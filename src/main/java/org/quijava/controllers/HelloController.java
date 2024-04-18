@@ -1,4 +1,4 @@
-package org.quijava.quijava;
+package org.quijava.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
