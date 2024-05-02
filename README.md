@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/BrunoF2P/quijava">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="utils/logo.png" alt="Logo" width="200" height="200">
   </a>
 
 <h3 align="center">Quijava - Quizes para você se divertir</h3>
@@ -86,7 +86,7 @@ Porque?:
     - [ ] Listar Quizes
     - [ ] Buscar por categorias
 
-
+  
 Abre o [Issues](https://github.com/BrunoF2P/quijava/issues) para obter uma lista completa dos recursos propostos (e problemas conhecidos).
 <p align="right">(<a href="#readme-top">inicio</a>)</p>
 
