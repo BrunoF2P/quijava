@@ -1,4 +1,6 @@
-<!-- PROJECT LOGO -->
+<a name="readme-top"></a>
+
+<!-- LOGO -->
 <br />
 <div align="center">
   <a href="https://github.com/BrunoF2P/quijava">
@@ -23,16 +25,15 @@
   <summary>Tabela de Conteudos</summary>
   <ol>
     <li>
-      <a href="#about-the-project">Sobre o Projeto</a>
+      <a href="#sobre-o-projeto">Sobre o Projeto</a>
       <ul>
-        <li><a href="#built-with">Construção</a></li>
+        <li><a href="#construção">Construção</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contribuição</a></li>
-    <li><a href="#license">Licença</a></li>
-    <li><a href="#contact">Contato</a></li>
-    <li><a href="#acknowledgments">Agradecimentos</a></li>
+    <li><a href="#licença">Licença</a></li>
+    <li><a href="#contato">Contato</a></li>
+    <li><a href="#agradecimentos">Agradecimentos</a></li>
   </ol>
 </details>
 
@@ -43,13 +44,9 @@
 
 O projeto consiste na implementação de um quiz interativo utilizando os princípios e técnicas aprendidos na disciplina de Linguagem de Programação 2. O objetivo é criar uma aplicação que permita aos usuários testarem seus conhecimentos em um determinado tema, apresentando uma série de perguntas e fornecendo feedback instantâneo sobre as respostas escolhidas.
 
-Porque?:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
 
 <p align="right">(<a href="#readme-top">inicio</a>)</p>
+
 
 ### Construção
 
@@ -92,8 +89,11 @@ Distribuído sob a licença MIT. Consulte `LICENSE.txt` para obter mais informa�
 <!-- CONTACT -->
 ## Contato
 
-Bruno Bispo - [@brunof2p](https://instagram.com/brunof2p) -
+Bruno Bispo: [@brunof2p](https://instagram.com/brunof2p) -
 Projetos: [github.com/BrunoF2P](https://github.com/BrunoF2P)
+
+Gabriel Brandão: [](##) - 
+Projetos: [github.com/Tartacoding](https://github.com/Tartacoding)
 
 <p align="right">(<a href="#readme-top">inicio</a>)</p>
 
