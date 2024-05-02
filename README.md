@@ -61,15 +61,47 @@ O projeto consiste na implementação de um quiz interativo utilizando os princ�
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Criar tela de cadastro
-- [ ] Criar tela de login
-- [ ] Criar quiz
-- [ ] Criar menu
-    - [ ] Listar Quizes
-    - [ ] Buscar por categorias
 
-  
-Abre o [Issues](https://github.com/BrunoF2P/quijava/issues) para obter uma lista completa dos recursos propostos (e problemas conhecidos).
+### Telas
+- [ ] Menu
+  * Listagem de quizzes por categoria
+  * Filtrar por categorias
+  - [ ] Informação auxiliar
+    * Mostrar se um usuario já realizou um quiz ou não
+    * Exibir potuação obtida pelo usuario quiz
+- [ ] Cadastro
+- [ ] Criar quiz
+- [ ] Gerenciar quizzes feitos pelo usuario
+  * Possibilidade de editar pontuação, pergunta, img, tempo de resposta
+
+
+### Criacao de quiz
+- [ ] Definição do Quiz
+  * Criar interface para inserção de título, descrição e temas.
+  * Implementação de funcionalidades para salvar título, descrição e tema do quiz.
+- [ ] Configuração de Perguntas
+  * Adicionar campo para selecionar o número de perguntas 
+  - [ ] Implementar opções para escolha do tipo de pergunta
+    * Multipla escolha
+    * Escolha unica
+    * Verdadeiro ou falso
+  - [ ] Implementar opções para escolha do tipo de pergunta
+- [ ] Permitir definição da pontuação para cada pergunta
+- [ ] Adicionar imagem para cada pergunta
+- [ ] Tempo limite para responder cada pergunta
+- [ ] Visibilidade
+  * Opção para definir se o quiz é publico ou privado
+
+### Cadastro
+- [ ] Gerenciamento de Usuarios
+  * Formulario de registro para novos usuarios
+  * Sistema de autenticação de login de usuarios
+
+
+
+
+Para quaisquer funcionalidades adicionais além do escopo planejado ou para qualquer problema conhecido: [Issues](https://github.com/BrunoF2P/quijava/issues) 
+
 <p align="right">(<a href="#readme-top">inicio</a>)</p>
 
 
