@@ -1,5 +1,6 @@
 package org.quijava.quijava;
 
+import atlantafx.base.theme.PrimerLight;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
