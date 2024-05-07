@@ -23,14 +23,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
         fxmlLoader.setControllerFactory(context::getBean);
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root, 1280, 768);
+        scene.getStylesheets().add(cssStyle);
 
         stage.setTitle("Cadastrar");
         stage.setScene(scene);
