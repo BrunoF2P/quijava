@@ -1,14 +1,25 @@
 package org.quijava.quijava.controllers;
 
+import atlantafx.base.theme.PrimerLight;
+import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.quijava.quijava.models.UserModel;
 import org.quijava.quijava.repositories.UserRepository;
 import org.quijava.quijava.utils.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 
 @ComponentScan
@@ -17,6 +28,7 @@ public class RegisterController {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final ApplicationContext applicationContext;
 
     @FXML
     private TextField usernameField;
@@ -33,13 +45,22 @@ public class RegisterController {
     @FXML
     private Label alert;
 
+    @FXML
+    private Text login;
+
     @Autowired
-    public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+    public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationContext applicationContext) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
+        this.applicationContext = applicationContext;
     }
 
 
+    @FXML
+    void goToLogin(MouseEvent event) {
+        // Carregar a tela de login aqui
+        loadLoginScreen();
+    }
 
     @FXML
     void cadastrar(ActionEvent event) {
@@ -108,5 +129,25 @@ public class RegisterController {
 
     private void setAlert(String message) {
         alert.setText(message);
+    }
+
+    private void loadLoginScreen(){
+        try {
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+            String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/loginView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+
+            Scene scene = new Scene(root, 1280, 768);
+            scene.getStylesheets().add(cssStyle);
+            Stage stage = (Stage) login.getScene().getWindow();
+            stage.setTitle("Entrar");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
