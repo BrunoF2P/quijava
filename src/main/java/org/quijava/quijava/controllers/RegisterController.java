@@ -33,7 +33,8 @@ public class RegisterController {
     @FXML
     private Button cadastrarButton;
 
-
+    @FXML
+    private Label alert;
 
     @Autowired
     public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository) {
@@ -82,11 +83,11 @@ public class RegisterController {
     private boolean userValidation(String username, String password, String rePassword){
 
         if (username.isEmpty() || password.isEmpty()) {  // verifica se os campos de username e password estão vazios
-            showAlert("Preencha todos os campos.");
+            setAlert("Preencha todos os campos.");
             return false;
         }
         if (!username.matches("^[a-zA-Z0-9]+$")) {  // verifica se o username so possui letras e numeros
-            showAlert("O nome de usuário deve conter apenas letras e números");
+            setAlert("O nome de usuário deve conter apenas letras e números");
             return false;
         }
 
@@ -96,16 +97,19 @@ public class RegisterController {
         }
 
         if (password.length() < 8) {  // verifica se a senha é menor que 8
-            showAlert("A senha deve ter pelo menos 8 caracteres.");
+            setAlert("A senha deve ter pelo menos 8 caracteres.");
             return false;
         }
 
         if (userRepository.existsByUsername(username)) { // verifica se o usuario existe
-            showAlert("Nome de usuário já está em uso.");
+            setAlert("Nome de usuário já está em uso.");
             return false;
         }
 
         return true;
     }
 
+    private void setAlert(String message) {
+        alert.setText(message);
+    }
 }
