@@ -26,7 +26,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
         String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("registerView.fxml"));
         fxmlLoader.setControllerFactory(context::getBean);
         Parent root = fxmlLoader.load();
 
