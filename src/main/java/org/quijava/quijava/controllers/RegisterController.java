@@ -28,6 +28,9 @@ public class RegisterController {
     private PasswordField passwordField;
 
     @FXML
+    private PasswordField rePasswordField;
+
+    @FXML
     private Button cadastrarButton;
 
 
@@ -44,8 +47,9 @@ public class RegisterController {
     void cadastrar(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
+        String rePassword = rePasswordField.getText();
 
-        if (userValidation(username, password)) {
+        if (userValidation(username, password, rePassword)) {
             createUser(username, password);
             showAlert("Usuário cadastrado com sucesso!");
         }
@@ -75,7 +79,7 @@ public class RegisterController {
     /**
      * Verifica se os campos estão vazios e se senha é maior que 8 e se o usuario existe
      */
-    private boolean userValidation(String username, String password){
+    private boolean userValidation(String username, String password, String rePassword){
 
         if (username.isEmpty() || password.isEmpty()) {  // verifica se os campos de username e password estão vazios
             showAlert("Preencha todos os campos.");
@@ -83,6 +87,11 @@ public class RegisterController {
         }
         if (!username.matches("^[a-zA-Z0-9]+$")) {  // verifica se o username so possui letras e numeros
             showAlert("O nome de usuário deve conter apenas letras e números");
+            return false;
+        }
+
+        if (!password.equals(rePassword)) { // Verifica se as senhas são iguais
+            setAlert("As senhas não correspondem.");
             return false;
         }
 
