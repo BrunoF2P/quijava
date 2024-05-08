@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/BrunoF2P/quijava">
-    <img src="utils/logo.png" alt="Logo" width="200" height="200">
+    <img src="src/main/resources/images/logo.png" alt="Logo" width="200" height="200">
   </a>
 
 <h3 align="center">Quijava - Quizes para você se divertir</h3>
