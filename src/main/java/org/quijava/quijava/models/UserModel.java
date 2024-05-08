@@ -16,6 +16,9 @@ public class UserModel {
     @Column(name = "id", nullable = false)
     private Integer id;
 
+    @Column(name = "role", nullable = false)
+    private Integer role;
+
     @Column(name = "username", nullable = false, length = 32)
     private String username;
 
@@ -32,6 +35,14 @@ public class UserModel {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public void setRole(Integer role) {
+        this.role = role;
+    }
+
+    public Integer getRole() {
+        return role;
     }
 
     public Instant getCreatedAt() {

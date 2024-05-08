@@ -40,6 +40,9 @@ public class RegisterController {
     private PasswordField rePasswordField;
 
     @FXML
+    private TextField refCode;
+
+    @FXML
     private Button cadastrarButton;
 
     @FXML
@@ -67,10 +70,21 @@ public class RegisterController {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String rePassword = rePasswordField.getText();
+        String ref = refCode.getText();
 
         if (userValidation(username, password, rePassword)) {
-            createUser(username, password);
-            showAlert("Usuário cadastrado com sucesso!");
+            int role = 1;
+            if ("Larissa".equals(ref)) {  // Se ref for igual a larissa a rota recebe 2
+                role = 2;
+                createUser(username, password, role);
+                setAlert("Usuário cadastrado com sucesso!");
+            } else if (!ref.isEmpty()) {  // Se a rota for diferente de vazio o codigo é invalido
+                setAlert("Código de referência inválido!");
+            } else {
+                createUser(username, password, role);
+                setAlert("Usuário cadastrado com sucesso!");
+            }
+
         }
     }
 
@@ -86,10 +100,11 @@ public class RegisterController {
     /**
      * Cria um novo usuário e salva no banco de dados
      */
-    private void createUser(String username, String password){
+    private void createUser(String username, String password, int role){
         UserModel newUser = new UserModel();
         newUser.setUsername(username);
         newUser.setPassword(password);
+        newUser.setRole(role);
         String encodedPassword = passwordEncoder.encodePassword(newUser.getPassword());
         newUser.setPassword(encodedPassword);
         userRepository.save(newUser);
