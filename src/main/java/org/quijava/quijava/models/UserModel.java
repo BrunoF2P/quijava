@@ -2,7 +2,7 @@ package org.quijava.quijava.models;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
+import java.util.Date;
 
 @Entity
 @Table(name = "users", schema = "public", uniqueConstraints = {
@@ -25,9 +25,9 @@ public class UserModel {
     @Column(name = "password", nullable = false, length = Integer.MAX_VALUE)
     private String password;
 
-    private Instant created_at;
+    private Date created_at;
 
-    private Instant updated_at;
+    private Date updated_at;
 
     public Integer getId() {
         return id;
@@ -45,11 +45,11 @@ public class UserModel {
         return role;
     }
 
-    public Instant getCreatedAt() {
+    public Date getCreatedAt() {
         return created_at;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.created_at = createdAt;
     }
 
@@ -61,11 +61,11 @@ public class UserModel {
         this.password = password;
     }
 
-    public Instant getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updated_at;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updated_at = updatedAt;
     }
 
@@ -77,4 +77,14 @@ public class UserModel {
         this.username = username;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        this.created_at = new Date();
+        this.updated_at = new Date();
+    }
+
+    @PreUpdate
+    protected void updateDate(){
+        this.updated_at = new Date();
+    }
 }
