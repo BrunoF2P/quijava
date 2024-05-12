@@ -29,7 +29,7 @@ public class Main extends Application {
         fxmlLoader.setControllerFactory(context::getBean);
         Parent root = fxmlLoader.load();
 
-        Scene scene = new Scene(root, 1280, 768);
+        Scene scene = new Scene(root, 535, 768);
         scene.getStylesheets().add(cssStyle);
 
         stage.setTitle("Cadastrar");
