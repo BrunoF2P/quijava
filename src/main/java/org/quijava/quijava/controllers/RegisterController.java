@@ -9,19 +9,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.quijava.quijava.models.UserModel;
 import org.quijava.quijava.repositories.UserRepository;
 import org.quijava.quijava.utils.PasswordEncoder;
+import org.quijava.quijava.utils.SessionDBService;
+import org.quijava.quijava.utils.SessionPreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Objects;
-
 
 @ComponentScan
 @Component
@@ -30,6 +31,9 @@ public class RegisterController {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final ApplicationContext applicationContext;
+    private final SessionDBService sessionDBService;
+
+    SessionPreferencesService sessionPreferences= new SessionPreferencesService();
 
     @FXML
     private TextField usernameField;
@@ -53,10 +57,11 @@ public class RegisterController {
     private Text login;
 
     @Autowired
-    public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationContext applicationContext) {
+    public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationContext applicationContext, SessionDBService sessionDBService) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.applicationContext = applicationContext;
+        this.sessionDBService = sessionDBService;
     }
 
 
@@ -78,15 +83,32 @@ public class RegisterController {
             if ("Larissa".equals(ref)) {  // Se ref for igual a larissa a rota recebe 2
                 role = 2;
                 createUser(username, password, role);
-                setAlert("Usuário cadastrado com sucesso!");
+                createSession(username, role);
+                Integer sessionId = sessionDBService.getLastSessionId();
+                createPreferencesSession(username, sessionId);
+                loadMenuScreen();
+
             } else if (!ref.isEmpty()) {  // Se a rota for diferente de vazio o codigo é invalido
                 setAlert("Código de referência inválido!");
             } else {
                 createUser(username, password, role);
-                setAlert("Usuário cadastrado com sucesso!");
+                createSession(username, role);
+                Integer sessionId = sessionDBService.getLastSessionId();
+                createPreferencesSession(username, sessionId);
+                loadMenuScreen();
             }
 
+
         }
+    }
+
+    private void createSession(String username, Integer role){
+            sessionDBService.createSession(username, role);
+    }
+
+    private void createPreferencesSession(String username, Integer sessionId){
+        sessionPreferences.setUsername(username);
+        sessionPreferences.setSessionId(sessionId);
     }
 
     /**
@@ -146,10 +168,9 @@ public class RegisterController {
             fxmlLoader.setControllerFactory(applicationContext::getBean);
             Parent root = fxmlLoader.load();
 
-
-            Scene scene = new Scene(root, 535, 768);
-            scene.getStylesheets().add(cssStyle);
             Stage stage = (Stage) login.getScene().getWindow();
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(cssStyle);
             stage.setTitle("Entrar");
             stage.setScene(scene);
             stage.show();
@@ -157,4 +178,32 @@ public class RegisterController {
             throw new RuntimeException(e);
         }
     }
+
+    private void loadMenuScreen(){
+        try {
+
+            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+            String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/menuView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent home = fxmlLoader.load();
+
+            Stage oldStage = (Stage) login.getScene().getWindow();
+            Stage stage = new Stage();
+
+            BorderPane root = new BorderPane();
+            stage.setMaximized(true);
+            root.setCenter(home);
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(cssStyle);
+            stage.setTitle("Menu");
+            stage.setScene(scene);
+            stage.show();
+            oldStage.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
+
