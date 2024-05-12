@@ -50,7 +50,7 @@ public class LoginController {
 
             Parent root = fxmlLoader.load();
 
-            Scene scene = new Scene(root, 1280, 768);
+            Scene scene = new Scene(root, 535, 768);
             scene.getStylesheets().add(cssStyle);
             Stage stage = (Stage) register.getScene().getWindow();
             stage.setTitle("Cadastrar");
