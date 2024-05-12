@@ -14,6 +14,7 @@ module org.quijava.quijava {
     requires spring.orm;
     requires spring.security.crypto;
     requires atlantafx.base;
+    requires java.prefs;
 
 
     opens org.quijava.quijava to javafx.fxml, spring.core;
@@ -23,4 +24,5 @@ module org.quijava.quijava {
     exports org.quijava.quijava.models;
     exports org.quijava.quijava.utils;
     exports org.quijava.quijava.controllers;
+    exports org.quijava.quijava.repositories;
 }
