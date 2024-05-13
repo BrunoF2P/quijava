@@ -41,7 +41,7 @@ public class Main extends Application {
     }
 
     /**
-     * Fecha o contexto do Spring ao encerrar a aplicação
+     * Fecha o Spring ao encerrar a aplicação
      */
     @Override
     public void stop() {
@@ -53,6 +53,10 @@ public class Main extends Application {
     }
 
 
+    /**
+     *  Se existir sessao armazenada nas preferencias vericica se existe sessao armazenada no banco de dados
+     *
+     */
     public void checkSessionOnAppOpen(String cssStyle) {
         String usernameFromPreferences = sessionPreferences.getUsername();
         int sessionIdFromPreferences = sessionPreferences.getSessionId();
@@ -69,6 +73,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Navega até o menu
+     */
     private void navigateToMenuScreen(String cssStyle) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("menuView.fxml"));
@@ -87,6 +94,10 @@ public class Main extends Application {
         }
     }
 
+
+    /**
+     * Navega até a tela de login
+     */
     private void navigateToLoginScreen(String cssStyle) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("loginView.fxml"));
