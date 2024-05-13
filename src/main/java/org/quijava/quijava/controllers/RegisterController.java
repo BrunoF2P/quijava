@@ -102,10 +102,18 @@ public class RegisterController {
         }
     }
 
+
+    /**
+     * Cria uma sessao no banco de dados armazenando informacao do usuario nelas (o id da sessao é gerada automaticamente)
+     */
     private void createSession(String username, Integer role){
             sessionDBService.createSession(username, role);
     }
 
+
+    /**
+     *  Armazena info do usuario pra armazenar nas preferencias
+     */
     private void createPreferencesSession(String username, Integer sessionId){
         sessionPreferences.setUsername(username);
         sessionPreferences.setSessionId(sessionId);
@@ -160,6 +168,10 @@ public class RegisterController {
         alert.setText(message);
     }
 
+
+    /**
+     * Carrega a tela de login
+     */
     private void loadLoginScreen(){
         try {
             Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
@@ -179,6 +191,10 @@ public class RegisterController {
         }
     }
 
+
+    /**
+     * Carrega o menu
+     */
     private void loadMenuScreen(){
         try {
 
