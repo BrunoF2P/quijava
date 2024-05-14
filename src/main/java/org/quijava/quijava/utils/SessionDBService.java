@@ -25,10 +25,9 @@ public class SessionDBService {
         session.setCreateTime(LocalDateTime.now());
         sessionRepository.save(session);
     }
+    public Integer getLastSessionId(String username) {
 
-    public Integer getLastSessionId() {
-
-        return sessionRepository.getLastSessionId();
+        return sessionRepository.getLastSessionIdForUser(username);
     }
 
     public boolean deleteSession(Integer id) {
@@ -43,11 +42,11 @@ public class SessionDBService {
     public boolean isSessionValid(Integer id) {
         return sessionRepository.existsById(id);
     }
-    
+
     public Optional<Integer> getSessionIdForUser(String username) {
         return sessionRepository.getSessionIdForUser(username);
     }
-    
+
     public String getUsername(Integer id) {
         Optional<UserSessionModel> sessionOptional = sessionRepository.findById(id);
         return sessionOptional.map(UserSessionModel::getUsername).orElse(null);
