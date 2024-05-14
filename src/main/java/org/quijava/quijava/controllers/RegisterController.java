@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import org.quijava.quijava.models.UserModel;
 import org.quijava.quijava.repositories.UserRepository;
 import org.quijava.quijava.utils.PasswordEncoder;
+import org.quijava.quijava.utils.ScreenLoader;
 import org.quijava.quijava.utils.SessionDBService;
 import org.quijava.quijava.utils.SessionPreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,7 @@ public class RegisterController {
     private final UserRepository userRepository;
     private final ApplicationContext applicationContext;
     private final SessionDBService sessionDBService;
+    private final ScreenLoader screenLoader;
 
     SessionPreferencesService sessionPreferences= new SessionPreferencesService();
 
@@ -57,11 +59,12 @@ public class RegisterController {
     private Text login;
 
     @Autowired
-    public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationContext applicationContext, SessionDBService sessionDBService) {
+    public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationContext applicationContext, SessionDBService sessionDBService, ScreenLoader screenLoader) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.applicationContext = applicationContext;
         this.sessionDBService = sessionDBService;
+        this.screenLoader = screenLoader;
     }
 
 
@@ -172,53 +175,15 @@ public class RegisterController {
     /**
      * Carrega a tela de login
      */
-    private void loadLoginScreen(){
-        try {
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/loginView.fxml"));
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            Parent root = fxmlLoader.load();
-
-            Stage stage = (Stage) login.getScene().getWindow();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(cssStyle);
-            stage.setTitle("Entrar");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private void loadLoginScreen() {
+        screenLoader.loadLoginScreen((Stage) login.getScene().getWindow(), applicationContext);
     }
 
-
     /**
-     * Carrega o menu
+     * Carrega a tela de menu
      */
-    private void loadMenuScreen(){
-        try {
-
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/menuView.fxml"));
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            Parent home = fxmlLoader.load();
-
-            Stage oldStage = (Stage) login.getScene().getWindow();
-            Stage stage = new Stage();
-
-            BorderPane root = new BorderPane();
-            stage.setMaximized(true);
-            root.setCenter(home);
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(cssStyle);
-            stage.setTitle("Menu");
-            stage.setScene(scene);
-            stage.show();
-            oldStage.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private void loadMenuScreen() {
+        screenLoader.loadMenuScreen((Stage) login.getScene().getWindow(), applicationContext);
 
     }
 }
