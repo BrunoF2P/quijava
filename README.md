@@ -69,9 +69,9 @@ O projeto consiste na implementação de um quiz interativo utilizando os princ�
   - [ ] Informação auxiliar
     * Mostrar se um usuario já realizou um quiz ou não
     * Exibir potuação obtida pelo usuario quiz
-- [ ] Cadastro
+- [x] Cadastro
 - [ ] Criar quiz
-- [ ] Gerenciar quizzes feitos pelo usuario
+- [ ] Gerenciar quizzes feitos pelo administrador
   * Possibilidade de editar pontuação, pergunta, img, tempo de resposta
 
 
@@ -93,7 +93,7 @@ O projeto consiste na implementação de um quiz interativo utilizando os princ�
   * Opção para definir se o quiz é publico ou privado
 
 ### Cadastro
-- [ ] Gerenciamento de Usuarios
+- [x] Gerenciamento de Usuarios
   * Formulario de registro para novos usuarios
   * Sistema de autenticação de login de usuarios
 
