@@ -4,14 +4,16 @@ import org.junit.jupiter.api.Test;
 import org.quijava.quijava.models.UserModel;
 
 import java.time.Instant;
+import java.util.Date;
 
 public class UserModelTest {
     @Test
     void testDateTimeNow(){
         UserModel newUser = new UserModel();
 
-        Instant createdAt = Instant.now();
-        Instant updatedAt = Instant.now();
+        Date createdAt = Date.from(Instant.now());
+        Date updatedAt = Date.from(Instant.now());
+
 
         newUser.setCreatedAt(createdAt);
         newUser.setUpdatedAt(updatedAt);
