@@ -1,29 +1,20 @@
 package org.quijava.quijava.controllers;
 
-import atlantafx.base.theme.PrimerLight;
-import javafx.application.Application;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.quijava.quijava.models.UserModel;
 import org.quijava.quijava.repositories.UserRepository;
-import org.quijava.quijava.utils.PasswordEncoder;
-import org.quijava.quijava.utils.ScreenLoader;
-import org.quijava.quijava.utils.SessionDBService;
-import org.quijava.quijava.utils.SessionPreferencesService;
+import org.quijava.quijava.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 
 @ComponentScan
 @Component
@@ -87,8 +78,8 @@ public class RegisterController {
                 role = 2;
                 createUser(username, password, role);
                 createSession(username, role);
-                Integer sessionId = sessionDBService.getLastSessionId();
-                createPreferencesSession(username, sessionId);
+                Integer sessionId = sessionDBService.getLastSessionId(username);
+                createPreferencesSession(username, sessionId, role);
                 loadMenuScreen();
 
             } else if (!ref.isEmpty()) {  // Se a rota for diferente de vazio o codigo é invalido
@@ -96,8 +87,8 @@ public class RegisterController {
             } else {
                 createUser(username, password, role);
                 createSession(username, role);
-                Integer sessionId = sessionDBService.getLastSessionId();
-                createPreferencesSession(username, sessionId);
+                Integer sessionId = sessionDBService.getLastSessionId(username);
+                createPreferencesSession(username, sessionId, role);
                 loadMenuScreen();
             }
 
@@ -117,9 +108,10 @@ public class RegisterController {
     /**
      *  Armazena info do usuario pra armazenar nas preferencias
      */
-    private void createPreferencesSession(String username, Integer sessionId){
+    private void createPreferencesSession(String username, Integer sessionId, Integer role){
         sessionPreferences.setUsername(username);
         sessionPreferences.setSessionId(sessionId);
+        sessionPreferences.setRole(role);
     }
 
     /**

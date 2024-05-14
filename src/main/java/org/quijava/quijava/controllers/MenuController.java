@@ -9,6 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import org.quijava.quijava.utils.ScreenLoader;
 import org.quijava.quijava.utils.SessionDBService;
 import org.quijava.quijava.utils.SessionPreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class MenuController {
 
     private final ApplicationContext applicationContext;
     private final SessionDBService sessionDBService;
+    private final ScreenLoader screenLoader;
+
+
     SessionPreferencesService sessionPreferences= new SessionPreferencesService();
 
     @FXML
@@ -31,6 +36,9 @@ public class MenuController {
 
     @FXML
     private Button createCategory;
+
+    @FXML
+    private Button sair;
 
     @FXML
     private Text idSession;
@@ -45,22 +53,35 @@ public class MenuController {
     public void initialize() {
         // Obtém o nome de usuário e o ID da sessão e define nos campos de texto correspondentes
         username.setText(getUsername());
-        idSession.setText(getSessionId().toString());
+        idSession.setText(getRole().toString());
     }
 
     @FXML
     public String getUsername() {
-        return sessionDBService.getUsername(sessionDBService.getLastSessionId());
+        return sessionDBService.getUsername(sessionPreferences.getSessionId());
     }
     @FXML
-    public Integer getSessionId() {
-        return sessionDBService.getLastSessionId();
+    public Integer getRole() {
+        return sessionDBService.getRole(sessionPreferences.getSessionId());
     }
 
+
+    @FXML
+    void onLogout(ActionEvent event) {
+        // Remove a sessão atual do banco de dados
+        sessionDBService.deleteSession(sessionPreferences.getSessionId());
+        // Limpa as preferências da sessão
+        sessionPreferences.clear();
+        // Navega para a tela de login
+        loadLoginScreen();
+    }
+
+
     @Autowired
-    public MenuController(ApplicationContext applicationContext, SessionDBService sessionDBService) {
+    public MenuController(ApplicationContext applicationContext, SessionDBService sessionDBService, ScreenLoader screenLoader) {
         this.applicationContext = applicationContext;
         this.sessionDBService = sessionDBService;
+        this.screenLoader = screenLoader;
     }
 
     @FXML
@@ -107,6 +128,13 @@ public class MenuController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Carrega a tela de login
+     */
+    private void loadLoginScreen() {
+        screenLoader.loadLoginScreen((Stage) sair.getScene().getWindow(), applicationContext);
     }
 }
 
