@@ -19,8 +19,8 @@ public interface UserSessionRepository extends JpaRepository<UserSessionModel, I
     void deleteById(Integer integer);
 
 
-    @Query(value = "SELECT MAX(id) FROM UserSessionModel")
-    Integer getLastSessionId();
+    @Query("SELECT MAX(id) FROM UserSessionModel WHERE username = :username")
+    Integer getLastSessionIdForUser(String username);
 
     @Query("SELECT id FROM UserSessionModel WHERE username = :username")
     Optional<Integer> getSessionIdForUser(String username);
