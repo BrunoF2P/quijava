@@ -10,5 +10,6 @@
       <Button fx:id="createCategory" layoutX="411.0" layoutY="335.0" mnemonicParsing="false" onAction="#onCreateCategory" prefHeight="49.0" prefWidth="180.0" text="Cadastrar Categorias" />
       <Text fx:id="username" layoutX="578.0" layoutY="471.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
       <Text fx:id="idSession" layoutX="578.0" layoutY="510.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+      <Button fx:id="sair" layoutX="1162.0" layoutY="54.0" mnemonicParsing="false" onAction="#onLogout" prefHeight="36.0" prefWidth="67.0" text="Sair" />
    </children>
 </AnchorPane>
