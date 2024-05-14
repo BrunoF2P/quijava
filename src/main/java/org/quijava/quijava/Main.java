@@ -58,8 +58,14 @@ public class Main extends Application {
         if (sessionIdFromPreferences != 0) {
             Optional<Integer> sessionId = sessionService.getSessionIdForUser(usernameFromPreferences);
             if (sessionId.isPresent() && sessionService.isSessionValid(sessionId.get())) {
-                screenLoader.loadMenuScreen(stage, context);
+                if (sessionIdFromPreferences == sessionId.get()) {
+                    screenLoader.loadMenuScreen(stage, context);
+                } else {
+                    sessionPreferences.clear();
+                    screenLoader.loadLoginScreen(stage, context);
+                }
             } else {
+                sessionPreferences.clear();
                 screenLoader.loadLoginScreen(stage, context);
             }
         } else {
