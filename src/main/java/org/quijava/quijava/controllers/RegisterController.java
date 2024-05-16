@@ -15,6 +15,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 
 @ComponentScan
 @Component
@@ -77,19 +79,37 @@ public class RegisterController {
             if ("Larissa".equals(ref)) {  // Se ref for igual a larissa a rota recebe 2
                 role = 2;
                 createUser(username, password, role);
-                createSession(username, role);
-                Integer sessionId = sessionDBService.getLastSessionId(username);
-                createPreferencesSession(username, sessionId, role);
-                loadMenuScreen();
+
+                Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
+                if (userOptional.isPresent()) {
+                    UserModel user = userOptional.get();
+                    Integer userId = user.getId();
+
+                    createSession(username, role, userId);
+                    Integer sessionId = sessionDBService.getLastSessionId(username);
+                    createPreferencesSession(username, sessionId, role, userId);
+                    loadMenuScreen();
+
+                }
+
 
             } else if (!ref.isEmpty()) {  // Se a rota for diferente de vazio o codigo é invalido
                 setAlert("Código de referência inválido!");
             } else {
+
                 createUser(username, password, role);
-                createSession(username, role);
-                Integer sessionId = sessionDBService.getLastSessionId(username);
-                createPreferencesSession(username, sessionId, role);
-                loadMenuScreen();
+
+                Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
+                if (userOptional.isPresent()) {
+                    UserModel user = userOptional.get();
+                    Integer userId = user.getId();
+
+                    createSession(username, role, userId);
+                    Integer sessionId = sessionDBService.getLastSessionId(username);
+                    createPreferencesSession(username, sessionId, role, userId);
+                    loadMenuScreen();
+
+                }
             }
 
 
@@ -100,18 +120,19 @@ public class RegisterController {
     /**
      * Cria uma sessao no banco de dados armazenando informacao do usuario nelas (o id da sessao é gerada automaticamente)
      */
-    private void createSession(String username, Integer role){
-            sessionDBService.createSession(username, role);
+    private void createSession(String username, Integer role, Integer userId){
+        sessionDBService.createSession(username, role, userId);
     }
 
 
     /**
      *  Armazena info do usuario pra armazenar nas preferencias
      */
-    private void createPreferencesSession(String username, Integer sessionId, Integer role){
+    private void createPreferencesSession(String username, Integer sessionId, Integer role, Integer userId){
         sessionPreferences.setUsername(username);
         sessionPreferences.setSessionId(sessionId);
         sessionPreferences.setRole(role);
+        sessionPreferences.setUserId(userId);
     }
 
     /**
