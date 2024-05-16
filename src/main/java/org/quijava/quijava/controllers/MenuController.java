@@ -89,46 +89,13 @@ public class MenuController {
         loadCreateQuizScreen();
     }
 
-    @FXML
-    void onCreateCategory(ActionEvent event) {
-        loadCreateCategoryScreen();
+    /**
+     * Carrega a de criar quiz
+     */
+    private void loadCreateQuizScreen() {
+        screenLoader.loadCreateQuizScreen((Stage) createQuiz.getScene().getWindow(), applicationContext);
     }
 
-    private void loadCreateQuizScreen(){
-        try {
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/createQuizView.fxml"));
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            Parent createQuizView = fxmlLoader.load();
-
-
-            BorderPane root = (BorderPane) createQuiz.getScene().getRoot();
-
-            root.setCenter(createQuizView);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void loadCreateCategoryScreen(){
-        try {
-            Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
-            String cssStyle = getClass().getResource("/css/styles.css").toExternalForm();
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/createCategoryView.fxml"));
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            Parent createCategoryView = fxmlLoader.load();
-
-
-            BorderPane root = (BorderPane) createQuiz.getScene().getRoot();
-
-            root.setCenter(createCategoryView);
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * Carrega a tela de login
