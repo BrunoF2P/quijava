@@ -62,4 +62,35 @@ public class ScreenLoader {
             e.printStackTrace();
         }
     }
+
+    public void loadCreateQuizScreen(Stage currentStage, ApplicationContext applicationContext) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/createQuizView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            loadScreen(currentStage, "Criar Quiz", root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadCreateCategoryScreen(ApplicationContext applicationContext) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/createCategoryView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Criar Categoria");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(500);
+            stage.setMinHeight(500);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
