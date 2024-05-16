@@ -7,16 +7,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="456.0" prefWidth="589.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.quijava.quijava.controllers.CreateCategoryController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.quijava.quijava.controllers.CreateCategoryController">
    <children>
-      <Text layoutX="227.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categorias">
+      <Text layoutX="182.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Categorias">
          <font>
             <Font size="27.0" />
          </font>
       </Text>
-      <TextField fx:id="categoryNameField" layoutX="85.0" layoutY="200.0" prefHeight="36.0" prefWidth="420.0" promptText="Titulo" />
-      <Button fx:id="createCategory" layoutX="363.0" layoutY="312.0" mnemonicParsing="false" onAction="#cadastrar" prefHeight="36.0" prefWidth="84.0" text="Criar" />
-      <Button layoutX="105.0" layoutY="312.0" mnemonicParsing="false" text="Cancelar" />
-      <Label fx:id="alert" alignment="CENTER" layoutX="164.0" layoutY="264.0" prefHeight="20.0" prefWidth="262.0" textFill="RED" />
+      <TextField fx:id="categoryNameField" layoutX="119.0" layoutY="241.0" prefHeight="36.0" prefWidth="262.0" promptText="Titulo" />
+      <Button fx:id="createCategory" layoutX="297.0" layoutY="331.0" mnemonicParsing="false" onAction="#cadastrar" prefHeight="36.0" prefWidth="84.0" text="Criar" />
+      <Button layoutX="119.0" layoutY="331.0" mnemonicParsing="false" text="Cancelar" />
+      <Label fx:id="alert" alignment="CENTER" layoutX="119.0" layoutY="295.0" prefHeight="20.0" prefWidth="262.0" textFill="RED" />
    </children>
 </AnchorPane>

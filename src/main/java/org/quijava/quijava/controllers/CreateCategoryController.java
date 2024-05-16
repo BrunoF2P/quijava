@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.quijava.quijava.models.CategoryModel;
 import org.quijava.quijava.repositories.CategoryRepository;
-import org.quijava.quijava.repositories.UserRepository;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 public class CreateCategoryController {
 
     private final CategoryRepository categoryRepository;
-    private final UserRepository userRepository;
 
     @FXML
     private Button createCategory;
@@ -28,9 +26,8 @@ public class CreateCategoryController {
     @FXML
     private Label alert;
 
-    public CreateCategoryController(CategoryRepository categoryRepository, UserRepository userRepository) {
+    public CreateCategoryController(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        this.userRepository = userRepository;
     }
 
     @FXML

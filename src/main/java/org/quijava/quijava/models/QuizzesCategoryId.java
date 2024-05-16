@@ -10,11 +10,21 @@ import java.util.Objects;
 @Embeddable
 public class QuizzesCategoryId implements Serializable {
     private static final long serialVersionUID = -799806918591193423L;
+
     @Column(name = "quiz_id", nullable = false)
     private Integer quiz_id;
 
     @Column(name = "category_id", nullable = false)
     private Integer category_id;
+
+    // Construtor
+    public QuizzesCategoryId() {
+    }
+
+    public QuizzesCategoryId(Integer quiz_id, Integer category_id) {
+        this.quiz_id = quiz_id;
+        this.category_id = category_id;
+    }
 
     public Integer getQuizId() {
         return quiz_id;
@@ -45,5 +55,4 @@ public class QuizzesCategoryId implements Serializable {
     public int hashCode() {
         return Objects.hash(quiz_id, category_id);
     }
-
 }
