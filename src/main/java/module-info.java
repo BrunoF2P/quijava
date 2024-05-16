@@ -15,6 +15,7 @@ module org.quijava.quijava {
     requires spring.security.crypto;
     requires atlantafx.base;
     requires java.prefs;
+    requires java.desktop;
 
 
     opens org.quijava.quijava to javafx.fxml, spring.core;
