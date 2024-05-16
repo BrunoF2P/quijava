@@ -70,13 +70,13 @@ O projeto consiste na implementação de um quiz interativo utilizando os princ�
     * Mostrar se um usuario já realizou um quiz ou não
     * Exibir potuação obtida pelo usuario quiz
 - [x] Cadastro
-- [ ] Criar quiz
+- [x] Criar quiz
 - [ ] Gerenciar quizzes feitos pelo administrador
   * Possibilidade de editar pontuação, pergunta, img, tempo de resposta
 
 
 ### Criacao de quiz
-- [ ] Definição do Quiz
+- [x] Definição do Quiz
   * Criar interface para inserção de título, descrição e temas.
   * Implementação de funcionalidades para salvar título, descrição e tema do quiz.
 - [ ] Configuração de Perguntas
