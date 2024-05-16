@@ -1,13 +1,9 @@
 package org.quijava.quijava.controllers;
 
-import atlantafx.base.theme.PrimerLight;
-import javafx.application.Application;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.control.Button;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.quijava.quijava.utils.ScreenLoader;
@@ -35,13 +31,10 @@ public class MenuController {
     private Button createQuiz;
 
     @FXML
-    private Button createCategory;
-
-    @FXML
     private Button sair;
 
     @FXML
-    private Text idSession;
+    private Text role;
 
     @FXML
     private Text username;
@@ -51,18 +44,28 @@ public class MenuController {
 
 
     public void initialize() {
-        // Obtém o nome de usuário e o ID da sessão e define nos campos de texto correspondentes
+        // Mostrar nome de usuario e permissao de role do mesmo
         username.setText(getUsername());
-        idSession.setText(getRole().toString());
+        role.setText(getRole().toString());
     }
 
     @FXML
     public String getUsername() {
-        return sessionDBService.getUsername(sessionPreferences.getSessionId());
+        String username = sessionPreferences.getUsername();
+        if (username == null || username.isEmpty()) {
+            username = sessionDBService.getUsername(sessionPreferences.getSessionId());
+            sessionPreferences.setUsername(username);
+        }
+        return username;
     }
     @FXML
     public Integer getRole() {
-        return sessionDBService.getRole(sessionPreferences.getSessionId());
+        Integer role = sessionPreferences.getRole();
+        if (role <= 0) {
+            role = sessionDBService.getRole(sessionPreferences.getSessionId());
+            sessionPreferences.setRole(role);
+        }
+        return role;
     }
 
 
