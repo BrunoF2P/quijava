@@ -11,13 +11,17 @@ public class UserSessionModel {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "session_id_seq")
     @SequenceGenerator(name = "session_id_seq", sequenceName = "session_id_seq", allocationSize = 1)
     private Integer id;
-
+    private Integer userId;
     private String username;
     private Integer role;
     private LocalDateTime createTime;
 
     public void setSessionId(Integer id) {
         this.id = id;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public void setUsername(String username) {
@@ -32,8 +36,13 @@ public class UserSessionModel {
         this.createTime = createTime;
     }
 
+
     public Integer getSessionId() {
         return id;
+    }
+
+    public Integer getUserId() {
+        return userId;
     }
 
     public String getUsername() {

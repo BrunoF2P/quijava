@@ -18,10 +18,11 @@ public class SessionDBService {
         this.sessionRepository = sessionRepository;
     }
 
-    public void createSession(String username, Integer role) {
+    public void createSession(String username, Integer role, Integer userId) {
         UserSessionModel session = new UserSessionModel();
         session.setUsername(username);
         session.setRole(role);
+        session.setUserId(userId);
         session.setCreateTime(LocalDateTime.now());
         sessionRepository.save(session);
     }
@@ -55,6 +56,11 @@ public class SessionDBService {
     public Integer getRole(Integer id) {
         Optional<UserSessionModel> sessionOptional = sessionRepository.findById(id);
         return sessionOptional.map(UserSessionModel::getRole).orElse(null);
+    }
+
+    public Integer getUserId(Integer id) {
+        Optional<UserSessionModel> sessionOptional = sessionRepository.findById(id);
+        return sessionOptional.map(UserSessionModel::getUserId).orElse(null);
     }
 }
 
