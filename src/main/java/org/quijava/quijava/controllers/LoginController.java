@@ -64,18 +64,24 @@ public class LoginController {
             return;
         }
 
-        // Se o login for válido, exclui qualquer sessão ativa existente
-        Optional<Integer> activeSessionIdOptional = sessionDBService.getSessionIdForUser(username);
-        if (activeSessionIdOptional.isPresent()) {
-            Integer activeSessionId = activeSessionIdOptional.get();
-            sessionDBService.deleteSession(activeSessionId);
+        // Obtém o UserId do banco de dados
+        Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
+        if (userOptional.isPresent()) {
+            UserModel user = userOptional.get();
+            Integer userId = user.getId();
+
+            // Se o login for válido, exclui qualquer sessão ativa existente
+            Optional<Integer> activeSessionIdOptional = sessionDBService.getSessionIdForUser(username);
+            if (activeSessionIdOptional.isPresent()) {
+                Integer activeSessionId = activeSessionIdOptional.get();
+                sessionDBService.deleteSession(activeSessionId);
+            }
+
+            createSession(username, getUserRole(username), userId);
+            Integer sessionId = sessionDBService.getLastSessionId(username);
+            createPreferencesSession(username, sessionId, getUserRole(username), userId);
+            loadMenuScreen();
         }
-
-
-        createSession(username, getUserRole(username));
-        Integer sessionId = sessionDBService.getLastSessionId(username);
-        createPreferencesSession(username, sessionId, getUserRole(username));
-        loadMenuScreen();
     }
 
 
@@ -105,8 +111,8 @@ public class LoginController {
         return false;
     }
 
-    private void createSession(String username, Integer role){
-        sessionDBService.createSession(username, role);
+    private void createSession(String username, Integer role, Integer userId){
+        sessionDBService.createSession(username, role, userId);
     }
 
     @FXML
@@ -114,10 +120,11 @@ public class LoginController {
         screenLoader.loadRegisterScreen((Stage) register.getScene().getWindow(), applicationContext);
     }
 
-    private void createPreferencesSession(String username, Integer sessionId, Integer role){
+    private void createPreferencesSession(String username, Integer sessionId, Integer role, Integer userId){
         sessionPreferences.setUsername(username);
         sessionPreferences.setSessionId(sessionId);
         sessionPreferences.setRole(role);
+        sessionPreferences.setUserId(userId);
     }
 
     private void setAlert(String message) {
