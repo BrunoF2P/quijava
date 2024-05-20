@@ -4,17 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import org.quijava.quijava.models.CategoryModel;
-import org.quijava.quijava.models.QuizModel;
-import org.quijava.quijava.models.QuizzesCategory;
-import org.quijava.quijava.models.QuizzesCategoryId;
+import org.quijava.quijava.models.*;
 import org.quijava.quijava.repositories.CategoryRepository;
 import org.quijava.quijava.repositories.QuizRepository;
-import org.quijava.quijava.repositories.QuizzesCategoryRepository;
+import org.quijava.quijava.repositories.UserRepository;
 import org.quijava.quijava.utils.ScreenLoader;
 import org.quijava.quijava.utils.SessionPreferencesService;
 import org.springframework.context.ApplicationContext;
@@ -26,8 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,10 +36,8 @@ public class CreateQuizController implements Initializable{
     private final QuizRepository quizRepository;
     private final CategoryRepository categoryRepository;
     private final ScreenLoader screenLoader;
-    private Image selectedImage;
-    private final QuizModel quiz;
-    private final QuizzesCategoryRepository quizzesCategoryRepository;
-
+    private final Map<String, Integer> categoryMap = new HashMap<>();
+    private final UserRepository userRepository;
     SessionPreferencesService sessionPreferences= new SessionPreferencesService();
 
     @FXML
@@ -89,13 +81,12 @@ public class CreateQuizController implements Initializable{
 
 
 
-    public CreateQuizController(ApplicationContext applicationContext, CategoryRepository categoryRepository, QuizRepository quizRepository, ScreenLoader screenLoader, QuizzesCategoryRepository quizzesCategoryRepository) {
+    public CreateQuizController(ApplicationContext applicationContext, CategoryRepository categoryRepository, QuizRepository quizRepository, ScreenLoader screenLoader, UserRepository userRepository) {
         this.applicationContext = applicationContext;
         this.categoryRepository = categoryRepository;
         this.quizRepository = quizRepository;
         this.screenLoader = screenLoader;
-        this.quizzesCategoryRepository = quizzesCategoryRepository;
-        this.quiz = new QuizModel();
+        this.userRepository = userRepository;
     }
 
 
@@ -128,11 +119,18 @@ public class CreateQuizController implements Initializable{
         screenLoader.loadCreateCategoryScreen(applicationContext);
     }
 
+
+    /**
+     * Carrega a lista de categorias criadas, limpa categorias para não empilhar e mapeia descricao e id
+     */
     @FXML
     public void loadCategories() {
         List<CategoryModel> categories = categoryRepository.findAll();
-        items.clear();
-        items.addAll(categories.stream().map(CategoryModel::getDescription).toList());
+        categoryMap.clear();
+        for (CategoryModel category : categories) {
+            categoryMap.put(category.getDescription(), category.getId());
+            items.add(category.getDescription());
+        }
     }
 
 
@@ -144,9 +142,14 @@ public class CreateQuizController implements Initializable{
 
         // Aqui você deve converter as descrições das categorias em IDs
         Set<Integer> categoryIds = selectedCategories.stream()
-                .map(this::findCategoryIdByDescription)
+                .map(categoryMap::get)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
+        // Procura o usuario pelo id fornecido no preferences
+        UserModel author = userRepository.findById(sessionPreferences.getUserId()).orElse(null);
+
+        // Converte os IDs das Categorias Selecionadas para Objetos
         Set<CategoryModel> categories = findCategoriesByIds(categoryIds);
 
         // Crie e salve o novo quiz aqui
@@ -154,29 +157,20 @@ public class CreateQuizController implements Initializable{
         quiz.setTitle(title);
         quiz.setImageQuiz(imagePath);
         quiz.setDescription(description);
+        quiz.setAuthor(author);
         quiz.setCategories(categories);
-        quiz.setAuthorId(sessionPreferences.getUserId());
-
-        QuizModel savedQuiz = quizRepository.save(quiz); // Salva o quiz e obtém o ID
-
-        for (CategoryModel category : categories) {
-            QuizzesCategory quizzesCategory = new QuizzesCategory();
-            quizzesCategory.setId(new QuizzesCategoryId(savedQuiz.getId(), category.getId()));
-            quizzesCategory.setQuiz(savedQuiz);
-            quizzesCategory.setCategory(category);
-            quizzesCategoryRepository.save(quizzesCategory); // Salva a associação na tabela de junção
-        }
+        quizRepository.save(quiz);
 
     }
 
-    public Integer findCategoryIdByDescription(String description) {
-        CategoryModel category = categoryRepository.findByDescription(description);
-        return category != null ? category.getId() : null;
-    }
 
+    /**
+     * Converter um conjunto de IDs de categorias
+     * @param categoryIds
+     * @return Conjunto de objetos do Cateogory Model
+     */
     public Set<CategoryModel> findCategoriesByIds(Set<Integer> categoryIds) {
-        List<CategoryModel> categoryModels = categoryRepository.findByIdIn(new ArrayList<>(categoryIds));
-        return new HashSet<>(categoryModels);
+        return new HashSet<>(categoryRepository.findByIdIn(new ArrayList<>(categoryIds)));
     }
 
 
