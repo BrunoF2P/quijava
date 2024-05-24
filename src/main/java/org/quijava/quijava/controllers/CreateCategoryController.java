@@ -5,17 +5,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import org.quijava.quijava.models.CategoryModel;
-import org.quijava.quijava.repositories.CategoryRepository;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+
+import org.quijava.quijava.services.CategoryService;
+import org.springframework.stereotype.Controller;
 
 
-@Component
-@ComponentScan
+
+@Controller
 public class CreateCategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @FXML
     private Button createCategory;
@@ -26,47 +25,25 @@ public class CreateCategoryController {
     @FXML
     private Label alert;
 
-    public CreateCategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public CreateCategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
     }
 
     @FXML
     void cadastrar(ActionEvent event) {
-        String category_name = categoryNameField.getText();
-
-        if (categoryValidation(category_name)) {
-            createCategory(category_name);
+        String categoryName = categoryNameField.getText();
+        try {
+            categoryService.createCategory(categoryName);
+        } catch (IllegalArgumentException e) {
+            setAlert(e.getMessage());
+        } catch (Exception e){
+            setAlert("Erro ao cadastrar a categoria");
+            e.printStackTrace();
         }
     }
 
-
-    private boolean categoryValidation(String category_name){
-
-        if (category_name.isEmpty()) {  // verifica se os campos de username e password estão vazios
-            setAlert("Preencha todos os campos.");
-            return false;
-        }
-
-        if (!category_name.matches("^[a-zA-Z0-9]+$")) {  // verifica se o username so possui letras e numeros
-            setAlert("As categorias deve conter apenas letras e números");
-            return false;
-        }
-
-        if (categoryRepository.existsByDescription(category_name)) { // verifica se o usuario existe
-            setAlert("Categoria já cadastrada.");
-            return false;
-        }
-
-        return true;
-    }
-
+    @FXML
     private void setAlert(String message) {
         alert.setText(message);
-    }
-
-    private void createCategory(String category_name){
-        CategoryModel newCategory = new CategoryModel();
-        newCategory.setDescription(category_name);
-        categoryRepository.save(newCategory);
     }
 }

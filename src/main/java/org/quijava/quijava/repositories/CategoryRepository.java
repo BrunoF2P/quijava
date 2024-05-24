@@ -17,4 +17,7 @@ public interface CategoryRepository extends JpaRepository<CategoryModel, Integer
 
     List<CategoryModel> findByIdIn(List<Integer> categoryIds);
 
+    CategoryModel findByDescription(String description);
+
+
 }

@@ -14,7 +14,5 @@ public interface UserRepository extends JpaRepository<UserModel, Integer> {
 
     UserModel findByUsername(String username);
 
-
-    @Override
     Optional<UserModel> findById(Integer integer);
 }

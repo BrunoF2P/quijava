@@ -2,6 +2,7 @@ package org.quijava.quijava.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -9,26 +10,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.quijava.quijava.models.UserModel;
-import org.quijava.quijava.repositories.UserRepository;
-import org.quijava.quijava.utils.*;
+import org.quijava.quijava.services.LoginService;
+import org.quijava.quijava.utils.ScreenLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
 
-
-@ComponentScan
-@Component
+@Controller
 public class LoginController {
 
     private final ScreenLoader screenLoader;
+    private final LoginService loginService;
     private final ApplicationContext applicationContext;
-    private final UserRepository userRepository;
-    private final SessionDBService sessionDBService;
-    private final PasswordEncoder passwordEncoder;
-    SessionPreferencesService sessionPreferences= new SessionPreferencesService();
 
     @FXML
     private TextField usernameField;
@@ -42,77 +37,15 @@ public class LoginController {
     @FXML
     private Text register;
 
-    @Autowired
-    public LoginController(ScreenLoader screenLoader, ApplicationContext applicationContext, UserRepository userRepository, SessionDBService sessionDBService, PasswordEncoder passwordEncoder) {
-        this.screenLoader = screenLoader;
-        this.applicationContext = applicationContext;
-        this.userRepository = userRepository;
-        this.sessionDBService = sessionDBService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @FXML
-    void login(ActionEvent event) {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
+    private Button loginButton;
 
-
-        // Valida o login
-        if (!validateLogin(username, password)) {
-            // Caso contrário, exiba uma mensagem de erro
-            setAlert("Usuário ou senha incorretos!");
-            return;
-        }
-
-        // Obtém o UserId do banco de dados
-        Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
-        if (userOptional.isPresent()) {
-            UserModel user = userOptional.get();
-            Integer userId = user.getId();
-
-            // Se o login for válido, exclui qualquer sessão ativa existente
-            Optional<Integer> activeSessionIdOptional = sessionDBService.getSessionIdForUser(username);
-            if (activeSessionIdOptional.isPresent()) {
-                Integer activeSessionId = activeSessionIdOptional.get();
-                sessionDBService.deleteSession(activeSessionId);
-            }
-
-            createSession(username, getUserRole(username), userId);
-            Integer sessionId = sessionDBService.getLastSessionId(username);
-            createPreferencesSession(username, sessionId, getUserRole(username), userId);
-            loadMenuScreen();
-        }
-    }
-
-
-    /**
-     * Obtém a role do usuário
-     * @param username nome de usuário
-     * @return role do usuário
-     */
-    private Integer getUserRole(String username) {
-        Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
-        return userOptional.map(UserModel::getRole).orElse(null);
-    }
-
-    /**
-     * Método para validar o login
-     * @param username - nome do usuario
-     * @param password - senha do usuario
-     * @return verificacao se senha e usurio é valida
-     */
-
-    private boolean validateLogin(String username, String password) {
-        Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
-        if (userOptional.isPresent()) {
-            UserModel user = userOptional.get();
-            return passwordEncoder.matches(password, user.getPassword());
-        }
-        return false;
-    }
-
-    private void createSession(String username, Integer role, Integer userId){
-        sessionDBService.createSession(username, role, userId);
+    @Autowired
+    public LoginController(ScreenLoader screenLoader, LoginService loginService, ApplicationContext applicationContext) {
+        super();
+        this.screenLoader = screenLoader;
+        this.loginService = loginService;
+        this.applicationContext = applicationContext;
     }
 
     @FXML
@@ -120,24 +53,42 @@ public class LoginController {
         screenLoader.loadRegisterScreen((Stage) register.getScene().getWindow(), applicationContext);
     }
 
-    private void createPreferencesSession(String username, Integer sessionId, Integer role, Integer userId){
-        sessionPreferences.setUsername(username);
-        sessionPreferences.setSessionId(sessionId);
-        sessionPreferences.setRole(role);
-        sessionPreferences.setUserId(userId);
+    @FXML
+    void login(ActionEvent event) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        try {
+            if (loginService.validateLogin(username, password)) {
+                Optional<UserModel> userOptional = loginService.getUserByUsername(username);
+                if (userOptional.isPresent()) {
+                    UserModel user = userOptional.get();
+                    Integer userId = user.getId();
+                    Integer role = user.getRole();
+
+                    loginService.deleteActiveSession(username);
+
+                    loginService.createSession(username, role, userId);
+                    Integer sessionId = loginService.getLastSessionId(username);
+
+                    loginService.createPreferencesSession(username, sessionId, role, userId);
+
+                    screenLoader.loadMenuScreen((Stage) loginButton.getScene().getWindow(), applicationContext); // Carrega o menu
+                    return;
+                }
+            }
+            setAlert("Usuário ou senha incorretos.");
+        } catch (IllegalArgumentException e) {
+            setAlert(e.getMessage());
+        } catch (Exception e) {
+            setAlert("Erro durante o login. Por favor, tente novamente mais tarde.");
+            e.printStackTrace();
+        }
     }
 
+    @FXML
     private void setAlert(String message) {
         alert.setText(message);
     }
-
-    /**
-     * Carrega a tela de menu
-     */
-    private void loadMenuScreen() {
-        screenLoader.loadMenuScreen((Stage) register.getScene().getWindow(), applicationContext);
-
-    }
-
 
 }
