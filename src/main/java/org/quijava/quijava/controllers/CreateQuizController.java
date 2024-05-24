@@ -8,14 +8,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import org.quijava.quijava.models.*;
-import org.quijava.quijava.repositories.CategoryRepository;
-import org.quijava.quijava.repositories.QuizRepository;
-import org.quijava.quijava.repositories.UserRepository;
+import org.quijava.quijava.services.QuizService;
 import org.quijava.quijava.utils.ScreenLoader;
-import org.quijava.quijava.utils.SessionPreferencesService;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
 
 
 import java.io.File;
@@ -23,22 +18,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javafx.fxml.Initializable;
+import org.springframework.stereotype.Controller;
 
 
-@ComponentScan
-@Component
+@Controller
 public class CreateQuizController implements Initializable{
 
     private final ApplicationContext applicationContext;
-    private final QuizRepository quizRepository;
-    private final CategoryRepository categoryRepository;
     private final ScreenLoader screenLoader;
-    private final Map<String, Integer> categoryMap = new HashMap<>();
-    private final UserRepository userRepository;
-    SessionPreferencesService sessionPreferences= new SessionPreferencesService();
+    private final QuizService quizService;
 
     @FXML
     private TextField titleQuiz;
@@ -72,6 +62,13 @@ public class CreateQuizController implements Initializable{
     private final ObservableList<String> items = FXCollections.observableArrayList();
     private final ObservableList<String> selectedCategories = FXCollections.observableArrayList();
 
+
+    public CreateQuizController(ApplicationContext applicationContext, ScreenLoader screenLoader, QuizService quizService) {
+        this.applicationContext = applicationContext;
+        this.screenLoader = screenLoader;
+        this.quizService = quizService;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadCategories();
@@ -79,21 +76,8 @@ public class CreateQuizController implements Initializable{
         listAddCategories.setItems(selectedCategories);
     }
 
-
-
-    public CreateQuizController(ApplicationContext applicationContext, CategoryRepository categoryRepository, QuizRepository quizRepository, ScreenLoader screenLoader, UserRepository userRepository) {
-        this.applicationContext = applicationContext;
-        this.categoryRepository = categoryRepository;
-        this.quizRepository = quizRepository;
-        this.screenLoader = screenLoader;
-        this.userRepository = userRepository;
-    }
-
-
-
-
     @FXML
-    public void selectCategories(){
+    public void selectCategories() {
         String selectedItem = listCategories.getSelectionModel().getSelectedItem();
         if (selectedItem != null && !selectedCategories.contains(selectedItem)) {
             selectedCategories.add(selectedItem);
@@ -101,7 +85,7 @@ public class CreateQuizController implements Initializable{
     }
 
     @FXML
-    public void deleteSelectedCategories(){
+    public void deleteSelectedCategories() {
         String selectedItem = listAddCategories.getSelectionModel().getSelectedItem();
         if (selectedItem != null && selectedCategories.contains(selectedItem)) {
             selectedCategories.remove(selectedItem);
@@ -125,12 +109,8 @@ public class CreateQuizController implements Initializable{
      */
     @FXML
     public void loadCategories() {
-        List<CategoryModel> categories = categoryRepository.findAll();
-        categoryMap.clear();
-        for (CategoryModel category : categories) {
-            categoryMap.put(category.getDescription(), category.getId());
-            items.add(category.getDescription());
-        }
+        items.clear();
+        items.addAll(quizService.getAllCategoriesDescriptions());
     }
 
 
@@ -138,39 +118,11 @@ public class CreateQuizController implements Initializable{
     public void createQuiz() {
         String title = titleQuiz.getText();
         String description = descriptionQuiz.getText();
-        Set<String> selectedCategories = new HashSet<>(listAddCategories.getItems());
 
-        // Aqui você deve converter as descrições das categorias em IDs
-        Set<Integer> categoryIds = selectedCategories.stream()
-                .map(categoryMap::get)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        Set<String> selectedCategoriesSet = new HashSet<>(selectedCategories);
+        QuizModel quiz = quizService.createQuiz(title, description, selectedCategoriesSet, imagePath);
 
-        // Procura o usuario pelo id fornecido no preferences
-        UserModel author = userRepository.findById(sessionPreferences.getUserId()).orElse(null);
-
-        // Converte os IDs das Categorias Selecionadas para Objetos
-        Set<CategoryModel> categories = findCategoriesByIds(categoryIds);
-
-        // Crie e salve o novo quiz aqui
-        QuizModel quiz = new QuizModel();
-        quiz.setTitle(title);
-        quiz.setImageQuiz(imagePath);
-        quiz.setDescription(description);
-        quiz.setAuthor(author);
-        quiz.setCategories(categories);
-        quizRepository.save(quiz);
-
-    }
-
-
-    /**
-     * Converter um conjunto de IDs de categorias
-     * @param categoryIds
-     * @return Conjunto de objetos do Cateogory Model
-     */
-    public Set<CategoryModel> findCategoriesByIds(Set<Integer> categoryIds) {
-        return new HashSet<>(categoryRepository.findByIdIn(new ArrayList<>(categoryIds)));
+        screenLoader.loadCreateQuestion((Stage) createQuiz.getScene().getWindow(), applicationContext, quiz);
     }
 
 

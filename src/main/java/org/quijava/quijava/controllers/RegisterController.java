@@ -1,6 +1,5 @@
 package org.quijava.quijava.controllers;
 
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -8,27 +7,20 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.quijava.quijava.models.UserModel;
-import org.quijava.quijava.repositories.UserRepository;
-import org.quijava.quijava.utils.*;
+import org.quijava.quijava.services.RegisterService;
+import org.quijava.quijava.utils.ScreenLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.util.Optional;
 
-
-@ComponentScan
-@Component
+@Controller
 public class RegisterController {
 
-    private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
-    private final ApplicationContext applicationContext;
-    private final SessionDBService sessionDBService;
+    private final RegisterService registerService;
     private final ScreenLoader screenLoader;
-
-    SessionPreferencesService sessionPreferences= new SessionPreferencesService();
+    private final ApplicationContext applicationContext;
 
     @FXML
     private TextField usernameField;
@@ -52,19 +44,15 @@ public class RegisterController {
     private Text login;
 
     @Autowired
-    public RegisterController(PasswordEncoder passwordEncoder, UserRepository userRepository, ApplicationContext applicationContext, SessionDBService sessionDBService, ScreenLoader screenLoader) {
-        this.passwordEncoder = passwordEncoder;
-        this.userRepository = userRepository;
-        this.applicationContext = applicationContext;
-        this.sessionDBService = sessionDBService;
+    public RegisterController(RegisterService registerService, ScreenLoader screenLoader, ApplicationContext applicationContext) {
+        this.registerService = registerService;
         this.screenLoader = screenLoader;
+        this.applicationContext = applicationContext;
     }
-
 
     @FXML
     void goToLogin(MouseEvent event) {
-        // Carregar a tela de login aqui
-        loadLoginScreen();
+        screenLoader.loadLoginScreen((Stage) login.getScene().getWindow(), applicationContext);
     }
 
     @FXML
@@ -74,130 +62,28 @@ public class RegisterController {
         String rePassword = rePasswordField.getText();
         String ref = refCode.getText();
 
-        if (userValidation(username, password, rePassword)) {
-            int role = 1;
-            if ("Larissa".equals(ref)) {  // Se ref for igual a larissa a rota recebe 2
-                role = 2;
-                createUser(username, password, role);
+        try {
+            registerService.validateFields(username, password, rePassword);
 
-                Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
-                if (userOptional.isPresent()) {
-                    UserModel user = userOptional.get();
-                    Integer userId = user.getId();
+            int role = registerService.determineUserRole(ref);
+            Optional<UserModel> userOptional = registerService.registerUser(username, password, role);
 
-                    createSession(username, role, userId);
-                    Integer sessionId = sessionDBService.getLastSessionId(username);
-                    createPreferencesSession(username, sessionId, role, userId);
-                    loadMenuScreen();
-
-                }
-
-
-            } else if (!ref.isEmpty()) {  // Se a rota for diferente de vazio o codigo é invalido
-                setAlert("Código de referência inválido!");
+            if (userOptional.isPresent()) {
+                registerService.manageUserSession(userOptional.get());
+                screenLoader.loadMenuScreen((Stage) cadastrarButton.getScene().getWindow(), applicationContext); // Carregar o menu
             } else {
-
-                createUser(username, password, role);
-
-                Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
-                if (userOptional.isPresent()) {
-                    UserModel user = userOptional.get();
-                    Integer userId = user.getId();
-
-                    createSession(username, role, userId);
-                    Integer sessionId = sessionDBService.getLastSessionId(username);
-                    createPreferencesSession(username, sessionId, role, userId);
-                    loadMenuScreen();
-
-                }
+                setAlert("Erro ao registrar usuário.");
             }
-
-
+        } catch (IllegalArgumentException e) {
+            setAlert(e.getMessage());
+        } catch (Exception e) {
+            setAlert("Erro durante o registro. Por favor, tente novamente mais tarde.");
+            e.printStackTrace();
         }
     }
 
-
-    /**
-     * Cria uma sessao no banco de dados armazenando informacao do usuario nelas (o id da sessao é gerada automaticamente)
-     */
-    private void createSession(String username, Integer role, Integer userId){
-        sessionDBService.createSession(username, role, userId);
-    }
-
-
-    /**
-     *  Armazena info do usuario pra armazenar nas preferencias
-     */
-    private void createPreferencesSession(String username, Integer sessionId, Integer role, Integer userId){
-        sessionPreferences.setUsername(username);
-        sessionPreferences.setSessionId(sessionId);
-        sessionPreferences.setRole(role);
-        sessionPreferences.setUserId(userId);
-    }
-
-    /**
-     * Cria um novo usuário e salva no banco de dados
-     */
-    private void createUser(String username, String password, int role){
-        UserModel newUser = new UserModel();
-        newUser.setUsername(username);
-        newUser.setPassword(password);
-        newUser.setRole(role);
-        String encodedPassword = passwordEncoder.encodePassword(newUser.getPassword());
-        newUser.setPassword(encodedPassword);
-        userRepository.save(newUser);
-    }
-
-    /**
-     * Verifica se os campos estão vazios e se senha é maior que 8 e se o usuario existe
-     */
-    private boolean userValidation(String username, String password, String rePassword){
-
-        if (username.isEmpty() || password.isEmpty()) {  // verifica se os campos de username e password estão vazios
-            setAlert("Preencha todos os campos.");
-            return false;
-        }
-        if (!username.matches("^[a-zA-Z0-9]+$")) {  // verifica se o username so possui letras e numeros
-            setAlert("O nome de usuário deve conter apenas letras e números");
-            return false;
-        }
-
-        if (!password.equals(rePassword)) { // Verifica se as senhas são iguais
-            setAlert("As senhas não correspondem.");
-            return false;
-        }
-
-        if (password.length() < 8) {  // verifica se a senha é menor que 8
-            setAlert("A senha deve ter pelo menos 8 caracteres.");
-            return false;
-        }
-
-        if (userRepository.existsByUsername(username)) { // verifica se o usuario existe
-            setAlert("Nome de usuário já está em uso.");
-            return false;
-        }
-
-        return true;
-    }
-
+    @FXML
     private void setAlert(String message) {
         alert.setText(message);
     }
-
-
-    /**
-     * Carrega a tela de login
-     */
-    private void loadLoginScreen() {
-        screenLoader.loadLoginScreen((Stage) login.getScene().getWindow(), applicationContext);
-    }
-
-    /**
-     * Carrega a tela de menu
-     */
-    private void loadMenuScreen() {
-        screenLoader.loadMenuScreen((Stage) login.getScene().getWindow(), applicationContext);
-
-    }
 }
-

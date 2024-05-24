@@ -1,4 +1,4 @@
-package org.quijava.quijava.utils;
+package org.quijava.quijava.services;
 
 import org.quijava.quijava.models.UserSessionModel;
 import org.quijava.quijava.repositories.UserSessionRepository;

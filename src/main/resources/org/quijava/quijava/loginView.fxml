@@ -34,7 +34,7 @@
       </HBox>
       <TextField fx:id="usernameField" layoutX="61.0" layoutY="336.0" prefColumnCount="30" prefHeight="40.0" promptText="Usuario" />
       <PasswordField fx:id="passwordField" layoutX="61.0" layoutY="392.0" prefColumnCount="30" prefHeight="40.0" promptText="Senha" />
-      <Button layoutX="220.0" layoutY="493.0" mnemonicParsing="false" onAction="#login" prefHeight="40.0" prefWidth="90.0" text="Entrar" />
+      <Button fx:id="loginButton" layoutX="220.0" layoutY="493.0" mnemonicParsing="false" onAction="#login" prefHeight="40.0" prefWidth="90.0" text="Entrar" />
       <Label fx:id="alert" alignment="CENTER" contentDisplay="CENTER" layoutX="101.0" layoutY="445.0" prefHeight="20.0" prefWidth="328.0" textFill="RED" />
    </children>
 </AnchorPane>

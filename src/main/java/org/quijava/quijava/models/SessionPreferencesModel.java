@@ -1,8 +1,11 @@
-package org.quijava.quijava.utils;
+package org.quijava.quijava.models;
+
+import org.springframework.stereotype.Service;
 
 import java.util.prefs.Preferences;
 
-public class SessionPreferencesService {
+@Service
+public class SessionPreferencesModel {
     private static final String USERNAME_KEY = "username";
     private static final String USER_ID_KEY = "user_id";
     private static final String SESSION_ID_KEY = "session_id";
@@ -10,7 +13,7 @@ public class SessionPreferencesService {
 
     private final Preferences preferences;
 
-    public SessionPreferencesService() {
+    public SessionPreferencesModel() {
         this.preferences = Preferences.userRoot().node(this.getClass().getName());
     }
 
