@@ -8,6 +8,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import org.quijava.quijava.models.*;
+import org.quijava.quijava.services.ImageService;
 import org.quijava.quijava.services.QuizService;
 import org.quijava.quijava.utils.ScreenLoader;
 import org.springframework.context.ApplicationContext;
@@ -29,6 +30,7 @@ public class CreateQuizController implements Initializable{
     private final ApplicationContext applicationContext;
     private final ScreenLoader screenLoader;
     private final QuizService quizService;
+    private final ImageService imageService;
 
     @FXML
     private TextField titleQuiz;
@@ -63,10 +65,11 @@ public class CreateQuizController implements Initializable{
     private final ObservableList<String> selectedCategories = FXCollections.observableArrayList();
 
 
-    public CreateQuizController(ApplicationContext applicationContext, ScreenLoader screenLoader, QuizService quizService) {
+    public CreateQuizController(ApplicationContext applicationContext, ScreenLoader screenLoader, QuizService quizService, ImageService imageService) {
         this.applicationContext = applicationContext;
         this.screenLoader = screenLoader;
         this.quizService = quizService;
+        this.imageService = imageService;
     }
 
     @Override
@@ -127,20 +130,11 @@ public class CreateQuizController implements Initializable{
 
 
     @FXML
-    public void selectImage() throws IOException {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Escolha a imagem");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Tipos de arquivos", "*.png", "*.jpg", "*.jpeg")
-        );
-        File selectedFile = fileChooser.showOpenDialog(new Stage());
-        if (selectedFile != null) {
-            try {
-                imagePath = Files.readAllBytes(selectedFile.toPath());
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void selectImage() {
+        try {
+            imagePath = imageService.selectImage();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
