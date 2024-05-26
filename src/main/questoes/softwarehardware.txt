@@ -1,0 +1,258 @@
+FÁCIL
+
+**Hardware**
+
+1. Qual é a função principal do processador (CPU) em um computador?
+a) Armazenar dados
+b) Processar dados
+c) Exibir informações
+d) Gerenciar memória
+
+Resposta: b) Processar dados
+
+2. Qual é a unidade de medida de capacidade de armazenamento em um computador?
+a) Byte
+b) Kilobyte
+c) Megabyte
+d) Gigabyte
+
+Resposta: c) Megabyte
+
+3. Qual é a função do disco rígido (HD) em um computador?
+a) Armazenar dados
+b) Processar dados
+c) Exibir informações
+d) Gerenciar memória
+
+Resposta: a) Armazenar dados
+
+4. Qual é a função do mouse em um computador?
+a) Controlar a saída de áudio
+b) Controlar a saída de vídeo
+c) Controlar o cursor na tela
+d) Controlar o som do computador
+
+Resposta: c) Controlar o cursor na tela
+
+5. Qual é a unidade de medida de velocidade de transferência de dados em um computador?
+a) Bits por segundo
+b) Bytes por segundo
+c) Bits por minuto
+d) Bytes por minuto
+
+Resposta: b) Bytes por segundo
+
+**Software**
+
+1. Qual é o tipo de software que executa funções específicas, como editores de texto e jogos?
+a) Sistema operacional
+b) Aplicativo
+c) Biblioteca de recursos
+d) Ferramenta de desenvolvimento
+
+Resposta: b) Aplicativo
+
+2. Qual é a função do gerenciador de tarefas em um sistema operacional?
+a) Gerenciar memória RAM
+b) Gerenciar processos em execução
+c) Gerenciar arquivos no disco rígido
+d) Gerenciar impressão
+
+Resposta: b) Gerenciar processos em execução
+
+3. Qual é o tipo de software que permite ao usuário interagir com o computador?
+a) Sistema operacional
+b) Aplicativo
+c) Linguagem de programação
+d) Ferramenta de desenvolvimento
+
+Resposta: b) Aplicativo
+
+4. Qual é a função do editor de texto em um computador?
+a) Gerenciar arquivos no disco rígido
+b) Editar documentos textuais
+c) Executar aplicativos
+d) Gerenciar impressão
+
+Resposta: b) Editar documentos textuais
+
+5. Qual é o tipo de software que fornece funcionalidades básicas para o funcionamento do computador, como gerenciamento de arquivos e processos?
+a) Aplicativo
+b) Sistema operacional
+c) Biblioteca de recursos
+d) Ferramenta de desenvolvimento
+
+Resposta: b) Sistema operacional
+
+MÉDIO
+
+**Hardware**
+
+1. Qual é a função do chipset de Motherboard em um computador?
+a) Gerenciar fluxo de dados entre componentes
+b) Gerenciar a temperatura do computador
+c) Gerenciar a alimentação do computador
+d) Gerenciar a memória RAM
+
+Resposta: a) Gerenciar fluxo de dados entre componentes
+
+2. Qual é a diferença entre o tipo de memória RAM DDR2 e DDR3?
+a) Velocidade de transferência
+b) Capacidade de armazenamento
+c) Consumo de energia
+d) Fabricante
+
+Resposta: a) Velocidade de transferência
+
+3. Qual é a função do controlador de rede em um computador?
+a) Gerenciar o tráfego de rede
+b) Estabelecer conexões de rede
+c) Transmitir dados pela rede
+d) Gerenciar a configuração da rede
+
+Resposta: b) Estabelecer conexões de rede
+
+4. Qual é a diferença entre o tipo de disco rígido SATA e IDE?
+a) Velocidade de transferência
+b) Capacidade de armazenamento
+c) Tipo de conexão
+d) Consumo de energia
+
+Resposta: c) Tipo de conexão
+
+5. Qual é a função do capacitor electrolytico em um computador?
+a) Estabilizar a tensão elétrica
+b) Regulamentar a corrente elétrica
+c) Filtrar ruídos elétricos
+d) Armazenar dados
+
+Resposta: a) Estabilizar a tensão elétrica
+
+**Software**
+
+1. Qual é o tipo de arquivo que contém código fonte escrito em linguagem de programação?
+a) Executável
+b) Biblioteca dinâmica
+c) Arquivo de configuração
+d) Código fonte
+
+Resposta: d) Código fonte
+
+2. Qual é a função do gerenciador de pacotes em um sistema operacional?
+a) Instalar aplicativos
+b) Gerenciar arquivos no disco rígido
+c) Gerenciar processos em execução
+d) Executar comandos
+
+Resposta: a) Instalar aplicativos
+
+3. Qual é a diferença entre o tipo de sistema operacional Windows e Linux?
+a) Arquitetura do hardware suportado
+b) Linguagem de programação utilizada
+c) Licença do sistema operacional
+d) Interfaz de usuário
+
+Resposta: a) Arquitetura do hardware suportado
+
+4. Qual é a função do banco de dados relacional em um sistema operacional?
+a) Armazenar informações estruturadas
+b) Armazenar informações não-estruturadas
+c) Executar aplicativos
+d) Gerenciar arquivos no disco rígido
+
+Resposta: a) Armazenar informações estruturadas
+
+5. Qual é o tipo de software que fornece funcionalidades para automatizar tarefas repetitivas em um sistema operacional?
+a) Aplicativo cliente-servidor
+b) Aplicativo desktop
+c) Ferramenta de automação
+d) Sistema operacional
+
+Resposta: c) Ferramenta de automação
+
+DIFÍCIL
+Aqui estão 10 perguntas de nível difícil sobre hardware e software para concursos:
+
+**Hardware**
+
+1. Qual é a função do chip de temperatura em um computador?
+a) Regulamentar a velocidade de transferência de dados
+b) Monitorar a temperatura do computador
+c) Gerenciar a corrente elétrica
+d) Estabilizar a tensão elétrica
+
+Resposta: b) Monitorar a temperatura do computador
+
+2. Qual é a diferença entre o tipo de memória RAM DDR4 e DDR5?
+a) Capacidade de armazenamento
+b) Velocidade de transferência
+c) Consumo de energia
+d) Fabricante
+
+Resposta: b) Velocidade de transferência
+
+3. Qual é a função do controlador de dispositivos em um computador?
+a) Gerenciar o tráfego de rede
+b) Estabelecer conexões de rede
+c) Controlar o acesso aos dispositivos
+d) Transmitir dados pela rede
+
+Resposta: c) Controlar o acesso aos dispositivos
+
+4. Qual é a diferença entre o tipo de disco rígido SSD e HDD?
+a) Capacidade de armazenamento
+b) Velocidade de transferência
+c) Tipo de conexão
+d) Consumo de energia
+
+Resposta: b) Velocidade de transferência
+
+5. Qual é a função do capacitor cerâmico em um computador?
+a) Estabilizar a tensão elétrica
+b) Regulamentar a corrente elétrica
+c) Filtrar ruídos elétricos
+d) Armazenar dados
+
+Resposta: c) Filtrar ruídos elétricos
+
+**Software**
+
+1. Qual é o tipo de arquivo que contém informações sobre a configuração do sistema operacional?
+a) Executável
+b) Biblioteca dinâmica
+c) Arquivo de configuração
+d) Código fonte
+
+Resposta: c) Arquivo de configuração
+
+2. Qual é a função do gerenciador de pacotes RPM em um sistema operacional Linux?
+a) Instalar aplicativos
+b) Gerenciar arquivos no disco rígido
+c) Gerenciar processos em execução
+d) Executar comandos
+
+Resposta: a) Instalar aplicativos
+
+3. Qual é a diferença entre o tipo de sistema operacional Windows e macOS?
+a) Arquitetura do hardware suportado
+b) Linguagem de programação utilizada
+c) Licença do sistema operacional
+d) Interfaz de usuário
+
+Resposta: b) Linguagem de programação utilizada
+
+4. Qual é a função do banco de dados não-relacional em um sistema operacional?
+a) Armazenar informações estruturadas
+b) Armazenar informações não-estruturadas
+c) Executar aplicativos
+d) Gerenciar arquivos no disco rígido
+
+Resposta: b) Armazenar informações não-estruturadas
+
+5. Qual é o tipo de software que fornece funcionalidades para automatizar tarefas complexas em um sistema operacional?
+a) Aplicativo cliente-servidor
+b) Aplicativo desktop
+c) Ferramenta de automação
+d) Sistema operacional
+
+Resposta: c) Ferramenta de automação

@@ -1,0 +1,226 @@
+FÁCIL
+
+1. Qual é o tipo de variável que pode mudar seu valor durante a execução do programa?
+a) Variável constante
+b) Variável local
+c) Variável global
+d) Variável tipada
+
+Resposta: b) Variável local
+
+2. Qual é o tipo de estrutura de controle que executa um bloco de código zero ou mais vezes?
+a) Laço for
+b) Laço while
+c) Laço do-while
+d) Laço switch
+
+Resposta: b) Laço while
+
+3. Qual é o método de ordenação de strings que compara caracteres por caractere?
+a) Sort()
+b) Reverse()
+c) Toupper()
+d) Tolower()
+
+Resposta: a) Sort()
+
+4. Qual é o tipo de erro que ocorre quando um programa tenta acessar um índice inválido de um array?
+a) Erro de syntax
+b) Erro de runtime
+c) Erro de tipos
+d) Erro de memória
+
+Resposta: b) Erro de runtime
+
+5. Qual é a linguagem de programação que é facilmente interpretada pelo browser?
+a) Java
+b) Python
+c) JavaScript
+d) C++
+
+Resposta: c) JavaScript
+
+6. Qual é o tipo de variável que tem um valor fixo e não pode ser alterado durante a execução do programa?
+a) Variável local
+b) Variável global
+c) Variável constante
+d) Variável tipada
+
+Resposta: c) Variável constante
+
+7. Qual é o tipo de estrutura de dados que é uma coleção ordenada de valores?
+a) Vetor
+b) Matriz
+c) Pilha
+d) Fila
+
+Resposta: a) Vetor
+
+8. Qual é o método de entrada/saída que permite ao usuário digitar uma string?
+a) Console.ReadLine()
+b) Console.Write()
+c) Console.WriteLine()
+d) Console.Read()
+
+Resposta: a) Console.ReadLine()
+
+9. Qual é o tipo de exceção que ocorre quando um programa tenta dividir por zero?
+a) Exceção de divisão por zero
+b) Exceção de tipo inválido
+c) Exceção de falta de memória
+d) Exceção de syntax
+
+Resposta: a) Exceção de divisão por zero
+
+10. Qual é a linguagem de programação que é utilizada para desenvolver aplicativos móveis?
+a) Java
+b) Python
+c) C++
+d) Swift
+
+Resposta: d) Swift
+
+MÉDIO
+
+1. O paradigma de programação orientada a objetos é baseado na ideia de que os objetos têm propriedades e comportamentos.
+a) Verdadeiro
+b) Falso
+
+Resposta: a) Verdadeiro
+
+2. Qual é a linguagem de programação que é utilizada para desenvolver aplicações desktop com o framework .NET?
+a) Java
+b) Python
+c) C#
+d) C++
+
+Resposta: c) C#
+
+3. O algoritmo de ordenação quicksort tem complexidade temporal de O(n log n).
+a) Verdadeiro
+b) Falso
+
+Resposta: b) Falso
+
+4. Qual é o tipo de variável que é uma coleção desordenada de elementos?
+a) Vetor
+b) Matriz
+c) Pilha
+d) Fila
+
+Resposta: c) Pilha
+
+5. (A linguagem de programação Java é uma linguagem de programação compilada.
+a) Verdadeiro
+b) Falso
+
+Resposta: a) Verdadeiro
+
+6. Qual é o tipo de exceção que ocorre quando um programa tenta acessar um recurso que não está disponível?
+a) Exceção de divisão por zero
+b) Exceção de tipo inválido
+c) Exceção de falta de memória
+d) Exceção de dispositivo não encontrado
+
+Resposta: d) Exceção de dispositivo não encontrado
+
+7. O paradigma de programação funcional é baseado na ideia de que os programas são compostos por funções.
+a) Verdadeiro
+b) Falso
+
+Resposta: a) Verdadeiro
+
+8. Qual é a linguagem de programação que é utilizada para desenvolver aplicações web com o framework Ruby on Rails?
+a) Java
+b) Python
+c) Ruby
+d) PHP
+
+Resposta: c) Ruby
+
+9. A linguagem de programação C++ é uma linguagem de programação compilada.
+a) Verdadeiro
+b) Falso
+
+Resposta: a) Verdadeiro
+
+10. Qual é o tipo de algoritmo que é utilizado para resolver problemas que envolvem busca em grafos?
+a) Algoritmo de ordenação
+b) Algoritmo de busca em grafos
+c) Algoritmo de busca linear
+d) Algoritmo de compressão
+
+Resposta: b) Algoritmo de busca em grafos
+
+DIFÍCIL
+
+1. O conceito de "referência" em linguagens de programação como C e C++ é similar ao conceito de "ponteiro" em linguagens de programação como C.
+a) Verdadeiro
+b) Falso
+
+Resposta: a) Verdadeiro
+
+2. Qual é a técnica de desenvolvimento de software que envolve a criação de um modelo de negócios para entender melhor os requisitos do sistema?
+a) Design pattern
+b) Agile development
+c) Model-driven development
+d) Component-based development
+
+Resposta: c) Model-driven development
+
+3. O algoritmo de ordenação mergesort tem complexidade temporal de O(n log n).
+a) Verdadeiro
+b) Falso
+
+Resposta: b) Falso
+
+4. Qual é a técnica de optimização de código que envolve a análise da dependência entre as variáveis e a reorganização do código para minimizar as dependências?
+a) Dead code elimination
+b) Loop unrolling
+c) Dependency analysis
+d) Memoization
+
+Resposta: c) Dependency analysis
+
+5. A linguagem de programação Haskell é uma linguagem de programação funcional.
+a) Verdadeiro
+b) Falso
+
+Resposta: a) Verdadeiro
+
+6. Qual é a técnica de desenvolvimento de software que envolve a criação de um modelo de dados para entender melhor os requisitos do sistema?
+a) Model-driven development
+b) Data-driven development
+c) Service-oriented development
+d) Aspect-oriented development
+
+Resposta: a) Model-driven development
+
+7. O paradigma de programação logico é baseado na ideia de que os programas são compostos por regras lógicas.
+a) Verdadeiro
+b) Falso
+
+Resposta: b) Falso
+
+8. Qual é a técnica de desenvolvimento de software que envolve a criação de um modelo de comportamento para entender melhor os requisitos do sistema?
+a) Model-driven development
+b) Behavior-driven development
+c) Test-driven development
+d) Agile development
+
+Resposta: b) Behavior-driven development
+
+9. A linguagem de programação Scala é uma linguagem de programação orientada a objetos.
+a) Verdadeiro
+b) Falso
+
+Resposta: a) Verdadeiro
+
+10. Qual é a técnica de desenvolvimento de software que envolve a criação de um modelo de sistema para entender melhor os requisitos do sistema?
+a) Model-driven development
+b) System modeling
+c) Service-oriented modeling
+d) Data modeling
+
+Resposta: b) System modeling
+

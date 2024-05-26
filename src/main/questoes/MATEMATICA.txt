@@ -1,0 +1,312 @@
+FÁCIL
+Aqui estão 10 perguntas fáceis sobre matemática com questões de vestibular e gabarito:
+
+**Pergunta 1**
+Se o preço de um produto é R$ 25,00 e você tem um desconto de 10%, qual o preço do produto após o desconto?
+
+A) R$ 22,50
+B) R$ 23,50
+C) R$ 24,50
+D) R$ 25,50
+
+**Gabarito**: A) R$ 22,50
+
+**Pergunta 2**
+Se uma bola é lançada de uma altura de 20 metros e alcança um máximo de 42 metros, qual é a velocidade inicial da bola?
+
+A) 10 m/s
+B) 14 m/s
+C) 18 m/s
+D) 22 m/s
+
+**Gabarito**: B) 14 m/s
+
+**Pergunta 3**
+Se um triângulo tem lados de 5 cm, 6 cm e 7 cm, é possível construir um triângulo com esses lados? (Sim/Não)
+
+**Gabarito**: Sim
+
+**Pergunta 4**
+Se uma pessoa ganha R$ 100,00 por hora trabalhada e trabalha por 4 horas, qual é o valor total ganho?
+
+A) R$ 200,00
+B) R$ 300,00
+C) R$ 400,00
+D) R$ 500,00
+
+**Gabarito**: C) R$ 400,00
+
+**Pergunta 5**
+Se um círculo tem um raio de 4 cm, qual é a área do círculo?
+
+A) p (3,14) cm²
+B) p (6,28) cm²
+C) p (12,56) cm²
+D) p (19,83) cm²
+
+**Gabarito**: B) p (6,28) cm²
+
+**Pergunta 6**
+Se um carro percorre uma distância de 120 km em uma hora e meia, qual é a velocidade média do carro?
+
+A) 40 km/h
+B) 48 km/h
+C) 56 km/h
+D) 64 km/h
+
+**Gabarito**: C) 56 km/h
+
+**Pergunta 7**
+Se uma empresa tem uma receita de R$ 10.000,00 e despesas de R$ 8.000,00, qual é a lucro da empresa?
+
+A) R$ 2.000,00
+B) R$ 1.000,00
+C) R$ -2.000,00
+D) R$ -1.000,00
+
+**Gabarito**: A) R$ 2.000,00
+
+**Pergunta 8**
+Se um quadrilátero tem um lado de comprimento de 8 cm e um ângulo entre os lados de 60°, qual é o comprimento do outro lado?
+
+A) v(3² + (4/2)^2)
+B) v(3² + (3/2)^2)
+C) v(3² + (2/2)^2)
+D) v(3² + (1/2)^2)
+
+**Gabarito**: B) v(3² + (3/2)^2)
+
+**Pergunta 9**
+Se uma empresa vende x pacotes de frutas por R$ x cada e tem uma taxa de juros de 10% ao ano, qual é o valor total dos pacotes vendidos?
+
+A) x + (0.1x)
+B) x + (0.5x)
+C) x - (0.5x)
+D) x - (0.1x)
+
+**Gabarito**: A) x + (0.1x)
+
+**Pergunta 10**
+Se uma pessoa tem uma conta bancária com R$ 500,00 e deposita mais R$ 200,00, qual é o valor total da conta?
+
+A) R$ 500,00
+B) R$ 600,00
+C) R$ 700,00
+D) R$ 800,00
+
+**Gabarito**: C) R$ 700,00
+
+MÉDIO
+Aqui estão 10 perguntas de matemática com dificuldade média, com questões de vestibular e gabarito:
+
+**Pergunta 1**
+Se uma função é dada por f(x) = 2x^2 + 3x - 1, qual é o valor de f(2)?
+
+A) 11
+B) 13
+C) 15
+D) 17
+
+**Gabarito**: B) 13
+
+**Pergunta 2**
+Se um triângulo retângulo tem um cateto de 3 cm e uma hipotenusa de 5 cm, qual é o comprimento do outro cateto?
+
+A) v(5^2 - 3^2)
+B) v(3^2 - 5^2)
+C) v(5^2 + 3^2)
+D) v(3^2 + 5^2)
+
+**Gabarito**: A) v(5^2 - 3^2)
+
+**Pergunta 3**
+Se uma empresa vende x unidades de um produto por R$ x cada e tem uma taxa de juros de 10% ao ano, qual é o valor total da venda?
+
+A) x(x + (0.1x))
+B) x(x + (0.05x))
+C) x(x + (0.1x)) - (0.1x)
+D) x(x - (0.05x))
+
+**Gabarito**: A) x(x + (0.1x))
+
+**Pergunta 4**
+Se uma função é dada por f(x) = x^2 - 4x + 3, qual é o valor de f(-2)?
+
+A) -1
+B) 0
+C) 1
+D) 2
+
+**Gabarito**: B) 0
+
+**Pergunta 5**
+Se um paralelogramo tem dois lados de comprimento de 6 cm e 8 cm, qual é o comprimento do terceiro lado?
+
+A) v(6^2 + 8^2)
+B) v(6^2 - 8^2)
+C) v(6^2 + (4/2)^2)
+D) v(6^2 + (8/2)^2)
+
+**Gabarito**: B) v(6^2 - 8^2)
+
+**Pergunta 6**
+Se uma empresa tem uma receita de R$ 10.000,00 e despesas de R$ 8.000,00, qual é a lucro da empresa?
+
+A) R$ 1.000,00
+B) R$ 2.000,00
+C) R$ 3.000,00
+D) R$ 4.000,00
+
+**Gabarito**: C) R$ 3.000,00
+
+**Pergunta 7**
+Se uma função é dada por f(x) = x^3 - 5x + 2, qual é o valor de f'(1)?
+
+A) -3
+B) -4
+C) -5
+D) -6
+
+**Gabarito**: B) -4
+
+**Pergunta 8**
+Se um hexágono tem seis lados de comprimento de x cm cada, qual é a área do hexágono?
+
+A) (6x)/2
+B) (6x)/v3
+C) (6x)/p
+D) (6x)/vp
+
+**Gabarito**: B) (6x)/v3
+
+**Pergunta 9**
+Se uma empresa vende x pacotes de frutas por R$ x cada e tem uma taxa de juros de 10% ao ano, qual é o valor total dos pacotes vendidos?
+
+A) x(x + (0.1x))
+B) x(x + (0.05x))
+C) x(x + (0.1x)) - (0.1x)
+D) x(x - (0.05x))
+
+**Gabarito**: A) x(x + (0.1x))
+
+**Pergunta 10**
+Se uma função é dada por f(x) = x^4 - 3x^2 + 2x - 1, qual é o valor de f'(0)?
+
+A) -1
+B) -2
+C) -3
+D) -4
+
+**Gabarito**: A) -1
+
+DIFÍCIL
+
+Aqui estão 10 perguntas de matemática com nível de dificuldade alta, com questões de vestibular e gabarito:
+
+**Pergunta 1**
+Se uma função é dada por f(x) = x^5 - 2x^3 + x^2 - 3x + 1, qual é o valor de f'(x) quando x = 2?
+
+A) 3
+B) 4
+C) 5
+D) 6
+
+**Gabarito**: B) 4
+
+**Pergunta 2**
+Se um sistema de equações lineares é dado por:
+x + 2y = 4
+3x - y = 2
+qual é o valor de x e y?
+
+A) x = 1, y = 2
+B) x = 2, y = 1
+C) x = 1, y = -1
+D) x = -1, y = 2
+
+**Gabarito**: B) x = 2, y = 1
+
+**Pergunta 3**
+Se uma função é dada por f(x) = sin(x^2), qual é o valor de f'(p/2)?
+
+A) cos(p/2)
+B) sin(p/2)
+C) cos(p/4)
+D) sin(p/4)
+
+**Gabarito**: A) cos(p/2)
+
+**Pergunta 4**
+Se um volume de uma esfera é dado por V = (4/3)pr^3, qual é o valor de V quando r = 3?
+
+A) 36p
+B) 48p
+C) 60p
+D) 72p
+
+**Gabarito**: B) 48p
+
+**Pergunta 5**
+Se uma função é dada por f(x) = e^(x^2), qual é o valor de f'(0)?
+
+A) e^0
+B) e^1
+C) e^2
+D) e^3
+
+**Gabarito**: A) e^0
+
+**Pergunta 6**
+Se um conjunto de pontos é dado por:
+(0,0), (1,1), (1,-1), (-1,-1), (-1,1)
+qual é o equacionário do círculo que contém esses pontos?
+
+A) x^2 + y^2 - 1 = 0
+B) x^2 + y^2 + 1 = 0
+C) x^2 + y^2 - 2x - 2y + 1 = 0
+D) x^2 + y^2 + 2x + 2y + 1 = 0
+
+**Gabarito**: A) x^2 + y^2 - 1 = 0
+
+**Pergunta 7**
+Se uma função é dada por f(x) = x^(3/2), qual é o valor de f'(x) quando x = v8?
+
+A) v8/4
+B) v8/3
+C) v8/2
+D) v8/v3
+
+**Gabarito**: B) v8/3
+
+**Pergunta 8**
+Se um sistema de equações lineares é dado por:
+x + y = 5
+x - y = -3
+qual é o valor de x e y?
+
+A) x = 4, y = 1
+B) x = -1, y = -4
+C) x = -4, y = -1
+D) x = -1, y = -4
+
+**Gabarito**: B) x = -1, y = -4
+
+**Pergunta 9**
+Se uma função é dada por f(x) = sin(x)/x, qual é o valor de f'(p/6)?
+
+A) cos(p/6)/6
+B) sin(p/6)/6
+C) cos(p/6)/3
+D) sin(p/6)/3
+
+**Gabarito**: A) cos(p/6)/6
+
+**Pergunta 10**
+Se uma função é dada por f(x) = e^(x^3), qual é o valor de f'(x)?
+
+A) e^(x^3)
+B) e^(x^3)x
+C) e^(x^3)x^3
+D) e^(x^3)x^6
+
+**Gabarito**: C) e^(x^3)x^3
