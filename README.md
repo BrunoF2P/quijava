@@ -106,7 +106,7 @@ Antes de começar, verifique se sua máquina atende aos seguintes requisitos:
 
 5. Siga as instruções específicas do projeto para configurar o ambiente e iniciar o desenvolvimento.
 
-Se você encontrar algum problema durante a instalação ou configuração, consulte a seção entrar em contato com os contribuintes do projeto.
+Se você encontrar algum problema durante a instalação ou configuração, entre em contato com os contribuintes do projeto.
 <!-- ROADMAP -->
 ## Roadmap
 
