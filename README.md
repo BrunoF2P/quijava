@@ -27,11 +27,18 @@
     <li>
       <a href="#sobre-o-projeto">Sobre o Projeto</a>
       <ul>
-        <li><a href="#construção">Construção</a></li>
+        <li><a href="#construcao">Construção</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#comecando">Começando</a>
+      <ul>
+        <li><a href="#prerequisitos">Pre-requisitos</a></li>
+        <li><a href="#instalacao">Instalação</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#licença">Licença</a></li>
+    <li><a href="#licenca">Licença</a></li>
     <li><a href="#contato">Contato</a></li>
     <li><a href="#agradecimentos">Agradecimentos</a></li>
   </ol>
@@ -57,9 +64,52 @@ O projeto consiste na implementação de um quiz interativo utilizando os princ�
 
 <p align="right">(<a href="#readme-top">inicio</a>)</p>
 
+<!-- COMECO -->
+## Começando
 
+Antes de começar, verifique se sua máquina atende aos seguintes requisitos:
+
+### Pre-requisitos
+
+1. **Java:** É necessário ter o Java 21 ou uma versão superior instalada na sua máquina. Você pode baixar o Java mais recente em [Java](java.com).
+
+2. **Java Terumin no IntelliJ:** Certifique-se de ter o SDK Java Terumin 21 instalado no IntelliJ IDEA. Este SDK é essencial para o desenvolvimento e execução do projeto. 
+3. **Banco de dados:** O projeto requer um Banco de dados para armazenar informações, no momento está configurado com o HSQLDB. Você pode encontrar mais informações e baixar o [HSQLDB](hsqldb.org).
+
+### Instalação
+
+1. Clone este repositório em sua máquina local usando o comando abaixo:
+
+    ```bash
+    git clone https://github.com/BrunoF2P/quijava.git
+    ```
+2. Navegue até o diretório recém-clonado e abra sua IDE:
+
+    ```bash
+    cd quijava
+    ```
+3. **Atualize o projeto:** Dependendo da sua IDE, você pode precisar atualizar o projeto para que o Maven baixe os plugins adicionados. Em muitas IDEs, isso é feito clicando com o botão direito do mouse no arquivo pom.xml e selecionando a opção para atualizar o projeto ou atualizar as dependências do Maven.
+4.  Abra a pasta `db` do projeto:
+
+    ```bash
+    cd db
+    ```
+
+4. Ligue o servidor do banco de dados executando o seguinte comando (certifique-se de substituir `[PATH_HSQLDB]` pelo caminho para a biblioteca HSQLDB em sua máquina):
+
+    ```bash
+    java -cp [PATH_HSQLDB]/lib/hsqldb.jar org.hsqldb.server.Server --database.0 quijavadb --dbname.0 quijavadb
+    ```
+
+   Isso iniciará o servidor do banco de dados HSQLDB com o banco de dados `quijavadb`.
+
+
+5. Siga as instruções específicas do projeto para configurar o ambiente e iniciar o desenvolvimento.
+
+Se você encontrar algum problema durante a instalação ou configuração, consulte a seção entrar em contato com os contribuintes do projeto.
 <!-- ROADMAP -->
 ## Roadmap
+
 
 
 ### Telas
@@ -100,7 +150,7 @@ O projeto consiste na implementação de um quiz interativo utilizando os princ�
 
 
 
-Para quaisquer funcionalidades adicionais além do escopo planejado ou para qualquer problema conhecido: [Issues](https://github.com/BrunoF2P/quijava/issues) 
+Para quaisquer funcionalidades adicionais além do escopo planejado ou para qualquer problema conhecido: [Issues](https://github.com/BrunoF2P/quijava/issues)  
 
 <p align="right">(<a href="#readme-top">inicio</a>)</p>
 
