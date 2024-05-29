@@ -17,9 +17,11 @@ module org.quijava.quijava {
     requires java.prefs;
     requires java.desktop;
     requires spring.aop;
+    requires jakarta.annotation;
 
 
     opens org.quijava.quijava to javafx.fxml, spring.core;
+    opens org.quijava.quijava.utils to spring.core;
     opens  org.quijava.quijava.models;
     opens org.quijava.quijava.controllers;
     exports org.quijava.quijava;
