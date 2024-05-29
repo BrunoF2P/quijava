@@ -5,8 +5,6 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 import org.quijava.quijava.models.SessionPreferencesModel;
 import org.quijava.quijava.services.SessionDBService;
-import org.quijava.quijava.utils.DataInitializer;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -29,9 +27,6 @@ public class Main extends Application {
     public void init() {
         context = SpringApplication.run(SpringRunApp.class);
         sessionService = context.getBean(SessionDBService.class);
-
-        DataInitializer dataInitializer = context.getBean(DataInitializer.class);
-        dataInitializer.initializeData();
     }
 
 
