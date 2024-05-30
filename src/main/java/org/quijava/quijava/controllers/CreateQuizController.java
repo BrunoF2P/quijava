@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import org.quijava.quijava.models.*;
@@ -14,10 +13,8 @@ import org.quijava.quijava.utils.ScreenLoader;
 import org.springframework.context.ApplicationContext;
 
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.*;
 
 import javafx.fxml.Initializable;
@@ -125,7 +122,7 @@ public class CreateQuizController implements Initializable{
         Set<String> selectedCategoriesSet = new HashSet<>(selectedCategories);
         QuizModel quiz = quizService.createQuiz(title, description, selectedCategoriesSet, imagePath);
 
-        screenLoader.loadCreateQuestion((Stage) createQuiz.getScene().getWindow(), applicationContext, quiz);
+        screenLoader.loadCreateQuestionScreen((Stage) createQuiz.getScene().getWindow(), applicationContext, quiz);
     }
 
 

@@ -3,6 +3,7 @@ package org.quijava.quijava.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Duration;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -19,9 +20,13 @@ public class QuestionModel {
     @JoinColumn(name = "quiz_id", nullable = false)
     private QuizModel quiz;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "type_question_id", nullable = false)
-    private TypeQuestionModel typeQuestion;
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "type_question", nullable = false)
+    private TypeQuestion typeQuestion;
+
+    @Enumerated(EnumType.ORDINAL)
+    @Column(name = "question_difficulty", nullable = false)
+    private QuestionDifficulty questionDifficulty;
 
     @Column(name = "question_text", nullable = false, length = Integer.MAX_VALUE)
     private String questionText;
@@ -30,10 +35,11 @@ public class QuestionModel {
     @Column(name = "total_attempts", nullable = false)
     private Integer totalAttempts;
 
-    @Lob
-    @Column(name = "limite_time", nullable = false)
-    private String limiteTime;
 
+    @Column(name = "limite_time", nullable = false)
+    private Duration limiteTime;
+
+    @Lob
     @Column(name = "image_question")
     private byte[] imageQuestion;
 
@@ -63,13 +69,17 @@ public class QuestionModel {
         this.quiz = quiz;
     }
 
-    public TypeQuestionModel getTypeQuestion() {
+    public TypeQuestion getTypeQuestion() {
         return typeQuestion;
     }
 
-    public void setTypeQuestion(TypeQuestionModel typeQuestion) {
+    public void setTypeQuestion(TypeQuestion typeQuestion) {
         this.typeQuestion = typeQuestion;
     }
+
+    public QuestionDifficulty getQuestionDifficulty() {return questionDifficulty;}
+
+    public void setQuestionDifficulty(QuestionDifficulty questionDifficulty) {this.questionDifficulty = questionDifficulty;}
 
     public String getQuestionText() {
         return questionText;
@@ -87,11 +97,11 @@ public class QuestionModel {
         this.totalAttempts = totalAttempts;
     }
 
-    public String getLimiteTime() {
+    public Duration getLimiteTime() {
         return limiteTime;
     }
 
-    public void setLimiteTime(String limiteTime) {
+    public void setLimiteTime(Duration limiteTime) {
         this.limiteTime = limiteTime;
     }
 
@@ -125,6 +135,12 @@ public class QuestionModel {
 
     public void setOptionsAnswers(Set<OptionsAnswerModel> optionsAnswers) {
         this.optionsAnswers = optionsAnswers;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.totalAttempts = 0;
+        this.correctAttempts = 0;
     }
 
 }
