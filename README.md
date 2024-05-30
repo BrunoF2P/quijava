@@ -71,7 +71,7 @@ Antes de começar, verifique se sua máquina atende aos seguintes requisitos:
 
 ### Pre-requisitos
 
-1. **Java:** É necessário ter o Java 21 ou uma versão superior instalada na sua máquina. Você pode baixar o Java mais recente em [Java](htpps://java.com).
+1. **Java:** É necessário ter o Java 21 ou uma versão superior instalada na sua máquina. Você pode baixar o Java mais recente em [Java](https://java.com).
 
 2. **Java Terumin no IntelliJ:** Certifique-se de ter o SDK Java Terumin 21 instalado no IntelliJ IDEA. Este SDK é essencial para o desenvolvimento e execução do projeto. 
 3. **Banco de dados:** O projeto requer um Banco de dados para armazenar informações, no momento está configurado com o HSQLDB. Você pode encontrar mais informações e baixar o [HSQLDB](https://hsqldb.org).
@@ -131,14 +131,13 @@ Se você encontrar algum problema durante a instalação ou configuração, entr
   * Implementação de funcionalidades para salvar título, descrição e tema do quiz.
 - [ ] Configuração de Perguntas
   * Adicionar campo para selecionar o número de perguntas 
-  - [ ] Implementar opções para escolha do tipo de pergunta
+  - [x] Implementar opções para escolha do tipo de pergunta
     * Multipla escolha
     * Escolha unica
-    * Verdadeiro ou falso
   - [ ] Implementar opções para escolha do tipo de pergunta
-- [ ] Permitir definição da pontuação para cada pergunta
-- [ ] Adicionar imagem para cada pergunta
-- [ ] Tempo limite para responder cada pergunta
+- [x] Permitir definição da pontuação para cada pergunta
+- [x] Adicionar imagem para cada pergunta
+- [x] Tempo limite para responder cada pergunta
 - [ ] Visibilidade
   * Opção para definir se o quiz é publico ou privado
 
