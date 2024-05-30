@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.quijava.quijava.controllers.CreateQuestionController;
+import org.quijava.quijava.models.QuizModel;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
@@ -87,6 +89,22 @@ public class ScreenLoader {
             stage.setMinWidth(500);
             stage.setMinHeight(500);
             stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadCreateQuestionScreen(Stage currentStage, ApplicationContext applicationContext, QuizModel quiz) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/createQuestionView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            CreateQuestionController controller = fxmlLoader.getController();
+
+            controller.setQuizModel(quiz);
+
+            loadScreen(currentStage, "Criar Quiz", root);
         } catch (IOException e) {
             e.printStackTrace();
         }
