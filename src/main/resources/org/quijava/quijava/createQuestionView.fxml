@@ -33,7 +33,7 @@
                         <Insets left="250.0" top="10.0" />
                      </VBox.margin>
                      <children>
-                        <TextArea fx:id="questionText" prefWidth="561.0" promptText="Pergunta" />
+                        <TextArea fx:id="questionText" prefWidth="561.0" promptText="Pergunta" wrapText="true" />
                         <VBox alignment="CENTER_RIGHT">
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0">
@@ -102,14 +102,14 @@
          <bottom>
             <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button fx:id="addItemButton" mnemonicParsing="false" onAction="#addItem" prefHeight="36.0" prefWidth="96.0" text="Adicionar">
+                  <Button fx:id="addItemButton" mnemonicParsing="false" onAction="#addItem" prefHeight="40.0" prefWidth="105.0" text="Adicionar">
                      <HBox.margin>
                         <Insets right="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="finishButton" mnemonicParsing="false" onAction="#createQuestion" text="Concluir">
+                  <Button fx:id="finishButton" mnemonicParsing="false" onAction="#createQuestion" prefHeight="40.0" prefWidth="105.0" text="Concluir">
                      <HBox.margin>
-                        <Insets right="255.0" />
+                        <Insets right="258.0" />
                      </HBox.margin>
                   </Button>
                </children>
@@ -124,12 +124,12 @@
                   <VBox fx:id="optionsContainer" alignment="CENTER" prefHeight="615.0" prefWidth="1672.0" />
                   <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
                      <children>
-                        <Button mnemonicParsing="false" onAction="#updateQuestion" prefHeight="36.0" prefWidth="95.0" text="Atualizar">
+                        <Button mnemonicParsing="false" onAction="#updateQuestion" prefHeight="40.0" prefWidth="105.0" text="Atualizar">
                            <HBox.margin>
                               <Insets right="30.0" />
                            </HBox.margin>
                         </Button>
-                        <Button mnemonicParsing="false" onAction="#deleteQuestion" prefHeight="36.0" prefWidth="81.0" text="Exluir">
+                        <Button mnemonicParsing="false" onAction="#deleteQuestion" prefHeight="40.0" prefWidth="105.0" text="Exluir">
                            <HBox.margin>
                               <Insets right="10.0" />
                            </HBox.margin>
