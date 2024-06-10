@@ -2,3 +2,75 @@
     -fx-font-family: 'Roboto-Black';
     src: url('fonts/Roboto-Black.ttf');
 }
+
+
+.button {
+    -fx-background-color: #4E7896;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0.5, 0, 0);
+}
+
+.button:hover {
+    -fx-background-color: #ff7a45;
+}
+
+/* LOGIN AND REGISTE CSS */
+
+#logoImage {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.5, 0, 0);
+}
+
+#titleText {
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-fill: #4E7896;
+}
+
+#noAccountText {
+    -fx-font-size: 14px;
+    -fx-fill: #777777;
+}
+
+#registerText {
+    -fx-font-size: 14px;
+    -fx-fill: #4E7896;
+    -fx-cursor: hand;
+}
+
+#usernameField, #passwordField {
+    -fx-font-size: 16px;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+
+#alertLabel {
+    -fx-font-size: 14px;
+    -fx-text-fill: #FF914D;
+}
+
+/* MENU CSS */
+
+#buttonContainer {
+    -fx-spacing: 20;
+}
+
+#username {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-fill: #4E7896;
+}
+
+
+/* CREATE CATEGORY */
+
+#alert {
+    -fx-text-fill: #FF914D;
+}
