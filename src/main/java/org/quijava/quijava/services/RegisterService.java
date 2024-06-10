@@ -1,7 +1,7 @@
 package org.quijava.quijava.services;
 
+import org.quijava.quijava.dao.UserDao;
 import org.quijava.quijava.models.UserModel;
-import org.quijava.quijava.repositories.UserRepository;
 import org.quijava.quijava.utils.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,17 +14,18 @@ public class RegisterService {
 
 
     private final PasswordEncoder passwordEncoder;
-    public final SessionDBService sessionDBService;
+    private final SessionDBService sessionDBService;
     private final SessionPreferencesService sessionPreferencesService;
-    private final UserRepository userRepository;
+    private final UserDao userDao;
 
     @Autowired
-    public RegisterService(PasswordEncoder passwordEncoder, SessionDBService sessionDBService, SessionPreferencesService sessionPreferencesService, UserRepository userRepository) {
+    public RegisterService(PasswordEncoder passwordEncoder, SessionDBService sessionDBService, SessionPreferencesService sessionPreferencesService, UserDao userDao) {
         this.passwordEncoder = passwordEncoder;
         this.sessionDBService = sessionDBService;
         this.sessionPreferencesService = sessionPreferencesService;
-        this.userRepository = userRepository;
+        this.userDao = userDao;
     }
+
 
     public boolean validateUsername(String username) {
         String usernameRegex = "^[a-zA-Z0-9]+$";
@@ -40,7 +41,7 @@ public class RegisterService {
     }
 
     public boolean userExists(String username) {
-        return userRepository.existsByUsername(username);
+        return userDao.existsByUsername(username);
     }
 
     public void validateFields(String username, String password, String rePassword) {
@@ -66,15 +67,13 @@ public class RegisterService {
     }
 
     public Optional<UserModel> registerUser(String username, String password, int role) {
-
-
         UserModel newUser = new UserModel();
         newUser.setUsername(username);
         newUser.setPassword(passwordEncoder.encodePassword(password));
         newUser.setRole(role);
-        userRepository.save(newUser);
+        userDao.save(newUser);
 
-        return Optional.ofNullable(userRepository.findByUsername(username));
+        return Optional.ofNullable(userDao.findByUsername(username));
     }
 
     public void manageUserSession(UserModel user) throws Exception {

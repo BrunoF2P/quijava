@@ -21,4 +21,8 @@ public class SessionPreferencesService {
         sessionPreferences.setUserId(userId);
     }
 
+    public Integer getSessionUserId() {
+        return sessionPreferences.getUserId();
+    }
+
 }

@@ -1,8 +1,9 @@
 package org.quijava.quijava.services;
 
+import org.quijava.quijava.dao.OptionsAnswerDao;
+import org.quijava.quijava.dao.QuestionDao;
 import org.quijava.quijava.models.*;
-import org.quijava.quijava.repositories.OptionsAnswerRepository;
-import org.quijava.quijava.repositories.QuestionRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +14,13 @@ import java.util.Set;
 @Service
 public class QuestionService {
 
-    private final QuestionRepository questionRepository;
-    private final OptionsAnswerRepository optionsAnswerRepository;
+    private final QuestionDao questionDao;
+    private final OptionsAnswerDao optionsAnswerDao;
 
     @Autowired
-    public QuestionService(QuestionRepository questionRepository, OptionsAnswerRepository optionsAnswerRepository) {
-        this.questionRepository = questionRepository;
-        this.optionsAnswerRepository = optionsAnswerRepository;
+    public QuestionService(QuestionDao questionDao, OptionsAnswerDao optionsAnswerDao) {
+        this.questionDao = questionDao;
+        this.optionsAnswerDao = optionsAnswerDao;
     }
 
     public QuestionModel createQuestion(String questionText, QuizModel quiz, TypeQuestion typeQuestion, String durationText, Set<OptionsAnswerModel> optionsAnswers, QuestionDifficulty difficulty, byte[] image) {
@@ -76,10 +77,10 @@ public class QuestionService {
     }
 
     public void saveQuestions(Set<QuestionModel> questions) {
-        questionRepository.saveAll(questions);
+        questionDao.saveAll(questions);
     }
 
     public void saveOptionsAnswers(Set<OptionsAnswerModel> optionsAnswers) {
-        optionsAnswerRepository.saveAll(optionsAnswers);
+        optionsAnswerDao.saveAll(optionsAnswers);
     }
 }

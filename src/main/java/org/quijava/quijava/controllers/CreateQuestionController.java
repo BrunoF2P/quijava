@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.quijava.quijava.models.*;
@@ -15,7 +14,6 @@ import org.quijava.quijava.utils.QuestionListCell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
@@ -213,7 +211,7 @@ public class CreateQuestionController {
 
     void updateQuestionType() {
         int selectedCount = countSelectedCheckBoxes();
-        typeQuestion = (selectedCount == 1) ? TypeQuestion.ESCOLHA_UNICA : TypeQuestion.ESCOLHA_MULTIPLA;
+        typeQuestion = (selectedCount == 1) ? TypeQuestion.Escolha_unica : TypeQuestion.Multipla_escolha;
     }
 
     private int countSelectedCheckBoxes() {

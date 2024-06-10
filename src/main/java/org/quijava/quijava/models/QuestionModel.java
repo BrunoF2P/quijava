@@ -50,7 +50,7 @@ public class QuestionModel {
     @OneToMany(mappedBy = "question")
     private Set<AnswerModel> answers = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<OptionsAnswerModel> optionsAnswers = new LinkedHashSet<>();
 
     public Integer getId() {

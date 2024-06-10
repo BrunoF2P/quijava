@@ -3,7 +3,8 @@ package org.quijava.quijava.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
+import java.time.Duration;
+import java.util.Date;
 
 @Entity
 @Table(name = "ranking")
@@ -25,13 +26,12 @@ public class RankingModel {
     @Column(name = "total_score", nullable = false)
     private Integer totalScore;
 
-    @Lob
     @Column(name = "total_time", nullable = false)
-    private String totalTime;
+    private Duration totalTime;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "date_completed")
-    private Instant dateCompleted;
+    private Date dateCompleted;
 
     public Integer getId() {
         return id;
@@ -65,20 +65,25 @@ public class RankingModel {
         this.totalScore = totalScore;
     }
 
-    public String getTotalTime() {
+    public Duration getTotalTime() {
         return totalTime;
     }
 
-    public void setTotalTime(String totalTime) {
+    public void setTotalTime(Duration totalTime) {
         this.totalTime = totalTime;
     }
 
-    public Instant getDateCompleted() {
+    public Date getDateCompleted() {
         return dateCompleted;
     }
 
-    public void setDateCompleted(Instant dateCompleted) {
+    public void setDateCompleted(Date dateCompleted) {
         this.dateCompleted = dateCompleted;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.dateCompleted = new Date();
     }
 
 }
