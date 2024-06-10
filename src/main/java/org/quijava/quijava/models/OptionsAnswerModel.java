@@ -11,7 +11,7 @@ public class OptionsAnswerModel {
     @Column(name = "option_answer_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id", nullable = false)
     private QuestionModel question;
 

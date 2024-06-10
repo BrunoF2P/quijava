@@ -1,7 +1,7 @@
 package org.quijava.quijava.services;
 
+import org.quijava.quijava.dao.UserDao;
 import org.quijava.quijava.models.UserModel;
-import org.quijava.quijava.repositories.UserRepository;
 import org.quijava.quijava.utils.PasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,14 +14,14 @@ public class LoginService {
     private final SessionDBService sessionDBService;
     private final PasswordEncoder passwordEncoder;
     private final SessionPreferencesService sessionPreferencesService;
-    private final UserRepository userRepository;
+    private final UserDao userDao;
 
     @Autowired
-    public LoginService(SessionDBService sessionDBService, PasswordEncoder passwordEncoder, SessionPreferencesService sessionPreferencesService, UserRepository userRepository) {
+    public LoginService(SessionDBService sessionDBService, PasswordEncoder passwordEncoder, SessionPreferencesService sessionPreferencesService, UserDao userDao) {
         this.sessionDBService = sessionDBService;
         this.passwordEncoder = passwordEncoder;
         this.sessionPreferencesService = sessionPreferencesService;
-        this.userRepository = userRepository;
+        this.userDao = userDao;
     }
 
     public boolean validateLogin(String username, String password) {
@@ -29,12 +29,12 @@ public class LoginService {
             throw new IllegalArgumentException("Preencha todos os campos.");
         }
 
-        Optional<UserModel> userOptional = Optional.ofNullable(userRepository.findByUsername(username));
+        Optional<UserModel> userOptional = Optional.ofNullable(userDao.findByUsername(username));
         return userOptional.map(user -> passwordEncoder.matches(password, user.getPassword())).orElse(false);
     }
 
     public Optional<UserModel> getUserByUsername(String username) {
-        return Optional.ofNullable(userRepository.findByUsername(username));
+        return Optional.ofNullable(userDao.findByUsername(username));
     }
 
     public Integer getUserRole(String username) {
@@ -55,5 +55,9 @@ public class LoginService {
 
     public void createPreferencesSession(String username, Integer sessionId, Integer role, Integer userId) {
         sessionPreferencesService.createPreferencesSession(username, sessionId, role, userId);
+    }
+
+    public UserModel findById(Integer id) {
+        return userDao.findById(id);
     }
 }

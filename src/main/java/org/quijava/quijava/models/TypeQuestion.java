@@ -1,8 +1,8 @@
 package org.quijava.quijava.models;
 
 public enum TypeQuestion {
-    ESCOLHA_UNICA(1),
-    ESCOLHA_MULTIPLA(2);
+    Escolha_unica(0),
+    Multipla_escolha(1);
 
     private final int value;
 

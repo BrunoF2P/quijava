@@ -1,7 +1,7 @@
 package org.quijava.quijava.services;
 
+import org.quijava.quijava.dao.UserSessionDao;
 import org.quijava.quijava.models.UserSessionModel;
-import org.quijava.quijava.repositories.UserSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,11 +11,11 @@ import java.util.Optional;
 
 @Service
 public class SessionDBService {
-    private final UserSessionRepository sessionRepository;
+    private final UserSessionDao userSessionDao;
 
     @Autowired
-    public SessionDBService(UserSessionRepository sessionRepository) {
-        this.sessionRepository = sessionRepository;
+    public SessionDBService(UserSessionDao userSessionDao) {
+        this.userSessionDao = userSessionDao;
     }
 
     public void createSession(String username, Integer role, Integer userId) {
@@ -24,42 +24,37 @@ public class SessionDBService {
         session.setRole(role);
         session.setUserId(userId);
         session.setCreateTime(LocalDateTime.now());
-        sessionRepository.save(session);
+        userSessionDao.save(session);
     }
     public Integer getLastSessionId(String username) {
 
-        return sessionRepository.getLastSessionIdForUser(username);
+        return userSessionDao.getLastSessionIdForUser(username);
     }
 
     public boolean deleteSession(Integer id) {
-        Optional<UserSessionModel> sessionOptional = sessionRepository.findById(id);
-        if (sessionOptional.isPresent()) {
-            sessionRepository.delete(sessionOptional.get());
-            return true;
-        }
-        return false;
+        return userSessionDao.delete(id);
     }
 
     public boolean isSessionValid(Integer id) {
-        return sessionRepository.existsById(id);
+        return userSessionDao.existsById(id);
     }
 
     public Optional<Integer> getSessionIdForUser(String username) {
-        return sessionRepository.getSessionIdForUser(username);
+        return userSessionDao.getSessionIdForUser(username);
     }
 
     public String getUsername(Integer id) {
-        Optional<UserSessionModel> sessionOptional = sessionRepository.findById(id);
+        Optional<UserSessionModel> sessionOptional = userSessionDao.findById(id);
         return sessionOptional.map(UserSessionModel::getUsername).orElse(null);
     }
 
     public Integer getRole(Integer id) {
-        Optional<UserSessionModel> sessionOptional = sessionRepository.findById(id);
+        Optional<UserSessionModel> sessionOptional = userSessionDao.findById(id);
         return sessionOptional.map(UserSessionModel::getRole).orElse(null);
     }
 
     public Integer getUserId(Integer id) {
-        Optional<UserSessionModel> sessionOptional = sessionRepository.findById(id);
+        Optional<UserSessionModel> sessionOptional = userSessionDao.findById(id);
         return sessionOptional.map(UserSessionModel::getUserId).orElse(null);
     }
 }

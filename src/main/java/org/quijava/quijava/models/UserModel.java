@@ -3,7 +3,6 @@ package org.quijava.quijava.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
