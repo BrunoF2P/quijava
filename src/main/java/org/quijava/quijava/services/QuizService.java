@@ -1,14 +1,8 @@
 package org.quijava.quijava.services;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.quijava.quijava.models.CategoryModel;
-import org.quijava.quijava.models.QuizModel;
-import org.quijava.quijava.models.SessionPreferencesModel;
-import org.quijava.quijava.models.UserModel;
-import org.quijava.quijava.repositories.CategoryRepository;
-import org.quijava.quijava.repositories.QuizRepository;
-import org.quijava.quijava.repositories.UserRepository;
+
+import org.quijava.quijava.dao.*;
+import org.quijava.quijava.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,45 +12,34 @@ import java.util.stream.Collectors;
 @Service
 public class QuizService {
 
-    private final QuizRepository quizRepository;
-    private final CategoryRepository categoryRepository;
+    private final QuizDao quizDao;
+    private final CategoryDao categoryDao;
     private final SessionPreferencesModel sessionPreferencesModel;
-    private final UserRepository userRepository;
+    private final UserDao userDao;
+    private final CategoryService categoryService;
+    private final OptionsAnswerDao optionsAnswerDao;
+    private final QuestionDao questionDao;
 
     @Autowired
-    public QuizService(QuizRepository quizRepository, CategoryRepository categoryRepository, SessionPreferencesModel sessionPreferencesModel, UserRepository userRepository) {
-        this.quizRepository = quizRepository;
-        this.categoryRepository = categoryRepository;
+    public QuizService(QuizDao quizDao, UserDao userDao, SessionPreferencesModel sessionPreferencesModel, CategoryDao categoryDao, CategoryService categoryService, OptionsAnswerDao optionsAnswerDao, QuestionDao questionDao) {
+        this.quizDao = quizDao;
+        this.categoryDao = categoryDao;
         this.sessionPreferencesModel = sessionPreferencesModel;
-        this.userRepository = userRepository;
+        this.userDao = userDao;
+        this.categoryService = categoryService;
+        this.optionsAnswerDao = optionsAnswerDao;
+        this.questionDao = questionDao;
     }
 
-    public ObservableList<String> getAllCategoriesDescriptions() {
-        List<CategoryModel> categories = categoryRepository.findAll();
-        return FXCollections.observableArrayList(
-                categories.stream()
-                        .map(CategoryModel::getDescription)
-                        .collect(Collectors.toList())
-        );
-    }
-
-    /**
-     * Converter um conjunto de IDs de categorias
-     * @param categoryIds
-     * @return Conjunto de objetos do Cateogory Model
-     */
-    public Set<CategoryModel> findCategoriesByIds(Set<Integer> categoryIds) {
-        return new HashSet<>(categoryRepository.findByIdIn(new ArrayList<>(categoryIds)));
-    }
 
     public QuizModel createQuiz(String title, String description, Set<String> selectedCategories, byte[] image) {
         Set<Integer> categoryIds = selectedCategories.stream()
-                .map(categoryRepository::findByDescription)
+                .map(categoryDao::findByDescription)
                 .filter(Objects::nonNull)
                 .map(CategoryModel::getId)
                 .collect(Collectors.toSet());
 
-        Set<CategoryModel> categories = findCategoriesByIds(categoryIds);
+        Set<CategoryModel> categories = categoryService.findCategoriesByIds(categoryIds);
         UserModel author = getLoggedInUser();
 
         QuizModel quiz = new QuizModel();
@@ -65,13 +48,70 @@ public class QuizService {
         quiz.setDescription(description);
         quiz.setAuthor(author);
         quiz.setCategories(categories);
-        return quizRepository.save(quiz);
+        return quizDao.save(quiz);
+    }
+
+    public List<QuestionModel> getAllQuestionsByQuizId(Integer quizId) {
+        return questionDao.findByQuizId(quizId);
+    }
+
+    public List<QuizModel> findAllQuizzesByUserId(Integer userId) {
+        return quizDao.findAllQuizzesByUserId(userId);
+    }
+
+    public void deleteQuiz(Integer quizId) {
+        optionsAnswerDao.deleteByQuizId(quizId);
+        quizDao.deleteQuizById(quizId);
+    }
+
+    public QuizModel updateCategoryQuiz(Integer quizId, Set<String> newCategories) {
+        Optional<QuizModel> optionalQuiz = quizDao.findById(quizId);
+        if (optionalQuiz.isPresent()) {
+            QuizModel quiz = optionalQuiz.get();
+            Set<Integer> categoryIds = newCategories.stream()
+                    .map(categoryDao::findByDescription)
+                    .filter(Objects::nonNull)
+                    .map(CategoryModel::getId)
+                    .collect(Collectors.toSet());
+
+            Set<CategoryModel> categories = categoryService.findCategoriesByIds(categoryIds);
+            quiz.setCategories(categories);
+            return quizDao.update(quiz);
+        } else {
+            throw new NoSuchElementException("Quiz não encontrado");
+        }
+    }
+
+    public QuizModel updateDescriptionQuiz(Integer quizId, String newDescription) {
+        Optional<QuizModel> optionalQuiz = quizDao.findById(quizId);
+        if (optionalQuiz.isPresent()) {
+            QuizModel quiz = optionalQuiz.get();
+            quiz.setDescription(newDescription);
+            return quizDao.update(quiz);
+        } else {
+            throw new NoSuchElementException("Quiz não encontrado");
+        }
+    }
+
+    public QuizModel updateNameQuiz(Integer quizId, String newName) {
+        Optional<QuizModel> optionalQuiz = quizDao.findById(quizId);
+        if (optionalQuiz.isPresent()) {
+            QuizModel quiz = optionalQuiz.get();
+            quiz.setTitle(newName);
+            return quizDao.update(quiz);
+        } else {
+            throw new NoSuchElementException("Quiz não encontrado");
+        }
+    }
+
+    public List<QuizModel> findQuizzesByCategory(Integer categoryId) {
+        return quizDao.findByCategoriesId(categoryId);
     }
 
     private UserModel getLoggedInUser() {
 
         int userId = sessionPreferencesModel.getUserId();
 
-        return userRepository.findById(userId).orElse(null);
+        return userDao.findById(userId);
     }
 }

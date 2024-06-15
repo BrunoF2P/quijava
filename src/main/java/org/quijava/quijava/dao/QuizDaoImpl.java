@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public class QuizDaoImpl implements QuizDao{
+public class QuizDaoImpl implements QuizDao {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -60,6 +60,14 @@ public class QuizDaoImpl implements QuizDao{
         return entityManager.createQuery(
                         "SELECT q FROM QuizModel q WHERE q.author.id = :userId", QuizModel.class)
                 .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    @Override
+    public List<QuizModel> findByCategoriesId(Integer categoryId) {
+        return entityManager.createQuery(
+                        "SELECT q FROM QuizModel q JOIN q.categories c WHERE c.id = :categoryId", QuizModel.class)
+                .setParameter("categoryId", categoryId)
                 .getResultList();
     }
 }

@@ -48,7 +48,7 @@ public class QuizModel {
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<CategoryModel> categories = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "quiz")
+    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RankingModel> rankings = new LinkedHashSet<>();
 
     public Integer getId() {
@@ -152,7 +152,7 @@ public class QuizModel {
     }
 
     @PreUpdate
-    protected void updateDate(){
+    protected void updateDate() {
         this.updatedAt = new Date();
     }
 

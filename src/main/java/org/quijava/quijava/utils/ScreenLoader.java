@@ -1,13 +1,14 @@
 package org.quijava.quijava.utils;
 
-import atlantafx.base.theme.PrimerLight;
+import atlantafx.base.theme.CupertinoLight;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.quijava.quijava.controllers.CreateQuestionController;
+import org.quijava.quijava.controllers.*;
+import org.quijava.quijava.models.CategoryModel;
 import org.quijava.quijava.models.QuizModel;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,11 +21,14 @@ import java.io.IOException;
 public class ScreenLoader {
 
     private void loadScreen(Stage currentStage, String title, Parent root) {
-        Application.setUserAgentStylesheet(new PrimerLight().getUserAgentStylesheet());
+        Application.setUserAgentStylesheet(new CupertinoLight().getUserAgentStylesheet());
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
         currentStage.setTitle(title);
         currentStage.setScene(scene);
+        currentStage.setMinWidth(700);
+        currentStage.setMinHeight(800);
+
         currentStage.show();
     }
 
@@ -85,7 +89,12 @@ public class ScreenLoader {
 
             Stage stage = new Stage();
             stage.setTitle("Criar Categoria");
-            stage.setScene(new Scene(root));
+
+            // Carrega o estilo CSS
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+
+            stage.setScene(scene);
             stage.setMinWidth(500);
             stage.setMinHeight(500);
             stage.show();
@@ -104,11 +113,94 @@ public class ScreenLoader {
 
             controller.setQuizModel(quiz);
 
-            loadScreen(currentStage, "Criar Quiz", root);
+            loadScreen(currentStage, "Criar Perguntas", root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadAllCategories(Stage currentStage, ApplicationContext applicationContext) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/allCategoriesView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            loadScreen(currentStage, "Todas as categorias", root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadMyQuizzes(Stage currentStage, ApplicationContext applicationContext) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/myListQuizzesView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            loadScreen(currentStage, "Meus Quizzes", root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadPlayQuiz(Stage currentStage, ApplicationContext applicationContext, QuizModel quiz) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/playQuizView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            PlayQuizController controller = fxmlLoader.getController();
+            controller.setQuiz(quiz);
+
+            loadScreen(currentStage, "Jogar", root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadUpdateQuizScreen(Stage currentStage, ApplicationContext applicationContext, QuizModel quiz) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/updateQuizView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            UpdateQuizController controller = fxmlLoader.getController();
+            controller.setQuiz(quiz);
+
+            loadScreen(currentStage, "Editar Quiz", root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void loadDetailsQuizScreen(Stage currentStage, ApplicationContext applicationContext, QuizModel quiz) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/detailsQuizView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            DetailsQuizController controller = fxmlLoader.getController();
+            controller.setQuiz(quiz);
+
+            loadScreen(currentStage, "Detalhes", root);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
+    public void loadQuizzesScreen(Stage currentStage, ApplicationContext applicationContext, CategoryModel categoryModel) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/org/quijava/quijava/listQuizzesView.fxml"));
+            fxmlLoader.setControllerFactory(applicationContext::getBean);
+            Parent root = fxmlLoader.load();
+
+            ListQuizController controller = fxmlLoader.getController();
+            controller.setCategory(categoryModel);
+
+            loadScreen(currentStage, "Quizzes", root);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
