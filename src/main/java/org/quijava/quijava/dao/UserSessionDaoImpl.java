@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional
-public class UserSessionDaoImpl implements UserSessionDao{
+public class UserSessionDaoImpl implements UserSessionDao {
 
     @PersistenceContext
     private EntityManager entityManager;

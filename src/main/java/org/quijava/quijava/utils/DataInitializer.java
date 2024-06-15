@@ -28,7 +28,7 @@ public class DataInitializer {
     }
 
     @Bean
-    public CommandLineRunner loadUser(UserDao userDao){
+    public CommandLineRunner loadUser(UserDao userDao) {
         return args -> {
             if (!userDao.existsByUsername("Bruno")) {
                 UserModel user = new UserModel();

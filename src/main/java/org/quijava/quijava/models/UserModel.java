@@ -121,7 +121,7 @@ public class UserModel {
     }
 
     @PreUpdate
-    protected void updateDate(){
+    protected void updateDate() {
         this.updatedAt = new Date();
     }
 

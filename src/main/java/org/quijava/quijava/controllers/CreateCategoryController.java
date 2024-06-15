@@ -5,10 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-
 import org.quijava.quijava.services.CategoryService;
 import org.springframework.stereotype.Controller;
-
 
 
 @Controller
@@ -36,7 +34,7 @@ public class CreateCategoryController {
             categoryService.createCategory(categoryName);
         } catch (IllegalArgumentException e) {
             setAlert(e.getMessage());
-        } catch (Exception e){
+        } catch (Exception e) {
             setAlert("Erro ao cadastrar a categoria");
             e.printStackTrace();
         }

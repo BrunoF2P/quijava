@@ -77,9 +77,13 @@ public class QuestionModel {
         this.typeQuestion = typeQuestion;
     }
 
-    public QuestionDifficulty getQuestionDifficulty() {return questionDifficulty;}
+    public QuestionDifficulty getQuestionDifficulty() {
+        return questionDifficulty;
+    }
 
-    public void setQuestionDifficulty(QuestionDifficulty questionDifficulty) {this.questionDifficulty = questionDifficulty;}
+    public void setQuestionDifficulty(QuestionDifficulty questionDifficulty) {
+        this.questionDifficulty = questionDifficulty;
+    }
 
     public String getQuestionText() {
         return questionText;
