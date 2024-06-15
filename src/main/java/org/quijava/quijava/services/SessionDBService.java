@@ -5,7 +5,6 @@ import org.quijava.quijava.models.UserSessionModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -26,6 +25,7 @@ public class SessionDBService {
         session.setCreateTime(LocalDateTime.now());
         userSessionDao.save(session);
     }
+
     public Integer getLastSessionId(String username) {
 
         return userSessionDao.getLastSessionIdForUser(username);

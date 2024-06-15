@@ -17,38 +17,36 @@ public class SessionPreferencesModel {
         this.preferences = Preferences.userRoot().node(this.getClass().getName());
     }
 
-    public void setUsername(String username) {
-        preferences.put(USERNAME_KEY, username);
-    }
-
-
     public String getUsername() {
         return preferences.get(USERNAME_KEY, null);
     }
 
-    public void setUserId(int userId) {
-        preferences.putInt(USER_ID_KEY, userId);
+    public void setUsername(String username) {
+        preferences.put(USERNAME_KEY, username);
     }
 
     public int getUserId() {
         return preferences.getInt(USER_ID_KEY, -1);
     }
 
-    public void setSessionId(int sessionId) {
-        preferences.putInt(SESSION_ID_KEY, sessionId);
+    public void setUserId(int userId) {
+        preferences.putInt(USER_ID_KEY, userId);
     }
 
     public int getSessionId() {
         return preferences.getInt(SESSION_ID_KEY, -1);
     }
 
-
-    public void setRole(int role) {
-        preferences.putInt(SESSION_ROLE_KEY, role);
+    public void setSessionId(int sessionId) {
+        preferences.putInt(SESSION_ID_KEY, sessionId);
     }
 
     public int getRole() {
         return preferences.getInt(SESSION_ROLE_KEY, -1);
+    }
+
+    public void setRole(int role) {
+        preferences.putInt(SESSION_ROLE_KEY, role);
     }
 
     public void clear() {
