@@ -3,12 +3,15 @@ package org.quijava.quijava.controllers;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.quijava.quijava.models.OptionsAnswerModel;
+import org.quijava.quijava.models.QuestionModel;
 import org.quijava.quijava.models.TypeQuestion;
-import org.quijava.quijava.services.QuestionService;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -23,18 +26,17 @@ public class OptionFieldController {
 
     public void initializeOptions(VBox optionsContainer, TextField scoreTextField) {
         optionsContainer.getChildren().clear();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             addAnswerField(optionsContainer, scoreTextField);
         }
     }
 
-    public Set<OptionsAnswerModel> createOptionsAnswers(VBox optionsContainer, TextField scoreTextField, QuestionService questionService) {
+    public Set<OptionsAnswerModel> createOptionsAnswers(VBox optionsContainer, TextField scoreTextField, QuestionModel selectedQuestion) {
         Set<OptionsAnswerModel> optionsAnswers = new HashSet<>();
         int score = scoreTextField.getText().isEmpty() ? 0 : Integer.parseInt(scoreTextField.getText());
 
         for (Node child : optionsContainer.getChildren()) {
-            if (child instanceof HBox) {
-                HBox answerBox = (HBox) child;
+            if (child instanceof HBox answerBox) {
                 TextArea answerTextArea = (TextArea) answerBox.getChildren().get(1);
                 CheckBox checkBox = (CheckBox) answerBox.getChildren().get(0);
 
@@ -43,7 +45,12 @@ public class OptionFieldController {
                     boolean isCorrect = checkBox.isSelected();
                     int optionScore = isCorrect ? score : 0;
 
-                    OptionsAnswerModel optionAnswer = questionService.createOptionAnswer(null, answerText, isCorrect, String.valueOf(optionScore));
+                    OptionsAnswerModel optionAnswer = new OptionsAnswerModel(); // Crie uma nova instância ou utilize seu método apropriado para criar
+                    optionAnswer.setOptionText(answerText);
+                    optionAnswer.setIsCorrect(isCorrect);
+                    optionAnswer.setScore(optionScore);
+                    optionAnswer.setQuestion(selectedQuestion); // Associa a opção à pergunta selecionada
+
                     optionsAnswers.add(optionAnswer);
                 }
             }
@@ -53,7 +60,7 @@ public class OptionFieldController {
     }
 
     public void addAnswerField(VBox optionsContainer, TextField scoreTextField) {
-        if (optionsContainer.getChildren().size() > 5) {
+        if (optionsContainer.getChildren().size() == 5) {
             System.out.println("Limite máximo de respostas atingido.");
             return;
         }
@@ -80,8 +87,9 @@ public class OptionFieldController {
     private TextArea createAnswerField() {
         TextArea answerField = new TextArea();
         answerField.setPrefWidth(300);
-        answerField.setPrefHeight(30);
-        answerField.setPromptText("Enter answer option");
+        answerField.setPrefHeight(70);
+        answerField.setPromptText("Digite a resposta");
+        answerField.setWrapText(true);
         return answerField;
     }
 
@@ -108,7 +116,7 @@ public class OptionFieldController {
     }
 
     private void updateAddButton(VBox optionsContainer) {
-        parentController.addItemButton.setDisable(optionsContainer.getChildren().size() >= 5);
+        parentController.addItemButton.setDisable(optionsContainer.getChildren().size() > 5);
     }
 
     private void updateRemoveButtons(VBox optionsContainer) {
@@ -146,7 +154,7 @@ public class OptionFieldController {
         }
 
         parentController.typeQuestion = (optionsAnswers.stream().filter(OptionsAnswerModel::getIsCorrect).count() > 1)
-                ? TypeQuestion.ESCOLHA_MULTIPLA
-                : TypeQuestion.ESCOLHA_UNICA;
+                ? TypeQuestion.Multipla_escolha
+                : TypeQuestion.Escolha_unica;
     }
 }
