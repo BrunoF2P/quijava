@@ -18,16 +18,19 @@ module org.quijava.quijava {
     requires java.desktop;
     requires spring.aop;
     requires jakarta.annotation;
+    requires spring.data.commons;
 
-
+    opens org.quijava.quijava.services to spring.core;
     opens org.quijava.quijava to javafx.fxml, spring.core;
+    opens org.quijava.quijava.dao to spring.core;
     opens org.quijava.quijava.utils to spring.core;
-    opens  org.quijava.quijava.models;
+    opens org.quijava.quijava.models;
     opens org.quijava.quijava.controllers;
     exports org.quijava.quijava;
     exports org.quijava.quijava.models;
     exports org.quijava.quijava.utils;
     exports org.quijava.quijava.controllers;
-    exports org.quijava.quijava.repositories;
     exports org.quijava.quijava.services;
+    exports org.quijava.quijava.dao;
+    exports org.quijava.quijava.view;
 }
