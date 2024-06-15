@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/22"
+            fx:controller="org.quijava.quijava.controllers.UpdateQuestionController">
+    <children>
+        <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <top>
+                <VBox alignment="CENTER" prefHeight="380.0" prefWidth="1670.0">
+                    <children>
+                        <Label text="Criar Nova Pergunta">
+                            <VBox.margin>
+                                <Insets top="30.0"/>
+                            </VBox.margin>
+                            <font>
+                                <Font size="22.0"/>
+                            </font>
+                        </Label>
+                        <HBox alignment="CENTER">
+                            <VBox.margin>
+                                <Insets left="250.0" top="10.0"/>
+                            </VBox.margin>
+                            <children>
+                                <TextArea fx:id="questionText" prefWidth="561.0" promptText="Pergunta" wrapText="true"/>
+                                <VBox alignment="CENTER_RIGHT">
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0">
+                                            <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Duração:">
+                                                    <HBox.margin>
+                                                        <Insets right="10.0"/>
+                                                    </HBox.margin>
+                                                </Text>
+                                                <TextField fx:id="durationTextField" promptText="Em segundos">
+                                                    <HBox.margin>
+                                                        <Insets left="15.0"/>
+                                                    </HBox.margin>
+                                                </TextField>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets left="10.0"/>
+                                            </VBox.margin>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="200.0">
+                                            <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Pontuação:">
+                                                    <HBox.margin>
+                                                        <Insets right="10.0"/>
+                                                    </HBox.margin>
+                                                </Text>
+                                                <TextField fx:id="scoreTextField" prefHeight="36.0" prefWidth="169.0"
+                                                           promptText="Por acerto"/>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets left="10.0"/>
+                                            </VBox.margin>
+                                        </HBox>
+                                        <HBox alignment="CENTER_LEFT" prefHeight="30.0">
+                                            <children>
+                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Dificuldade:"/>
+                                                <ChoiceBox fx:id="difficultyChoiceBox" prefWidth="150.0">
+                                                    <HBox.margin>
+                                                        <Insets left="5.0"/>
+                                                    </HBox.margin>
+                                                </ChoiceBox>
+                                            </children>
+                                            <VBox.margin>
+                                                <Insets left="10.0"/>
+                                            </VBox.margin>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                        <Button fx:id="sendImageQuestion" mnemonicParsing="false" prefHeight="36.0" prefWidth="221.0"
+                                text="Adicionar imagem">
+                            <VBox.margin>
+                                <Insets top="30.0"/>
+                            </VBox.margin>
+                        </Button>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0"
+                              text="Adicione as respostas e marque as que são corretas (após a publicação, as alternativas para cada pergunta serão embaralhadas.)">
+                            <VBox.margin>
+                                <Insets top="30.0"/>
+                            </VBox.margin>
+                        </Text>
+                    </children>
+                    <BorderPane.margin>
+                        <Insets right="250.0"/>
+                    </BorderPane.margin>
+                </VBox>
+            </top>
+            <bottom>
+                <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Button fx:id="addItemButton" mnemonicParsing="false" prefHeight="40.0" prefWidth="105.0"
+                                text="Adicionar">
+                            <HBox.margin>
+                                <Insets right="30.0"/>
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="finishButton" mnemonicParsing="false" onAction="#updateQuestion"
+                                prefHeight="40.0" prefWidth="105.0" text="Concluir">
+                            <HBox.margin>
+                                <Insets right="258.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                </HBox>
+            </bottom>
+            <right>
+                <ListView fx:id="questionListView" maxHeight="720.0" BorderPane.alignment="CENTER"/>
+            </right>
+            <center>
+                <VBox alignment="BOTTOM_CENTER" spacing="10.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <VBox fx:id="optionsContainer" alignment="CENTER" prefHeight="615.0" prefWidth="1672.0"/>
+                        <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#updateQuestion" prefHeight="40.0"
+                                        prefWidth="105.0" text="Atualizar">
+                                    <HBox.margin>
+                                        <Insets right="30.0"/>
+                                    </HBox.margin>
+                                </Button>
+                                <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="105.0" text="Excluir">
+                                    <HBox.margin>
+                                        <Insets right="10.0"/>
+                                    </HBox.margin>
+                                </Button>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </center>
+        </BorderPane>
+    </children>
+</AnchorPane>
