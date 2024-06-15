@@ -2,70 +2,67 @@ package org.quijava.quijava.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.quijava.quijava.models.*;
 import org.quijava.quijava.services.ImageService;
 import org.quijava.quijava.services.QuestionService;
 import org.quijava.quijava.utils.QuestionListCell;
+import org.quijava.quijava.utils.ScreenLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
 public class CreateQuestionController {
 
-    @FXML
-    private VBox optionsContainer;
-
-    @FXML
-    private ListView<QuestionModel> questionListView;
-
-    @FXML
-    Button addItemButton;
-
-    @FXML
-    private TextArea questionText;
-
-    @FXML
-    private ChoiceBox<QuestionDifficulty> difficultyChoiceBox;
-
-    @FXML
-    private TextField durationTextField;
-
-    @FXML
-    private TextField scoreTextField;
-
-    @FXML
-    private Button sendImageQuestion;
-
-    private QuizModel quiz;
-
-    private QuestionModel currentQuestion;
-
-    TypeQuestion typeQuestion;
-
-    private byte[] imagePath;
-
-    private final ObservableList<QuestionModel> temporaryQuestions = FXCollections.observableArrayList();
-    private final ObservableList<OptionsAnswerModel> temporaryAnswers =  FXCollections.observableArrayList();
-
+    private final ObservableList<QuestionModel> questions = FXCollections.observableArrayList();
+    private final ObservableList<OptionsAnswerModel> answers = FXCollections.observableArrayList();
     private final QuestionService questionService;
     private final OptionFieldController optionFieldController;
     private final ImageService imageService;
+    private final ScreenLoader screenLoader;
+    private final ApplicationContext applicationContext;
+    @FXML
+    Button addItemButton;
+    TypeQuestion typeQuestion;
+    @FXML
+    private VBox optionsContainer;
+    @FXML
+    private ListView<QuestionModel> questionListView;
+    @FXML
+    private TextArea questionText;
+    @FXML
+    private ChoiceBox<QuestionDifficulty> difficultyChoiceBox;
+    @FXML
+    private TextField durationTextField;
+    @FXML
+    private TextField scoreTextField;
+    @FXML
+    private Button sendImageQuestion;
+    @FXML
+    private Button finishButton;
+    private QuizModel quiz;
+    private QuestionModel currentQuestion;
+    private byte[] imagePath;
 
     @Autowired
-    public CreateQuestionController(QuestionService questionService, ImageService imageService) {
+    public CreateQuestionController(QuestionService questionService, ImageService imageService, ScreenLoader screenLoader, ApplicationContext applicationContext) {
         this.questionService = questionService;
         this.imageService = imageService;
+        this.screenLoader = screenLoader;
+        this.applicationContext = applicationContext;
         this.optionFieldController = new OptionFieldController(this);
     }
 
@@ -91,51 +88,58 @@ public class CreateQuestionController {
 
     @FXML
     public void addItem() {
-        Set<OptionsAnswerModel> optionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, questionService);
-        temporaryAnswers.addAll(optionsAnswers);
-
+        // Criar e salvar a pergunta
         QuestionModel newQuestion = questionService.createQuestion(
                 questionText.getText(),
                 quiz,
                 typeQuestion,
                 durationTextField.getText(),
-                optionsAnswers,
+                Collections.emptySet(), // Inicialmente sem respostas associadas
                 difficultyChoiceBox.getValue(),
                 imagePath
         );
 
-        temporaryQuestions.add(newQuestion);
+        // Associar respostas à pergunta
+        Set<OptionsAnswerModel> optionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, newQuestion);
+        for (OptionsAnswerModel answer : optionsAnswers) {
+            answer.setQuestion(newQuestion); // Associar cada resposta à nova pergunta
+        }
+
+        // Salvar a pergunta e as respostas
+        questionService.saveQuestion(newQuestion); // Salvar a pergunta
+        questionService.saveOptionsAnswers(optionsAnswers);// Salvar as respostas associadas
+
+        questions.add(newQuestion);
+
         clearFields();
         refreshListView();
     }
 
     @FXML
-    public void createQuestion() {
-        if (!temporaryQuestions.isEmpty()) {
-            for (QuestionModel question : temporaryQuestions) {
-                Set<OptionsAnswerModel> optionsAnswers = new HashSet<>();
-                for (OptionsAnswerModel answer : temporaryAnswers) {
-                    if (answer.getQuestion() == question) {
-                        optionsAnswers.add(answer);
-                    }
-                }
+    private void createQuestion(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Concluido");
+        alert.setHeaderText(null);
+        alert.setContentText("Sucessso!");
+        alert.showAndWait();
 
-                questionService.saveQuestions(Collections.singleton(question));
-                questionService.saveOptionsAnswers(optionsAnswers);
-            }
+        screenLoader.loadMyQuizzes((Stage) finishButton.getScene().getWindow(), applicationContext);
 
-            temporaryQuestions.clear();
-            refreshListView();
-            clearFields();
-        }
-    }
+}
 
     @FXML
-    public void editList() {
+    private void editList() {
         QuestionModel selectedQuestion = questionListView.getSelectionModel().getSelectedItem();
         if (selectedQuestion != null) {
-            currentQuestion = selectedQuestion;
-            loadQuestionDetails(selectedQuestion);
+            // Aqui você pode usar o ID da pergunta para buscar os detalhes completos no banco de dados
+            Optional<QuestionModel> optionalQuestion = questionService.findById(selectedQuestion.getId());
+            if (optionalQuestion.isPresent()) {
+                QuestionModel question = optionalQuestion.get();
+                loadQuestionDetails(question); // Carrega os detalhes da pergunta na interface gráfica
+            } else {
+                // Tratar cenário onde a pergunta não é encontrada
+                System.out.println("Pergunta não encontrada");
+            }
         }
     }
 
@@ -143,9 +147,19 @@ public class CreateQuestionController {
     private void deleteQuestion() {
         QuestionModel selectedQuestion = questionListView.getSelectionModel().getSelectedItem();
         if (selectedQuestion != null) {
-            temporaryQuestions.remove(selectedQuestion);
-            refreshListView();
+            try {
+                questionService.deleteQuestion(selectedQuestion.getId());
+                questions.remove(selectedQuestion);
+                refreshListView();
+            } catch (Exception e) {
+                // Handle exceptions appropriately
+                e.printStackTrace();
+            }
         }
+
+        clearFields();
+        refreshListView();
+        questionListView.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -155,18 +169,22 @@ public class CreateQuestionController {
             selectedQuestion.setQuestionText(questionText.getText());
             selectedQuestion.setQuestionDifficulty(difficultyChoiceBox.getValue());
 
-            Set<OptionsAnswerModel> updatedOptionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, questionService);
-            selectedQuestion.getOptionsAnswers().clear();
-            selectedQuestion.getOptionsAnswers().addAll(updatedOptionsAnswers);
-
-            optionFieldController.updateSelectedAnswerScore(updatedOptionsAnswers, scoreTextField);
-
-            if (imagePath != null) {
-                selectedQuestion.setImageQuestion(imagePath);
+            try {
+                long durationSeconds = Long.parseLong(durationTextField.getText());
+                Duration duration = Duration.ofSeconds(durationSeconds);
+                selectedQuestion.setLimiteTime(duration);
+            } catch (NumberFormatException e) {
+                System.out.println("Erro ao converter a duração para segundos.");
+                return;
             }
 
-            refreshListView();
+            Set<OptionsAnswerModel> updatedOptionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, selectedQuestion);
+            selectedQuestion.setOptionsAnswers(updatedOptionsAnswers); // Atualiza todas as opções de resposta de uma vez
+
+            questionService.updateQuestion(selectedQuestion);
+
             clearFields();
+            refreshListView();
             questionListView.getSelectionModel().clearSelection();
         }
     }
@@ -181,7 +199,7 @@ public class CreateQuestionController {
     }
 
     private void refreshListView() {
-        questionListView.setItems(FXCollections.observableArrayList(temporaryQuestions));
+        questionListView.setItems(FXCollections.observableArrayList(questions));
     }
 
     private void loadQuestionDetails(QuestionModel question) {
@@ -200,14 +218,6 @@ public class CreateQuestionController {
         }
     }
 
-    private void clearFields() {
-        difficultyChoiceBox.setValue(QuestionDifficulty.FACIL);
-        durationTextField.clear();
-        scoreTextField.clear();
-        questionText.clear();
-        imagePath = null;
-        optionFieldController.initializeOptions(optionsContainer, scoreTextField);
-    }
 
     void updateQuestionType() {
         int selectedCount = countSelectedCheckBoxes();
@@ -227,5 +237,13 @@ public class CreateQuestionController {
         return count;
     }
 
+    private void clearFields() {
+        difficultyChoiceBox.setValue(QuestionDifficulty.FACIL);
+        durationTextField.clear();
+        scoreTextField.clear();
+        questionText.clear();
+        imagePath = null;
+        optionFieldController.initializeOptions(optionsContainer, scoreTextField);
+    }
 
 }

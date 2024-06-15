@@ -2,14 +2,17 @@ package org.quijava.quijava.services;
 
 import org.quijava.quijava.dao.OptionsAnswerDao;
 import org.quijava.quijava.dao.QuestionDao;
-import org.quijava.quijava.models.*;
-
+import org.quijava.quijava.models.OptionsAnswerModel;
+import org.quijava.quijava.models.QuestionModel;
+import org.quijava.quijava.models.QuestionDifficulty;
+import org.quijava.quijava.models.QuizModel;
+import org.quijava.quijava.models.TypeQuestion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class QuestionService {
@@ -23,6 +26,7 @@ public class QuestionService {
         this.optionsAnswerDao = optionsAnswerDao;
     }
 
+    @Transactional
     public QuestionModel createQuestion(String questionText, QuizModel quiz, TypeQuestion typeQuestion, String durationText, Set<OptionsAnswerModel> optionsAnswers, QuestionDifficulty difficulty, byte[] image) {
         QuestionModel newQuestion = new QuestionModel();
 
@@ -41,27 +45,14 @@ public class QuestionService {
         }
 
         // Associar as respostas à pergunta
-        Set<OptionsAnswerModel> associatedAnswers = createOptionsAnswers( newQuestion, optionsAnswers);
+        Set<OptionsAnswerModel> associatedAnswers = createOptionsAnswers(newQuestion, optionsAnswers);
         newQuestion.setOptionsAnswers(associatedAnswers);
 
-        return newQuestion;
+        return questionDao.save(newQuestion);
     }
 
-    public OptionsAnswerModel createOptionAnswer(QuestionModel question, String text, boolean isCorrect, String scoreText) {
-        OptionsAnswerModel optionAnswer = new OptionsAnswerModel();
-        optionAnswer.setOptionText(text);
-        optionAnswer.setIsCorrect(isCorrect);
 
-        try {
-            int score = Integer.parseInt(scoreText);
-            optionAnswer.setScore(isCorrect ? score : 0);
-        } catch (NumberFormatException e) {
-            System.out.println("Erro ao converter a pontuação para um número inteiro.");
-        }
-        optionAnswer.setQuestion(question);
-        return optionAnswer;
-    }
-
+    @Transactional
     public Set<OptionsAnswerModel> createOptionsAnswers(QuestionModel question, Set<OptionsAnswerModel> newAnswers) {
         Set<OptionsAnswerModel> optionsAnswers = new HashSet<>();
 
@@ -76,10 +67,65 @@ public class QuestionService {
         return optionsAnswers;
     }
 
-    public void saveQuestions(Set<QuestionModel> questions) {
-        questionDao.saveAll(questions);
+
+
+    @Transactional
+    public QuestionModel updateQuestion(QuestionModel question) {
+        Optional<QuestionModel> optionalQuestion = questionDao.findById(question.getId());
+        if (optionalQuestion.isPresent()) {
+            QuestionModel existingQuestion = optionalQuestion.get();
+
+            existingQuestion.setQuestionText(question.getQuestionText());
+            existingQuestion.setQuiz(question.getQuiz());
+            existingQuestion.setTypeQuestion(question.getTypeQuestion());
+            existingQuestion.setQuestionDifficulty(question.getQuestionDifficulty());
+            existingQuestion.setImageQuestion(question.getImageQuestion());
+            existingQuestion.setLimiteTime(question.getLimiteTime());
+
+            // Limpa as opções de resposta atuais da pergunta no banco de dados
+            optionsAnswerDao.deleteByQuestionId(existingQuestion.getId());
+
+            // Limpa as opções de resposta atuais da pergunta em memória
+            existingQuestion.getOptionsAnswers().clear();
+
+            // Atualizar as opções de resposta associadas à pergunta
+            Set<OptionsAnswerModel> updatedOptionsAnswers = createOptionsAnswers(existingQuestion, question.getOptionsAnswers());
+            existingQuestion.getOptionsAnswers().addAll(updatedOptionsAnswers);
+
+            return questionDao.update(existingQuestion);
+        } else {
+            throw new IllegalArgumentException("Pergunta não encontrada.");
+        }
     }
 
+
+    @Transactional(readOnly = true)
+    public List<QuestionModel> getAllQuestions() {
+        return questionDao.findAll();
+    }
+
+
+    @Transactional
+    public QuestionModel saveQuestion(QuestionModel question) {
+        return questionDao.save(question);
+    }
+
+    @Transactional
+    public QuestionModel update(QuestionModel question) {
+        return questionDao.update(question);
+    }
+
+    @Transactional
+    public void deleteQuestion(Integer question) {
+        optionsAnswerDao.deleteByQuestionId(question);
+        questionDao.delete(question);
+    }
+
+    public Optional<QuestionModel> findById(Integer id) {
+        return questionDao.findById(id);
+    }
+
+    @Transactional
     public void saveOptionsAnswers(Set<OptionsAnswerModel> optionsAnswers) {
         optionsAnswerDao.saveAll(optionsAnswers);
     }
