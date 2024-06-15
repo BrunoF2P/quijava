@@ -4,6 +4,7 @@ package org.quijava.quijava.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.quijava.quijava.services.MenuService;
@@ -25,10 +26,17 @@ public class MenuController {
     private Button createQuiz;
 
     @FXML
-    private Button sair;
+    private Button listQuizzes;
 
     @FXML
-    private Text role;
+    private Button listMyQuizzes;
+
+    @FXML
+    private HBox buttonContainer;
+
+    @FXML
+    private Button sair;
+
 
     @FXML
     private Text username;
@@ -40,9 +48,14 @@ public class MenuController {
         this.menuService = menuService;
     }
 
+
     public void initialize() {
-        username.setText(menuService.getUsername());
-        role.setText(menuService.getRole().toString());
+        //  username.setText(menuService.getUsername());
+
+        if ("1".equals(menuService.getRole().toString())) {
+            buttonContainer.getChildren().remove(createQuiz);
+            buttonContainer.getChildren().remove(listMyQuizzes);
+        }
     }
 
     @FXML
@@ -54,6 +67,16 @@ public class MenuController {
     @FXML
     void onCreateQuiz(ActionEvent event) {
         screenLoader.loadCreateQuizScreen((Stage) createQuiz.getScene().getWindow(), applicationContext);
+    }
+
+    @FXML
+    void onCategories(ActionEvent event) {
+        screenLoader.loadAllCategories((Stage) listQuizzes.getScene().getWindow(), applicationContext);
+    }
+
+    @FXML
+    void onMyQuizzes(ActionEvent event) {
+        screenLoader.loadMyQuizzes((Stage) listMyQuizzes.getScene().getWindow(), applicationContext);
     }
 }
 
