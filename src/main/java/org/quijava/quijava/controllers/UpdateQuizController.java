@@ -128,9 +128,11 @@ public class UpdateQuizController implements Initializable {
             titleQuiz.setText(quiz.getTitle());
             descriptionQuiz.setText(quiz.getDescription());
             selectedCategories.addAll(quiz.getCategories().stream().map(CategoryModel::getDescription).toList());
-            imagePath = quiz.getImageQuiz();
+            if (imagePath != null) {
+                Image image = new Image(new ByteArrayInputStream(imagePath));
+                imageView.setImage(image);
+            }
         } else {
-            // Handle quiz not found scenario
             System.out.println("Quiz not found");
         }
     }
@@ -139,13 +141,9 @@ public class UpdateQuizController implements Initializable {
     public void updateQuiz() {
         String title = titleQuiz.getText();
         String description = descriptionQuiz.getText();
-
         Set<String> selectedCategoriesSet = new HashSet<>(selectedCategories);
 
-        // Atualizar o quiz existente
-        quizService.updateNameQuiz(quiz.getId(), title);
-        quizService.updateDescriptionQuiz(quiz.getId(), description);
-        quizService.updateCategoryQuiz(quiz.getId(), selectedCategoriesSet);
+        quizService.updateQuiz(quiz.getId(), title, description, selectedCategoriesSet, imagePath);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Atualizado");
@@ -153,7 +151,7 @@ public class UpdateQuizController implements Initializable {
         alert.setContentText("O quiz foi atualizado com sucesso!");
         alert.showAndWait();
 
-        screenLoader.loadCreateQuestionScreen((Stage) createQuiz.getScene().getWindow(), applicationContext, quiz);
+        screenLoader.loadMyQuizzes((Stage) createQuiz.getScene().getWindow(), applicationContext);
     }
 
 
@@ -162,11 +160,11 @@ public class UpdateQuizController implements Initializable {
         try {
             byte[] imageBytes = imageService.selectImage();
             if (imageBytes != null) {
+                imagePath = imageBytes;
                 Image image = new Image(new ByteArrayInputStream(imageBytes));
                 imageView.setImage(image);
             }
         } catch (IOException e) {
-            // Handle the exception (e.g., show an error message)
             e.printStackTrace();
         }
     }

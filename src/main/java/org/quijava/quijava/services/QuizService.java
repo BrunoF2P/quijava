@@ -82,26 +82,23 @@ public class QuizService {
         }
     }
 
-    public QuizModel updateDescriptionQuiz(Integer quizId, String newDescription) {
-        Optional<QuizModel> optionalQuiz = quizDao.findById(quizId);
-        if (optionalQuiz.isPresent()) {
-            QuizModel quiz = optionalQuiz.get();
-            quiz.setDescription(newDescription);
-            return quizDao.update(quiz);
-        } else {
-            throw new NoSuchElementException("Quiz não encontrado");
-        }
-    }
 
-    public QuizModel updateNameQuiz(Integer quizId, String newName) {
-        Optional<QuizModel> optionalQuiz = quizDao.findById(quizId);
-        if (optionalQuiz.isPresent()) {
-            QuizModel quiz = optionalQuiz.get();
-            quiz.setTitle(newName);
-            return quizDao.update(quiz);
-        } else {
-            throw new NoSuchElementException("Quiz não encontrado");
+    public void updateQuiz(Integer id, String title, String description, Set<String> newCategories, byte[] image) {
+        QuizModel quiz = quizDao.findById(id).orElseThrow(() -> new IllegalArgumentException("Quiz not found"));
+        Set<Integer> categoryIds = newCategories.stream()
+                .map(categoryDao::findByDescription)
+                .filter(Objects::nonNull)
+                .map(CategoryModel::getId)
+                .collect(Collectors.toSet());
+        Set<CategoryModel> categories = categoryService.findCategoriesByIds(categoryIds);
+        quiz.setTitle(title);
+        quiz.setDescription(description);
+        quiz.setCategories(categories);
+        if (image != null) {
+            quiz.setImageQuiz(image);
         }
+
+        quizDao.update(quiz);
     }
 
     public List<QuizModel> findQuizzesByCategory(Integer categoryId) {
