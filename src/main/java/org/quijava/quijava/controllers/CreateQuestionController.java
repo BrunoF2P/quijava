@@ -21,8 +21,8 @@ import org.springframework.stereotype.Controller;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Controller
 public class CreateQuestionController {
@@ -94,13 +94,13 @@ public class CreateQuestionController {
                 quiz,
                 typeQuestion,
                 durationTextField.getText(),
-                Collections.emptySet(), // Inicialmente sem respostas associadas
+                Collections.emptyList(), // Inicialmente sem respostas associadas
                 difficultyChoiceBox.getValue(),
                 imagePath
         );
 
         // Associar respostas à pergunta
-        Set<OptionsAnswerModel> optionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, newQuestion);
+        List<OptionsAnswerModel> optionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, newQuestion);
         for (OptionsAnswerModel answer : optionsAnswers) {
             answer.setQuestion(newQuestion); // Associar cada resposta à nova pergunta
         }
@@ -178,7 +178,7 @@ public class CreateQuestionController {
                 return;
             }
 
-            Set<OptionsAnswerModel> updatedOptionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, selectedQuestion);
+            List<OptionsAnswerModel> updatedOptionsAnswers = optionFieldController.createOptionsAnswers(optionsContainer, scoreTextField, selectedQuestion);
             selectedQuestion.setOptionsAnswers(updatedOptionsAnswers); // Atualiza todas as opções de resposta de uma vez
 
             questionService.updateQuestion(selectedQuestion);

@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import org.quijava.quijava.models.QuizModel;
 import org.quijava.quijava.services.CategoryService;
@@ -14,6 +16,7 @@ import org.quijava.quijava.utils.ScreenLoader;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
@@ -37,6 +40,8 @@ public class CreateQuizController implements Initializable {
     private TextArea descriptionQuiz;
     @FXML
     private Button sendImageQuiz;
+    @FXML
+    private ImageView imageView;
     @FXML
     private Button back;
     @FXML
@@ -118,12 +123,16 @@ public class CreateQuizController implements Initializable {
 
 
     @FXML
-    public void selectImage() {
+    private void selectImage() {
         try {
-            imagePath = imageService.selectImage();
+            byte[] imageBytes = imageService.selectImage();
+            if (imageBytes != null) {
+                imagePath = imageBytes;
+                Image image = new Image(new ByteArrayInputStream(imageBytes));
+                imageView.setImage(image);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
