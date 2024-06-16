@@ -5,6 +5,8 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Duration;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -51,7 +53,7 @@ public class QuestionModel {
     private Set<AnswerModel> answers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<OptionsAnswerModel> optionsAnswers = new LinkedHashSet<>();
+    private List<OptionsAnswerModel> optionsAnswers = new LinkedList<>();
 
     public Integer getId() {
         return id;
@@ -133,11 +135,11 @@ public class QuestionModel {
         this.answers = answers;
     }
 
-    public Set<OptionsAnswerModel> getOptionsAnswers() {
+    public List<OptionsAnswerModel> getOptionsAnswers() {
         return optionsAnswers;
     }
 
-    public void setOptionsAnswers(Set<OptionsAnswerModel> optionsAnswers) {
+    public void setOptionsAnswers(List<OptionsAnswerModel> optionsAnswers) {
         this.optionsAnswers = optionsAnswers;
     }
 

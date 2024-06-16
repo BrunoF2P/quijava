@@ -27,7 +27,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public QuestionModel createQuestion(String questionText, QuizModel quiz, TypeQuestion typeQuestion, String durationText, Set<OptionsAnswerModel> optionsAnswers, QuestionDifficulty difficulty, byte[] image) {
+    public QuestionModel createQuestion(String questionText, QuizModel quiz, TypeQuestion typeQuestion, String durationText, List<OptionsAnswerModel> optionsAnswers, QuestionDifficulty difficulty, byte[] image) {
         QuestionModel newQuestion = new QuestionModel();
 
         newQuestion.setQuestionText(questionText);
@@ -45,7 +45,7 @@ public class QuestionService {
         }
 
         // Associar as respostas à pergunta
-        Set<OptionsAnswerModel> associatedAnswers = createOptionsAnswers(newQuestion, optionsAnswers);
+        List<OptionsAnswerModel> associatedAnswers = createOptionsAnswers(newQuestion, optionsAnswers);
         newQuestion.setOptionsAnswers(associatedAnswers);
 
         return questionDao.save(newQuestion);
@@ -53,8 +53,8 @@ public class QuestionService {
 
 
     @Transactional
-    public Set<OptionsAnswerModel> createOptionsAnswers(QuestionModel question, Set<OptionsAnswerModel> newAnswers) {
-        Set<OptionsAnswerModel> optionsAnswers = new HashSet<>();
+    public List<OptionsAnswerModel> createOptionsAnswers(QuestionModel question, List<OptionsAnswerModel> newAnswers) {
+        List<OptionsAnswerModel> optionsAnswers = new LinkedList<>();
 
         if (newAnswers != null) {
             for (OptionsAnswerModel newAnswer : newAnswers) {
@@ -89,7 +89,7 @@ public class QuestionService {
             existingQuestion.getOptionsAnswers().clear();
 
             // Atualizar as opções de resposta associadas à pergunta
-            Set<OptionsAnswerModel> updatedOptionsAnswers = createOptionsAnswers(existingQuestion, question.getOptionsAnswers());
+            List<OptionsAnswerModel> updatedOptionsAnswers = createOptionsAnswers(existingQuestion, question.getOptionsAnswers());
             existingQuestion.getOptionsAnswers().addAll(updatedOptionsAnswers);
 
             return questionDao.update(existingQuestion);
@@ -126,7 +126,7 @@ public class QuestionService {
     }
 
     @Transactional
-    public void saveOptionsAnswers(Set<OptionsAnswerModel> optionsAnswers) {
+    public void saveOptionsAnswers(List<OptionsAnswerModel> optionsAnswers) {
         optionsAnswerDao.saveAll(optionsAnswers);
     }
 }

@@ -2,11 +2,11 @@ package org.quijava.quijava.dao;
 
 import org.quijava.quijava.models.OptionsAnswerModel;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface OptionsAnswerDao {
-    Set<OptionsAnswerModel> saveAll(Set<OptionsAnswerModel> optionsAnswers);
+    List<OptionsAnswerModel> saveAll(List<OptionsAnswerModel> optionsAnswers);
 
     OptionsAnswerModel save(OptionsAnswerModel optionsAnswer);
 
