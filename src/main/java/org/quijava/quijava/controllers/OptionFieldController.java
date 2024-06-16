@@ -13,7 +13,8 @@ import org.quijava.quijava.models.OptionsAnswerModel;
 import org.quijava.quijava.models.QuestionModel;
 import org.quijava.quijava.models.TypeQuestion;
 
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public class OptionFieldController {
@@ -31,8 +32,8 @@ public class OptionFieldController {
         }
     }
 
-    public Set<OptionsAnswerModel> createOptionsAnswers(VBox optionsContainer, TextField scoreTextField, QuestionModel selectedQuestion) {
-        Set<OptionsAnswerModel> optionsAnswers = new HashSet<>();
+    public List<OptionsAnswerModel> createOptionsAnswers(VBox optionsContainer, TextField scoreTextField, QuestionModel selectedQuestion) {
+        List<OptionsAnswerModel> optionsAnswers = new LinkedList<>();
         int score = scoreTextField.getText().isEmpty() ? 0 : Integer.parseInt(scoreTextField.getText());
 
         for (Node child : optionsContainer.getChildren()) {
@@ -137,7 +138,7 @@ public class OptionFieldController {
         }
     }
 
-    public void loadQuestionOptions(VBox optionsContainer, Set<OptionsAnswerModel> optionsAnswers, TextField scoreTextField) {
+    public void loadQuestionOptions(VBox optionsContainer, List<OptionsAnswerModel> optionsAnswers, TextField scoreTextField) {
         for (OptionsAnswerModel option : optionsAnswers) {
             HBox answerBox = createAnswerBox(optionsContainer, scoreTextField);
             optionsContainer.getChildren().add(answerBox);

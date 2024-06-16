@@ -7,9 +7,7 @@ import org.quijava.quijava.models.OptionsAnswerModel;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Repository
 @Transactional
@@ -29,8 +27,8 @@ public class OptionsAnswerDaoImpl implements OptionsAnswerDao {
     }
 
     @Override
-    public Set<OptionsAnswerModel> saveAll(Set<OptionsAnswerModel> optionsAnswers) {
-        Set<OptionsAnswerModel> savedEntities = new HashSet<>();
+    public List<OptionsAnswerModel> saveAll(List<OptionsAnswerModel> optionsAnswers) {
+        List<OptionsAnswerModel> savedEntities = new LinkedList<>();
 
         for (OptionsAnswerModel optionsAnswer : optionsAnswers) {
             if (optionsAnswer.getId() == null) {
