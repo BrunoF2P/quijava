@@ -1,12 +1,18 @@
 package org.quijava.quijava.controllers;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.quijava.quijava.models.OptionsAnswerModel;
 import org.quijava.quijava.models.QuestionModel;
@@ -16,7 +22,9 @@ import org.quijava.quijava.services.LoginService;
 import org.quijava.quijava.services.QuizService;
 import org.quijava.quijava.services.RankService;
 import org.quijava.quijava.services.SessionPreferencesService;
+import org.quijava.quijava.utils.ScreenLoader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
 import java.util.*;
@@ -24,12 +32,13 @@ import java.util.*;
 @Controller
 public class PlayQuizController {
 
-
     private final QuizService quizService;
     private final SessionPreferencesService sessionPreferencesService;
     private final LoginService loginService;
     private final RankService rankService;
     private final Set<Integer> shownQuestionIndices = new HashSet<>();
+    private final ScreenLoader screenLoader;
+    private final ApplicationContext applicationContext;
     @FXML
     private Text questionText;
     @FXML
@@ -42,6 +51,8 @@ public class PlayQuizController {
     private VBox answersField;
     @FXML
     private ProgressBar timeProgressBar;
+    @FXML
+    private Button finish;
     private Timeline timeline;
     private QuizModel quiz;
     private List<QuestionModel> questions;
@@ -51,13 +62,14 @@ public class PlayQuizController {
     private int totalScore = 0;
 
     @Autowired
-    public PlayQuizController(QuizService quizService, SessionPreferencesService sessionPreferencesService, LoginService loginService, RankService rankService) {
+    public PlayQuizController(QuizService quizService, SessionPreferencesService sessionPreferencesService, LoginService loginService, RankService rankService, ScreenLoader screenLoader, ApplicationContext applicationContext) {
         this.quizService = quizService;
         this.sessionPreferencesService = sessionPreferencesService;
         this.loginService = loginService;
         this.rankService = rankService;
+        this.screenLoader = screenLoader;
+        this.applicationContext = applicationContext;
     }
-
 
     public void setQuiz(QuizModel quiz) {
         this.quiz = quiz;
@@ -101,16 +113,15 @@ public class PlayQuizController {
         timeline.play();
     }
 
-
     private void handleTimeUp() {
         System.out.println("Tempo esgotado para a pergunta atual!");
+        Platform.runLater(() -> showAlert("Tempo Esgotado!", "Infelizmente, o tempo para responder a pergunta acabou."));
         onNextQuestion();
     }
 
     private void updateProgress() {
         progressText.setText("Pergunta " + (currentQuestionIndex + 1) + "/" + questions.size());
     }
-
 
     private void showNextQuestion() {
         int nextIndex = getNextQuestionIndex();
@@ -140,12 +151,12 @@ public class PlayQuizController {
 
         Collections.shuffle(optionsAnswers);
 
-        question.getOptionsAnswers().forEach(answer -> {
+        for (OptionsAnswerModel answer : optionsAnswers) {
             CheckBox checkBox = new CheckBox(answer.getOptionText());
-            checkBox.setUserData(answer.getIsCorrect());
+            checkBox.setUserData(answer);
             checkBoxes.add(checkBox);
             answersField.getChildren().add(checkBox);
-        });
+        }
 
         if (question.getTypeQuestion() == TypeQuestion.Escolha_unica) {
             checkBoxes.forEach(checkBox -> checkBox.setOnAction(event -> {
@@ -162,10 +173,41 @@ public class PlayQuizController {
 
     @FXML
     private void onNextQuestion() {
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
+            boolean answerSelected = false;
+            CheckBox selectedCheckBox = null;
+
+            // Verifica se alguma resposta foi selecionada
+            for (Node node : answersField.getChildren()) {
+                if (node instanceof CheckBox checkBox) {
+                    if (checkBox.isSelected()) {
+                        answerSelected = true;
+                        selectedCheckBox = checkBox;
+                        break;
+                    }
+                }
+            }
+            OptionsAnswerModel selectedAnswer = answerSelected ? (OptionsAnswerModel) selectedCheckBox.getUserData() : null;
+            boolean isCorrect = answerSelected && selectedAnswer.getIsCorrect();
+
+            if (!answerSelected) {
+                return;
+            } else {
+                String title = isCorrect ? "Correto!" : "Errado!";
+                String message = isCorrect ? "Você acertou a resposta!" : "Você errou a resposta.";
+                showAlert(title, message);
+            }
+
+
+        }
+
         long endTime = System.currentTimeMillis();
         long timeSpentMillis = endTime - startTime;
-        calculateScoreForCurrentQuestion();
-        totalTimeSpent = totalTimeSpent.add(javafx.util.Duration.millis(timeSpentMillis));
+        totalTimeSpent = totalTimeSpent.add(Duration.millis(timeSpentMillis));
+
+
+        calculateScore();
+
         if (shownQuestionIndices.size() >= questions.size()) {
             completeQuiz();
             return;
@@ -177,26 +219,47 @@ public class PlayQuizController {
         startQuestionTimer();
     }
 
-    private void calculateScoreForCurrentQuestion() {
+    private void calculateScore() {
         QuestionModel currentQuestion = questions.get(currentQuestionIndex);
-        List<OptionsAnswerModel> optionsList = new ArrayList<>(currentQuestion.getOptionsAnswers());
-        int questionScore = 0;
-        for (int i = 0; i < optionsList.size(); i++) {
-            CheckBox checkBox = (CheckBox) answersField.getChildren().get(i);
-            boolean selected = checkBox.isSelected();
-            OptionsAnswerModel option = optionsList.get(i);
-            if (selected && option.getIsCorrect()) {
-                questionScore += option.getScore();
-            } else if (!selected && !option.getIsCorrect()) {
-                questionScore += option.getScore();
+        boolean allCorrect = true;
+
+        for (CheckBox checkBox : answersField.getChildren().filtered(node -> node instanceof CheckBox).toArray(new CheckBox[0])) {
+            OptionsAnswerModel answer = (OptionsAnswerModel) checkBox.getUserData();
+            boolean isSelected = checkBox.isSelected();
+
+            if ((answer.getIsCorrect() && !isSelected) || (!answer.getIsCorrect() && isSelected)) {
+                allCorrect = false;
+                break;
             }
         }
-        totalScore += questionScore;
+
+        if (allCorrect) {
+            for (CheckBox checkBox : answersField.getChildren().filtered(node -> node instanceof CheckBox).toArray(new CheckBox[0])) {
+                OptionsAnswerModel answer = (OptionsAnswerModel) checkBox.getUserData();
+                if (answer.getIsCorrect()) {
+                    totalScore += answer.getScore();
+                    System.out.println("Pontos" + totalScore);
+                }
+            }
+        }
     }
 
 
     private void completeQuiz() {
         rankService.saveRanking(quiz, totalScore, totalTimeSpent);
+        String message = "Quiz completo!\n";
+        message += "Pontuação Total: " + totalScore + " pontos";
+
+        showAlert("Quiz Completo", message);
+
+        screenLoader.loadDetailsQuizScreen((Stage) finish.getScene().getWindow(), applicationContext, quiz);
     }
 
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 }

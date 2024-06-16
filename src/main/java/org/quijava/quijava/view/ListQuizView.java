@@ -23,6 +23,7 @@ public class ListQuizView {
         quizBox.setSpacing(20);
         quizBox.setStyle("-fx-background-color: #f4f4f4; -fx-padding: 10px; -fx-border-color: #ddd; -fx-border-width: 1px; -fx-border-radius: 5px;");
         quizBox.setOnMouseClicked(event -> showDetails.run()); // Adiciona evento de clique no VBox
+        quizBox.setMinWidth(400);
 
         Text descriptionText = new Text(quiz.getTitle());
         descriptionText.setFont(Font.font(18));
@@ -33,6 +34,7 @@ public class ListQuizView {
         imageView.setImage(image);
         imageView.setFitWidth(450);
         imageView.setFitHeight(200);
+        imageView.setPreserveRatio(true);
 
         ButtonBar buttonBar = new ButtonBar();
 
