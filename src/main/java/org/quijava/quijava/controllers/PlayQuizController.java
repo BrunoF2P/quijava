@@ -3,13 +3,9 @@ package org.quijava.quijava.controllers;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -52,6 +48,8 @@ public class PlayQuizController {
     @FXML
     private ProgressBar timeProgressBar;
     @FXML
+    private Label score;
+    @FXML
     private Button finish;
     private Timeline timeline;
     private QuizModel quiz;
@@ -60,6 +58,7 @@ public class PlayQuizController {
     private javafx.util.Duration totalTimeSpent = javafx.util.Duration.ZERO;
     private long startTime;
     private int totalScore = 0;
+    private boolean timeUp = false;
 
     @Autowired
     public PlayQuizController(QuizService quizService, SessionPreferencesService sessionPreferencesService, LoginService loginService, RankService rankService, ScreenLoader screenLoader, ApplicationContext applicationContext) {
@@ -73,7 +72,9 @@ public class PlayQuizController {
 
     public void setQuiz(QuizModel quiz) {
         this.quiz = quiz;
+        countPlayQuiz();
         loadQuestions();
+        setScore();
         showNextQuestion();
         updateProgress();
         startQuestionTimer();
@@ -88,6 +89,7 @@ public class PlayQuizController {
         if (timeline != null) {
             timeline.stop();
         }
+        timeUp = false; // Resetar a variável de tempo ao iniciar o timer
         startTime = System.currentTimeMillis();
         QuestionModel currentQuestion = questions.get(currentQuestionIndex);
         Duration questionTimeLimit = Duration.millis(currentQuestion.getLimiteTime().toMillis());
@@ -114,8 +116,8 @@ public class PlayQuizController {
     }
 
     private void handleTimeUp() {
-        System.out.println("Tempo esgotado para a pergunta atual!");
-        Platform.runLater(() -> showAlert("Tempo Esgotado!", "Infelizmente, o tempo para responder a pergunta acabou."));
+        timeUp = true;
+        timeline.stop();
         onNextQuestion();
     }
 
@@ -173,7 +175,7 @@ public class PlayQuizController {
 
     @FXML
     private void onNextQuestion() {
-        if (timeline.getStatus() == Animation.Status.RUNNING) {
+        if (timeline.getStatus() == Animation.Status.RUNNING || timeUp) {
             boolean answerSelected = false;
             CheckBox selectedCheckBox = null;
 
@@ -190,9 +192,9 @@ public class PlayQuizController {
             OptionsAnswerModel selectedAnswer = answerSelected ? (OptionsAnswerModel) selectedCheckBox.getUserData() : null;
             boolean isCorrect = answerSelected && selectedAnswer.getIsCorrect();
 
-            if (!answerSelected) {
+            if (!answerSelected && !timeUp) {
                 return;
-            } else {
+            } else if (answerSelected && !timeUp) {
                 String title = isCorrect ? "Correto!" : "Errado!";
                 String message = isCorrect ? "Você acertou a resposta!" : "Você errou a resposta.";
                 showAlert(title, message);
@@ -205,8 +207,9 @@ public class PlayQuizController {
         long timeSpentMillis = endTime - startTime;
         totalTimeSpent = totalTimeSpent.add(Duration.millis(timeSpentMillis));
 
-
-        calculateScore();
+        if (!timeUp) {
+            calculateScore();
+        }
 
         if (shownQuestionIndices.size() >= questions.size()) {
             completeQuiz();
@@ -238,7 +241,7 @@ public class PlayQuizController {
                 OptionsAnswerModel answer = (OptionsAnswerModel) checkBox.getUserData();
                 if (answer.getIsCorrect()) {
                     totalScore += answer.getScore();
-                    System.out.println("Pontos" + totalScore);
+                    setScore();
                 }
             }
         }
@@ -251,8 +254,29 @@ public class PlayQuizController {
         message += "Pontuação Total: " + totalScore + " pontos";
 
         showAlert("Quiz Completo", message);
-
+        reset();
         screenLoader.loadDetailsQuizScreen((Stage) finish.getScene().getWindow(), applicationContext, quiz);
+    }
+
+    private void reset() {
+        if (timeline != null) {
+            timeline.stop();
+            timeline.getKeyFrames().clear();
+            timeline = null;
+        }
+        shownQuestionIndices.clear();
+        currentQuestionIndex = 0;
+        totalScore = 0;
+        totalTimeSpent = Duration.ZERO;
+        questions = null;
+    }
+
+    private void countPlayQuiz() {
+            quizService.countPlayQuiz(quiz);
+    }
+
+    private void setScore() {
+        score.setText(Integer.toString(totalScore));
     }
 
     private void showAlert(String title, String message) {

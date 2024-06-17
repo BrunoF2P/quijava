@@ -37,10 +37,11 @@ public class ListQuizView {
         imageView.setPreserveRatio(true);
 
         ButtonBar buttonBar = new ButtonBar();
-
+        Button playing = new Button("Jogado " + quiz.getTotalAttempts().toString());
+        playing.setDisable(true);
         Button playButton = new Button("Jogar");
         playButton.setStyle("-fx-background-color: #2196f3;");
-        buttonBar.getButtons().addAll(playButton);
+        buttonBar.getButtons().addAll(playing,playButton);
         VBox.setMargin(buttonBar, new Insets(0, 0, 20, 0));
 
         playButton.setOnAction(event -> startQuiz.run());

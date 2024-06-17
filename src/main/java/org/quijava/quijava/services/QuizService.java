@@ -105,6 +105,10 @@ public class QuizService {
         return quizDao.findByCategoriesId(categoryId);
     }
 
+    public void countPlayQuiz(QuizModel quiz){
+        quiz.setTotalAttempts(quiz.getTotalAttempts() + 1);
+        quizDao.update(quiz);
+    }
     private UserModel getLoggedInUser() {
 
         int userId = sessionPreferencesModel.getUserId();
