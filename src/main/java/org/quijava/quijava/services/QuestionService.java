@@ -99,9 +99,9 @@ public class QuestionService {
     }
 
 
-    @Transactional(readOnly = true)
-    public List<QuestionModel> getAllQuestions() {
-        return questionDao.findAll();
+
+    public List<QuestionModel> findQuestionsByQuiz(Integer quiz) {
+        return questionDao.findByQuizId(quiz);
     }
 
 

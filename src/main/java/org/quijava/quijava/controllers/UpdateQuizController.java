@@ -128,6 +128,7 @@ public class UpdateQuizController implements Initializable {
             titleQuiz.setText(quiz.getTitle());
             descriptionQuiz.setText(quiz.getDescription());
             selectedCategories.addAll(quiz.getCategories().stream().map(CategoryModel::getDescription).toList());
+            imagePath = quiz.getImageQuiz();
             if (imagePath != null) {
                 Image image = new Image(new ByteArrayInputStream(imagePath));
                 imageView.setImage(image);
@@ -151,7 +152,7 @@ public class UpdateQuizController implements Initializable {
         alert.setContentText("O quiz foi atualizado com sucesso!");
         alert.showAndWait();
 
-        screenLoader.loadMyQuizzes((Stage) createQuiz.getScene().getWindow(), applicationContext);
+        screenLoader.loadCreateQuestionScreen((Stage) createQuiz.getScene().getWindow(), applicationContext, quiz);
     }
 
 
