@@ -68,22 +68,31 @@ public class CreateQuestionController {
 
     public void setQuizModel(QuizModel quizModel) {
         this.quiz = quizModel;
+        loadQuizQuestions();
     }
 
     public void initialize() {
         setupListView();
         setupChoiceBox();
         optionFieldController.initializeOptions(optionsContainer, scoreTextField);
+        refreshListView();
     }
 
     private void setupListView() {
         questionListView.setCellFactory(param -> new QuestionListCell());
-        refreshListView();
+        questionListView.setItems(questions);
     }
 
     private void setupChoiceBox() {
         difficultyChoiceBox.setItems(FXCollections.observableArrayList(QuestionDifficulty.values()));
         difficultyChoiceBox.setValue(QuestionDifficulty.FACIL);
+    }
+
+    private void loadQuizQuestions() {
+        if (quiz != null) {
+            List<QuestionModel> quizQuestions = questionService.findQuestionsByQuiz(quiz.getId());
+            questions.setAll(quizQuestions);
+        }
     }
 
     @FXML
@@ -125,7 +134,7 @@ public class CreateQuestionController {
 
         screenLoader.loadMyQuizzes((Stage) finishButton.getScene().getWindow(), applicationContext);
 
-}
+    }
 
     @FXML
     private void editList() {
@@ -152,7 +161,6 @@ public class CreateQuestionController {
                 questions.remove(selectedQuestion);
                 refreshListView();
             } catch (Exception e) {
-                // Handle exceptions appropriately
                 e.printStackTrace();
             }
         }
@@ -199,7 +207,8 @@ public class CreateQuestionController {
     }
 
     private void refreshListView() {
-        questionListView.setItems(FXCollections.observableArrayList(questions));
+        questionListView.refresh();
+        System.out.println("ListView recarregada. N questoes: " + questions.size());
     }
 
     private void loadQuestionDetails(QuestionModel question) {
@@ -217,7 +226,6 @@ public class CreateQuestionController {
             System.out.println("Imagem carregada com sucesso.");
         }
     }
-
 
     void updateQuestionType() {
         int selectedCount = countSelectedCheckBoxes();
