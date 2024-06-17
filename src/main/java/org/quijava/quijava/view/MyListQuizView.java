@@ -26,7 +26,7 @@ public class MyListQuizView {
         quizBox.setSpacing(20);
         quizBox.setStyle("-fx-background-color: #f4f4f4; -fx-padding: 10px; -fx-border-color: #ddd; -fx-border-width: 1px; -fx-border-radius: 5px;");
         quizBox.setOnMouseClicked(event -> showDetails.run()); // Adiciona evento de clique no VBox
-        quizBox.setMinWidth(400);
+        quizBox.setMinWidth(360);
 
         Text descriptionText = new Text(quiz.getTitle());
         descriptionText.setFont(Font.font(18));
@@ -35,18 +35,20 @@ public class MyListQuizView {
         ImageView imageView = new ImageView();
         Image image = bytesToImage(quiz.getImageQuiz());
         imageView.setImage(image);
-        imageView.setFitWidth(350);
+        imageView.setFitWidth(360);
         imageView.setFitHeight(200);
         imageView.setPreserveRatio(true);
 
         ButtonBar buttonBar = new ButtonBar();
+        Button playing = new Button("Jogado " + quiz.getTotalAttempts().toString());
+        playing.setDisable(true);
         Button deleteButton = new Button("Deletar");
         Button editButton = new Button("Editar");
         Button playButton = new Button("Jogar");
         deleteButton.setStyle("-fx-background-color: #ff5757;");
         editButton.setStyle("-fx-background-color: #4caf50;");
         playButton.setStyle("-fx-background-color: #2196f3;");
-        buttonBar.getButtons().addAll(deleteButton, editButton, playButton);
+        buttonBar.getButtons().addAll(playing, deleteButton, editButton, playButton);
         VBox.setMargin(buttonBar, new Insets(0, 0, 20, 0));
 
         deleteButton.setOnAction(event -> showDeleteConfirmation(quiz, onDelete));
