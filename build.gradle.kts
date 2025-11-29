@@ -57,4 +57,9 @@ tasks.withType<Javadoc>() {
 tasks.withType<Test>() {
     useJUnitPlatform()
     failOnNoDiscoveredTests = false
+    jvmArgs = listOf("--enable-native-access=ALL-UNNAMED")
+}
+
+tasks.withType<JavaExec>() {
+    jvmArgs = listOf("--enable-native-access=ALL-UNNAMED")
 }
