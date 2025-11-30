@@ -131,6 +131,10 @@ public class QuizService {
         return quizDao.findById(quizId);
     }
 
+    public Optional<QuizModel> findByIdWithCategories(Integer quizId) {
+        return quizDao.findByIdWithCategories(quizId);
+    }
+
     private UserModel getLoggedInUser() {
         return sessionPreferences.getUserId()
                 .flatMap(userDao::findById)

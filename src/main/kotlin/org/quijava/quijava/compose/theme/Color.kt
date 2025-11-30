@@ -2,14 +2,17 @@ package org.quijava.quijava.compose.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Java Brand Colors
+val JavaBlue = Color(0xFF007396)      // Java primary blue
+val JavaBlueDark = Color(0xFF005A7A)  // Darker blue for dark theme
+val JavaBlueLight = Color(0xFF4A9FBD) // Lighter blue variant
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val JavaOrange = Color(0xFFF89820)    // Java orange
+val JavaOrangeDark = Color(0xFFE67E00) // Darker orange
+val JavaOrangeLight = Color(0xFFFFB84D) // Lighter orange
 
-val Primary = Color(0xFF6200EE)
-val Secondary = Color(0xFF03DAC6)
-val Tertiary = Color(0xFF018786)
+// Supporting colors
+val JavaGray = Color(0xFF5382A1)      // Java secondary blue-gray
+val JavaGrayLight = Color(0xFFE8F4F8) // Light background
+val JavaGrayDark = Color(0xFF2D2D2D)  // Dark background
+

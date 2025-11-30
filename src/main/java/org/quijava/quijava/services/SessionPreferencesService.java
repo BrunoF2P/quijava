@@ -13,6 +13,7 @@ public class SessionPreferencesService {
     private static final String USER_ID_KEY = "user_id";
     private static final String SESSION_ID_KEY = "session_id";
     private static final String SESSION_ROLE_KEY = "role";
+    private static final String REMEMBERED_USERNAME_KEY = "remembered_username";
 
     private final Preferences preferences;
 
@@ -99,5 +100,21 @@ public class SessionPreferencesService {
 
     public boolean hasActiveSession() {
         return getSessionId().isPresent() && getUsername().isPresent();
+    }
+
+    public void saveRememberedUsername(String username) {
+        if (username != null) {
+            preferences.put(REMEMBERED_USERNAME_KEY, username);
+        } else {
+            preferences.remove(REMEMBERED_USERNAME_KEY);
+        }
+    }
+
+    public void clearRememberedUsername() {
+        preferences.remove(REMEMBERED_USERNAME_KEY);
+    }
+
+    public Optional<String> getRememberedUsername() {
+        return Optional.ofNullable(preferences.get(REMEMBERED_USERNAME_KEY, null));
     }
 }

@@ -56,12 +56,38 @@ public class QuestionService {
         return questionDao.save(existingQuestion);
     }
 
+    public QuestionModel updateQuestion(Integer questionId,
+                                       String questionText,
+                                       TypeQuestion typeQuestion,
+                                       QuestionDifficulty difficulty,
+                                       String durationText,
+                                       List<OptionsAnswerModel> newOptions,
+                                       byte[] image) {
+        QuestionModel existingQuestion = questionDao.findById(questionId)
+                .orElseThrow(() -> new IllegalArgumentException("Pergunta não encontrada."));
+
+        existingQuestion.setQuestionText(questionText);
+        existingQuestion.setTypeQuestion(typeQuestion);
+        existingQuestion.setQuestionDifficulty(difficulty);
+        existingQuestion.setImageQuestion(image);
+        existingQuestion.setLimiteTime(parseDuration(durationText));
+
+        existingQuestion.getOptionsAnswers().clear();
+        associateOptionsToQuestion(existingQuestion, newOptions);
+
+        return questionDao.save(existingQuestion);
+    }
+
     public void deleteQuestion(Integer questionId) {
         questionDao.deleteById(questionId);
     }
 
     public Optional<QuestionModel> findById(Integer id) {
         return questionDao.findById(id);
+    }
+
+    public Optional<QuestionModel> findByIdWithOptions(Integer id) {
+        return questionDao.findByIdWithOptions(id);
     }
 
     public List<QuestionModel> findQuestionsByQuiz(Integer quizId) {

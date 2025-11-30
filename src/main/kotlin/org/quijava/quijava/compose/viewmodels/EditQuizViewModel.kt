@@ -69,13 +69,34 @@ class EditQuizViewModel(
     }
 
     fun loadQuiz(quiz: QuizModel) {
-        _uiState.update {
-            it.copy(
-                title = quiz.title,
-                description = quiz.description,
-                selectedCategories = quiz.categories.map { cat -> cat.description }.toSet(),
-                selectedImageBytes = quiz.imageQuiz
-            )
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // Fetch quiz with categories from database
+                val fullQuiz = quizService.findByIdWithCategories(quiz.id).orElse(null)
+                
+                val categoryDescriptions = if (fullQuiz != null) {
+                    try {
+                        fullQuiz.categories?.map { it.description }?.toSet() ?: emptySet()
+                    } catch (e: Exception) {
+                        emptySet()
+                    }
+                } else {
+                    emptySet()
+                }
+                
+                _uiState.update {
+                    it.copy(
+                        title = fullQuiz?.title ?: quiz.title,
+                        description = fullQuiz?.description ?: quiz.description,
+                        selectedCategories = categoryDescriptions,
+                        selectedImageBytes = fullQuiz?.imageQuiz ?: quiz.imageQuiz
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(errorMessage = "Erro ao carregar quiz: ${e.message}")
+                }
+            }
         }
     }
 

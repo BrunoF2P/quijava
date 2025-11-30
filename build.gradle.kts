@@ -4,7 +4,6 @@ plugins {
     kotlin("jvm") version "2.1.0"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.0"
     id("org.jetbrains.compose") version "1.8.0"
-    id("application")
 }
 
 repositories {
@@ -18,6 +17,8 @@ dependencies {
     implementation(compose.desktop.currentOs)
     implementation(compose.material3)
     implementation(compose.materialIconsExtended)
+    implementation(compose.components.resources)
+
     implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.1")
 
     // Koin DI
@@ -46,9 +47,36 @@ group = "org.quijava"
 version = "1.0-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
-application {
-    mainClass.set("org.quijava.quijava.compose.MainComposeKt")
+compose.desktop {
+    application {
+        mainClass = "org.quijava.quijava.compose.MainComposeKt"
+
+        nativeDistributions {
+            targetFormats(org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg, org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi, org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb)
+            packageName = "quijava"
+            packageVersion = "1.0.0"
+
+            linux {
+                iconFile.set(project.file("src/main/resources/images/logo.png"))
+            }
+            windows {
+                // Windows requires .ico
+                // iconFile.set(project.file("src/main/resources/images/logo.ico"))
+            }
+            macOS {
+                // macOS requires .icns
+                // iconFile.set(project.file("src/main/resources/images/logo.icns"))
+            }
+        }
+    }
 }
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "org.quijava.quijava.compose.resources"
+    generateResClass = always
+}
+
 
 kotlin {
     jvmToolchain(21)

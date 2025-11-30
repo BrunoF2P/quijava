@@ -14,4 +14,7 @@ public interface RankingDao extends JpaRepository<@NotNull RankingModel, @NotNul
 
     @Query("SELECT r FROM RankingModel r JOIN FETCH r.user WHERE r.quiz.id = :quizId ORDER BY r.totalScore DESC, r.totalTime ASC")
     List<RankingModel> findAllRankByQuizId(@Param("quizId") Integer quizId);
+
+    @Query("SELECT r FROM RankingModel r JOIN FETCH r.quiz WHERE r.user.id = :userId ORDER BY r.dateCompleted DESC")
+    List<RankingModel> findByUserId(@Param("userId") Integer userId);
 }

@@ -21,4 +21,7 @@ public interface QuizDao extends JpaRepository<@NotNull QuizModel, @NotNull Inte
 
     @Query("SELECT q FROM QuizModel q JOIN q.categories c WHERE c.id = :categoryId")
     List<QuizModel> findByCategoriesId(@Param("categoryId") Integer categoryId);
+
+    @Query("SELECT q FROM QuizModel q LEFT JOIN FETCH q.categories WHERE q.id = :id")
+    java.util.Optional<QuizModel> findByIdWithCategories(@Param("id") Integer id);
 }

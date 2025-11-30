@@ -11,6 +11,7 @@ import org.quijava.quijava.services.LoginService
 data class LoginUiState(
     val username: String = "",
     val password: String = "",
+    val rememberMe: Boolean = false,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -30,6 +31,9 @@ class LoginViewModel(
     private val _events = Channel<LoginEvent>(Channel.BUFFERED)
     val events = _events.receiveAsFlow()
 
+    init {
+        loadRememberedUsername()
+    }
     fun updateUsername(username: String) {
         _uiState.update { it.copy(username = username) }
     }
@@ -38,12 +42,18 @@ class LoginViewModel(
         _uiState.update { it.copy(password = password) }
     }
 
+    fun toggleRememberMe(checked: Boolean) {
+        _uiState.update { it.copy(rememberMe = checked) }
+    }
+
     fun login() {
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val (username, password) = _uiState.value.let { it.username to it.password }
+                val (username, password, rememberMe) = _uiState.value.let {
+                    Triple(it.username, it.password, it.rememberMe)
+                }
 
                 if (!loginService.validateLogin(username, password)) {
                     _uiState.update { it.copy(isLoading = false) }
@@ -56,6 +66,12 @@ class LoginViewModel(
 
                 loginService.createFullSession(username, user.role, user.id)
 
+                if (rememberMe) {
+                    loginService.saveRememberedUsername(username)
+                } else {
+                    loginService.clearRememberedUsername()
+                }
+
                 _uiState.update { it.copy(isLoading = false) }
                 _events.send(LoginEvent.NavigateToMenu)
 
@@ -66,6 +82,19 @@ class LoginViewModel(
                 _uiState.update { it.copy(isLoading = false) }
                 _events.send(LoginEvent.ShowError("Erro ao fazer login"))
                 e.printStackTrace()
+            }
+        }
+    }
+
+    fun loadRememberedUsername() {
+        viewModelScope.launch(Dispatchers.IO) {
+            loginService.getRememberedUsername().ifPresent { username ->
+                _uiState.update {
+                    it.copy(
+                        username = username,
+                        rememberMe = true
+                    )
+                }
             }
         }
     }

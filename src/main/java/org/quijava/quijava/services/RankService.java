@@ -43,4 +43,8 @@ public class RankService {
     public List<RankingModel> getAllRankingsSorted(QuizModel quiz) {
         return rankingDao.findAllRankByQuizId(quiz.getId());
     }
+
+    public List<RankingModel> getUserHistory(UserModel user) {
+        return rankingDao.findByUserId(user.getId());
+    }
 }

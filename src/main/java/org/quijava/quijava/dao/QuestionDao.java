@@ -23,4 +23,7 @@ public interface QuestionDao extends JpaRepository<@NotNull QuestionModel, @NotN
 
     @Query("SELECT q FROM QuestionModel q LEFT JOIN FETCH q.optionsAnswers WHERE q.quiz.id = :quizId")
     List<QuestionModel> findByQuizIdWithOptions(@Param("quizId") Integer quizId);
+
+    @Query("SELECT q FROM QuestionModel q LEFT JOIN FETCH q.optionsAnswers WHERE q.id = :id")
+    java.util.Optional<QuestionModel> findByIdWithOptions(@Param("id") Integer id);
 }

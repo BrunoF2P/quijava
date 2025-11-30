@@ -63,4 +63,17 @@ public class LoginService {
     public Optional<UserModel> findById(Integer id) {
         return userDao.findById(id);
     }
+
+    public void saveRememberedUsername(String username) {
+        sessionPreferences.saveRememberedUsername(username);
+    }
+
+    public void clearRememberedUsername() {
+        sessionPreferences.clearRememberedUsername();
+    }
+
+    public Optional<String> getRememberedUsername() {
+        return sessionPreferences.getRememberedUsername();
+    }
+
 }

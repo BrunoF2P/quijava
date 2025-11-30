@@ -12,7 +12,7 @@ import org.quijava.quijava.services.*
 import org.springframework.context.ConfigurableApplicationContext
 
 enum class Screen {
-    Login, Register, Menu, CreateQuiz, Categories, ListQuizzes, PlayQuiz, MyQuizzes, DetailsQuiz, EditQuiz, CreateQuestion, CreateCategory
+    Login, Register, Menu, CreateQuiz, Categories, ListQuizzes, PlayQuiz, MyQuizzes, DetailsQuiz, EditQuiz, CreateQuestion, CreateCategory, History
 }
 
 @Composable
@@ -49,6 +49,7 @@ fun Navigation(context: ConfigurableApplicationContext) {
                 onNavigateToCreateCategory = { navController.navigate(Screen.CreateCategory.name) },
                 onNavigateToAllQuizzes = { navController.navigate(Screen.Categories.name) },
                 onNavigateToMyQuizzes = { navController.navigate(Screen.MyQuizzes.name) },
+                onNavigateToHistory = { navController.navigate(Screen.History.name) },
                 onLogout = { 
                     navController.navigate(Screen.Login.name) {
                         popUpTo(Screen.Menu.name) { inclusive = true }
@@ -108,20 +109,12 @@ fun Navigation(context: ConfigurableApplicationContext) {
             MyQuizzesScreen(
                 quizService = quizService,
                 sessionPreferencesService = sessionPreferencesService,
-                onQuizEdit = { quiz ->
+                onEditQuiz = { quiz ->
                     selectedQuiz = quiz
                     navController.navigate(Screen.EditQuiz.name)
                 },
-                onQuizPlay = { quiz ->
-                    selectedQuiz = quiz
-                    navController.navigate(Screen.PlayQuiz.name) {
-                        popUpTo(Screen.Menu.name) { inclusive = false }
-                        launchSingleTop = true
-                    }
-                },
-                onQuizDetails = { quiz ->
-                    selectedQuiz = quiz
-                    navController.navigate(Screen.DetailsQuiz.name)
+                onNavigateToCreateQuiz = {
+                    navController.navigate(Screen.CreateQuiz.name)
                 },
                 onBack = { navController.popBackStack() }
             )
@@ -206,6 +199,13 @@ fun Navigation(context: ConfigurableApplicationContext) {
                 onBack = {
                     navController.popBackStack()
                 }
+            )
+        }
+
+        composable(Screen.History.name) {
+            HistoryScreen(
+                viewModel = koinInject(),
+                onBack = { navController.popBackStack() }
             )
         }
     }

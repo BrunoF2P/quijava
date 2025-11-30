@@ -1,20 +1,28 @@
 package org.quijava.quijava.compose.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.quijava.quijava.compose.components.QuizCard
 import org.quijava.quijava.models.QuizModel
 import org.quijava.quijava.services.QuizService
 import org.quijava.quijava.services.SessionPreferencesService
@@ -22,224 +30,232 @@ import org.quijava.quijava.services.SessionPreferencesService
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyQuizzesScreen(
-    quizService: QuizService,
     sessionPreferencesService: SessionPreferencesService,
-    onQuizEdit: (QuizModel) -> Unit,
-    onQuizPlay: (QuizModel) -> Unit,
-    onQuizDetails: (QuizModel) -> Unit,
+    quizService: QuizService,
+    onEditQuiz: (QuizModel) -> Unit,
+    onNavigateToCreateQuiz: () -> Unit,
     onBack: () -> Unit
 ) {
     var quizzes by remember { mutableStateOf<List<QuizModel>>(emptyList()) }
-    val scope = rememberCoroutineScope()
     var isLoading by remember { mutableStateOf(true) }
-    var refreshTrigger by remember { mutableStateOf(0) }
+    var showDeleteDialog by remember { mutableStateOf<QuizModel?>(null) }
 
-    LaunchedEffect(refreshTrigger) {
-        launch(Dispatchers.IO) {
+    fun loadQuizzes() {
+        isLoading = true
+        // Using IO dispatcher for database operations
+        kotlinx.coroutines.GlobalScope.launch(Dispatchers.IO) {
             try {
-                val userId = sessionPreferencesService.sessionUserId
-                quizzes = quizService.findAllQuizzesByUserId(userId)
+                val userId = sessionPreferencesService.userId.orElse(null)
+                if (userId != null) {
+                    quizzes = quizService.findAllQuizzesByUserId(userId)
+                }
             } finally {
                 isLoading = false
             }
         }
     }
 
+    LaunchedEffect(Unit) {
+        loadQuizzes()
+    }
+
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Meus Quizzes") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                }
-            )
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onNavigateToCreateQuiz,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = Color.White
+            ) {
+                Icon(Icons.Default.Add, contentDescription = "Criar Quiz")
+            }
         }
     ) { paddingValues ->
-        if (isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else if (quizzes.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        Icons.Default.Quiz,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Spacer(Modifier.height(16.dp))
-                    Text(
-                        "Você ainda não criou nenhum quiz",
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Adaptive(minSize = 350.dp),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                items(quizzes) { quiz ->
-                    MyQuizCard(
-                        quiz = quiz,
-                        onEdit = { onQuizEdit(quiz) },
-                        onDelete = {
-                            scope.launch(Dispatchers.IO) {
-                                quizService.deleteQuiz(quiz.id)
-                                refreshTrigger++
-                            }
-                        },
-                        onPlay = { onQuizPlay(quiz) },
-                        onDetails = { onQuizDetails(quiz) }
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun MyQuizCard(
-    quiz: QuizModel,
-    onEdit: () -> Unit,
-    onDelete: () -> Unit,
-    onPlay: () -> Unit,
-    onDetails: () -> Unit
-) {
-    var showDeleteDialog by remember { mutableStateOf(false) }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(240.dp)
-    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            verticalArrangement = Arrangement.SpaceBetween
+                .background(MaterialTheme.colorScheme.background)
         ) {
-            Column {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+            // Header
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(180.dp)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.secondary,
+                                MaterialTheme.colorScheme.secondary.copy(alpha = 0.8f)
+                            )
+                        )
+                    )
+            ) {
+                IconButton(
+                    onClick = onBack,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.TopStart)
                 ) {
                     Icon(
-                        Icons.Default.Quiz,
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Voltar",
+                        tint = Color.White
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        Icons.Default.Person,
                         contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = Color.White,
+                        modifier = Modifier.size(48.dp)
+                    )
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        "Meus Quizzes",
+                        style = MaterialTheme.typography.headlineLarge.copy(
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
                     )
                     Text(
-                        quiz.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        "Gerencie seus quizzes criados",
+                        style = MaterialTheme.typography.titleMedium.copy(
+                            color = Color.White.copy(alpha = 0.9f)
+                        )
                     )
                 }
-
-                Spacer(Modifier.height(8.dp))
-
-                Text(
-                    quiz.description ?: "Sem descrição",
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
 
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+            if (isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
-                    OutlinedButton(
-                        onClick = onDetails,
-                        modifier = Modifier.weight(1f)
+                    CircularProgressIndicator()
+                }
+            } else if (quizzes.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Icon(Icons.Default.Info, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Info", style = MaterialTheme.typography.bodySmall)
-                    }
-
-                    Button(
-                        onClick = onPlay,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Jogar", style = MaterialTheme.typography.bodySmall)
+                        Text(
+                            "Você ainda não criou nenhum quiz",
+                            style = MaterialTheme.typography.titleLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Button(onClick = onNavigateToCreateQuiz) {
+                            Icon(Icons.Default.Add, contentDescription = null)
+                            Spacer(Modifier.width(8.dp))
+                            Text("Criar meu primeiro quiz")
+                        }
                     }
                 }
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Adaptive(minSize = 350.dp),
+                    contentPadding = PaddingValues(
+                        start = 16.dp,
+                        end = 16.dp,
+                        top = 16.dp,
+                        bottom = 80.dp // Space for FAB
+                    ),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    OutlinedButton(
-                        onClick = onEdit,
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Icon(Icons.Default.Edit, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Editar", style = MaterialTheme.typography.bodySmall)
-                    }
-
-                    OutlinedButton(
-                        onClick = { showDeleteDialog = true },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = MaterialTheme.colorScheme.error
-                        )
-                    ) {
-                        Icon(Icons.Default.Delete, contentDescription = null, modifier = Modifier.size(16.dp))
-                        Spacer(Modifier.width(4.dp))
-                        Text("Deletar", style = MaterialTheme.typography.bodySmall)
+                    items(quizzes) { quiz ->
+                        Box {
+                            QuizCard(
+                                quiz = quiz,
+                                onClick = { onEditQuiz(quiz) },
+                                showPlayButton = false
+                            )
+                            
+                            // Edit/Delete actions overlay
+                            Row(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(8.dp),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                Surface(
+                                    shape = CircleShape,
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                                    shadowElevation = 4.dp,
+                                    modifier = Modifier.size(40.dp)
+                                ) {
+                                    IconButton(onClick = { onEditQuiz(quiz) }) {
+                                        Icon(
+                                            Icons.Default.Edit,
+                                            contentDescription = "Editar",
+                                            tint = MaterialTheme.colorScheme.primary,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                                
+                                Surface(
+                                    shape = CircleShape,
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                                    shadowElevation = 4.dp,
+                                    modifier = Modifier.size(40.dp)
+                                ) {
+                                    IconButton(onClick = { showDeleteDialog = quiz }) {
+                                        Icon(
+                                            Icons.Default.Delete,
+                                            contentDescription = "Excluir",
+                                            tint = MaterialTheme.colorScheme.error,
+                                            modifier = Modifier.size(20.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
 
-    if (showDeleteDialog) {
+    // Delete Confirmation Dialog
+    showDeleteDialog?.let { quiz ->
         AlertDialog(
-            onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Confirmar exclusão") },
-            text = { Text("Tem certeza que deseja deletar o quiz \"${quiz.title}\"?") },
+            onDismissRequest = { showDeleteDialog = null },
+            title = { Text("Excluir Quiz") },
+            text = { Text("Tem certeza que deseja excluir o quiz '${quiz.title}'? Esta ação não pode ser desfeita.") },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
-                        showDeleteDialog = false
-                        onDelete()
+                        kotlinx.coroutines.GlobalScope.launch(Dispatchers.IO) {
+                            try {
+                                quizService.deleteQuiz(quiz.id)
+                                showDeleteDialog = null
+                                loadQuizzes()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                showDeleteDialog = null
+                            }
+                        }
                     },
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.error
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Text("Deletar")
+                    Text("Excluir")
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) {
+                TextButton(onClick = { showDeleteDialog = null }) {
                     Text("Cancelar")
                 }
             }

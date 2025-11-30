@@ -1,20 +1,27 @@
 package org.quijava.quijava.compose.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toComposeImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import org.quijava.quijava.compose.components.PrimaryButton
 import org.quijava.quijava.compose.viewmodels.EditQuizEvent
 import org.quijava.quijava.compose.viewmodels.EditQuizViewModel
 import org.quijava.quijava.models.QuizModel
@@ -46,190 +53,295 @@ fun EditQuizScreen(
         viewModel.loadQuiz(quiz)
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Editar Quiz") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Voltar")
-                    }
-                }
+    Scaffold { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(paddingValues)
+        ) {
+            // Background Header
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .background(
+                        Brush.verticalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.primary,
+                                MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                            )
+                        )
+                    )
             )
-        }
-    ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
-            if (state.isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-            } else {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    OutlinedTextField(
-                        value = state.title,
-                        onValueChange = { viewModel.updateTitle(it) },
-                        label = { Text("Título do Quiz") },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true
-                    )
 
-                    OutlinedTextField(
-                        value = state.description,
-                        onValueChange = { viewModel.updateDescription(it) },
-                        label = { Text("Descrição") },
-                        modifier = Modifier.fillMaxWidth(),
-                        minLines = 3
-                    )
+            // Back Button
+            IconButton(
+                onClick = onBack,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .align(Alignment.TopStart)
+            ) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Voltar",
+                    tint = Color.White
+                )
+            }
 
-                    // Categories Section
-                    Card(modifier = Modifier.fillMaxWidth()) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Text("Categorias", style = MaterialTheme.typography.titleMedium)
-                                IconButton(onClick = { viewModel.toggleCategoryDialog(true) }) {
-                                    Icon(Icons.Default.Add, contentDescription = "Adicionar Categoria")
-                                }
-                            }
-                            
-                            Spacer(Modifier.height(8.dp))
-                            
-                            if (state.selectedCategories.isEmpty()) {
-                                Text(
-                                    "Nenhuma categoria selecionada",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+            // Main Content Card
+            Card(
+                modifier = Modifier
+                    .width(600.dp)
+                    .align(Alignment.Center)
+                    .padding(vertical = 32.dp)
+                    .fillMaxHeight(0.9f),
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
+            ) {
+                if (state.isLoading) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
+                    }
+                } else {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(32.dp)
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                    ) {
+                        // Header Icon
+                        Surface(
+                            shape = RoundedCornerShape(16.dp),
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            modifier = Modifier.size(64.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    Icons.Default.Edit,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(32.dp)
                                 )
-                            } else {
+                            }
+                        }
+
+                        Text(
+                            "Editar Quiz",
+                            style = MaterialTheme.typography.headlineSmall.copy(
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+
+                        // Form Fields
+                        OutlinedTextField(
+                            value = state.title,
+                            onValueChange = { viewModel.updateTitle(it) },
+                            label = { Text("Título do Quiz") },
+                            leadingIcon = { Icon(Icons.Default.Title, contentDescription = null) },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+
+                        OutlinedTextField(
+                            value = state.description,
+                            onValueChange = { viewModel.updateDescription(it) },
+                            label = { Text("Descrição") },
+                            leadingIcon = { Icon(Icons.Default.Description, contentDescription = null) },
+                            modifier = Modifier.fillMaxWidth(),
+                            minLines = 3,
+                            maxLines = 5,
+                            shape = RoundedCornerShape(12.dp)
+                        )
+
+                        // Category Selection
+                        OutlinedCard(
+                            onClick = { viewModel.toggleCategoryDialog(true) },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(12.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    state.selectedCategories.forEach { category ->
-                                        InputChip(
-                                            selected = true,
-                                            onClick = { viewModel.toggleCategorySelection(category, false) },
-                                            label = { Text(category) },
-                                            trailingIcon = {
-                                                Icon(
-                                                    Icons.Default.Close,
-                                                    contentDescription = "Remover",
-                                                    modifier = Modifier.size(16.dp)
-                                                )
-                                            }
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Icon(
+                                            Icons.Default.Category,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
+                                        Spacer(Modifier.width(12.dp))
+                                        Text(
+                                            "Categorias",
+                                            style = MaterialTheme.typography.bodyLarge
+                                        )
+                                    }
+                                    Icon(
+                                        Icons.Default.Add,
+                                        contentDescription = "Adicionar",
+                                        tint = MaterialTheme.colorScheme.primary
+                                    )
+                                }
+                                
+                                if (state.selectedCategories.isNotEmpty()) {
+                                    Spacer(Modifier.height(12.dp))
+                                    FlowRow(
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                                    ) {
+                                        state.selectedCategories.forEach { category ->
+                                            InputChip(
+                                                selected = true,
+                                                onClick = { viewModel.toggleCategorySelection(category, false) },
+                                                label = { Text(category) },
+                                                trailingIcon = {
+                                                    Icon(
+                                                        Icons.Default.Close,
+                                                        contentDescription = "Remover",
+                                                        modifier = Modifier.size(16.dp)
+                                                    )
+                                                },
+                                                colors = InputChipDefaults.inputChipColors(
+                                                    selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                                                    selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer
+                                                )
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    Button(
-                        onClick = { viewModel.selectImage() },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.outlinedButtonColors()
-                    ) {
-                        Icon(Icons.Default.Image, contentDescription = null)
-                        Spacer(Modifier.width(8.dp))
-                        Text("Alterar Imagem (Opcional)")
-                    }
-
-                    // Image Preview
-                    state.selectedImageBytes?.let { bytes ->
-                        val imageBitmap = remember(bytes) {
-                            try {
-                                SkiaImage.makeFromEncoded(bytes).toComposeImageBitmap()
-                            } catch (e: Exception) {
-                                null
+                        // Image Selection
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Button(
+                                onClick = { viewModel.selectImage() },
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = ButtonDefaults.outlinedButtonColors(),
+                                shape = RoundedCornerShape(12.dp),
+                                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                            ) {
+                                Icon(Icons.Default.Image, contentDescription = null)
+                                Spacer(Modifier.width(8.dp))
+                                Text("Alterar Imagem de Capa")
                             }
-                        }
 
-                        if (imageBitmap != null) {
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                Image(
-                                    bitmap = imageBitmap,
-                                    contentDescription = "Preview",
-                                    modifier = Modifier
-                                        .height(200.dp)
-                                        .fillMaxWidth(),
-                                    alignment = Alignment.Center
-                                )
-                                IconButton(
-                                    onClick = { viewModel.removeImage() },
-                                    modifier = Modifier.align(Alignment.TopEnd)
-                                ) {
-                                    Icon(
-                                        Icons.Default.Close,
-                                        contentDescription = "Remover",
-                                        tint = MaterialTheme.colorScheme.error
-                                    )
+                            // Image Preview
+                            state.selectedImageBytes?.let { bytes ->
+                                val imageBitmap = remember(bytes) {
+                                    try {
+                                        SkiaImage.makeFromEncoded(bytes).toComposeImageBitmap()
+                                    } catch (e: Exception) {
+                                        null
+                                    }
+                                }
+
+                                if (imageBitmap != null) {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(200.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .background(MaterialTheme.colorScheme.surfaceVariant)
+                                    ) {
+                                        Image(
+                                            bitmap = imageBitmap,
+                                            contentDescription = "Preview",
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                        IconButton(
+                                            onClick = { viewModel.removeImage() },
+                                            modifier = Modifier
+                                                .align(Alignment.TopEnd)
+                                                .padding(8.dp)
+                                                .background(Color.Black.copy(alpha = 0.5f), CircleShape)
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Close,
+                                                contentDescription = "Remover",
+                                                tint = Color.White
+                                            )
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    Spacer(Modifier.height(16.dp))
+                        state.errorMessage?.let {
+                            Text(
+                                it,
+                                color = MaterialTheme.colorScheme.error,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
 
-                    state.errorMessage?.let {
-                        Text(
-                            text = it,
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(bottom = 8.dp)
+                        Spacer(Modifier.weight(1f))
+
+                        PrimaryButton(
+                            text = "Salvar Alterações",
+                            onClick = { viewModel.updateQuiz(quiz) },
+                            modifier = Modifier.fillMaxWidth(),
+                            icon = { Icon(Icons.Default.Save, contentDescription = null, tint = Color.White) }
                         )
-                    }
-
-                    Button(
-                        onClick = { viewModel.updateQuiz(quiz) },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = true
-                    ) {
-                        Text("Atualizar Quiz")
                     }
                 }
             }
-            
-            // Category Selection Dialog
-            if (state.showCategoryDialog) {
-                AlertDialog(
-                    onDismissRequest = { viewModel.toggleCategoryDialog(false) },
-                    title = { Text("Selecionar Categorias") },
-                    text = {
-                        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                            state.categories.forEach { category ->
-                                Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 4.dp)
-                                ) {
-                                    Checkbox(
-                                        checked = state.selectedCategories.contains(category),
-                                        onCheckedChange = { isChecked ->
-                                            viewModel.toggleCategorySelection(category, isChecked)
-                                        }
-                                    )
-                                    Text(
-                                        text = category,
-                                        modifier = Modifier.padding(start = 8.dp)
-                                    )
+        }
+    }
+
+    // Category Selection Dialog
+    if (state.showCategoryDialog) {
+        AlertDialog(
+            onDismissRequest = { viewModel.toggleCategoryDialog(false) },
+            icon = { Icon(Icons.Default.Category, contentDescription = null) },
+            title = { Text("Selecionar Categorias") },
+            text = {
+                Column(
+                    modifier = Modifier
+                        .heightIn(max = 400.dp)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    state.categories.forEach { category ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = state.selectedCategories.contains(category),
+                                onCheckedChange = { checked ->
+                                    viewModel.toggleCategorySelection(category, checked)
                                 }
-                            }
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { viewModel.toggleCategoryDialog(false) }) {
-                            Text("Concluir")
+                            )
+                            Text(
+                                text = category,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
                         }
                     }
-                )
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { viewModel.toggleCategoryDialog(false) }) {
+                    Text("Concluir")
+                }
             }
-        }
+        )
     }
 }

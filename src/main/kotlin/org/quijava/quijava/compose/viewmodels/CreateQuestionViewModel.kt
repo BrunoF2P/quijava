@@ -9,7 +9,6 @@ import kotlinx.coroutines.launch
 import org.quijava.quijava.models.*
 import org.quijava.quijava.services.ImageService
 import org.quijava.quijava.services.QuestionService
-import java.time.Duration
 
 data class CreateQuestionUiState(
     val isLoading: Boolean = true,
@@ -122,22 +121,45 @@ class CreateQuestionViewModel(
     }
 
     fun loadQuestionForEdit(question: QuestionModel) {
-        val options = question.optionsAnswers?.map { 
-            OptionState(text = it.optionText, isCorrect = it.isCorrect) 
-        } ?: listOf(OptionState(), OptionState())
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                // Fetch the question with options from database
+                val fullQuestion = questionService.findByIdWithOptions(question.id).orElse(null)
+                
+                val options = if (fullQuestion != null) {
+                    try {
+                        fullQuestion.optionsAnswers?.map { 
+                            OptionState(text = it.optionText, isCorrect = it.isCorrect) 
+                        } ?: listOf(OptionState(), OptionState())
+                    } catch (e: Exception) {
+                        listOf(OptionState(), OptionState())
+                    }
+                } else {
+                    listOf(OptionState(), OptionState())
+                }
 
+                _uiState.update {
+                    it.copy(
+                        form = QuestionFormState(
+                            questionText = fullQuestion?.questionText ?: question.questionText,
+                            durationSeconds = fullQuestion?.limiteTime?.seconds?.toString() ?: "30",
+                            difficulty = fullQuestion?.questionDifficulty ?: question.questionDifficulty,
+                            selectedImageBytes = fullQuestion?.imageQuestion ?: question.imageQuestion,
+                            options = options,
+                            editingQuestion = question,
+                            score = "10"
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                _events.send(CreateQuestionEvent.ShowError("Erro ao carregar questão: ${e.message}"))
+            }
+        }
+    }
+
+    fun cancelEdit() {
         _uiState.update {
-            it.copy(
-                form = QuestionFormState(
-                    questionText = question.questionText,
-                    durationSeconds = question.limiteTime?.seconds?.toString() ?: "30",
-                    difficulty = question.questionDifficulty,
-                    selectedImageBytes = question.imageQuestion,
-                    options = options,
-                    editingQuestion = question,
-                    score = "10"
-                )
-            )
+            it.copy(form = QuestionFormState())
         }
     }
 
@@ -164,16 +186,16 @@ class CreateQuestionViewModel(
                 }
 
                 if (form.editingQuestion != null) {
-                    form.editingQuestion.apply {
-                        questionText = form.questionText
-                        typeQuestion = type
-                        limiteTime = Duration.ofSeconds(form.durationSeconds.toLongOrNull() ?: 30)
-                        questionDifficulty = form.difficulty
-                        imageQuestion = form.selectedImageBytes
-                        optionsAnswers.clear()
-                        optionsAnswers.addAll(optionsModels.onEach { it.question = this })
-                    }
-                    questionService.updateQuestion(form.editingQuestion)
+                    // Use the new updateQuestion method that accepts parameters
+                    questionService.updateQuestion(
+                        form.editingQuestion.id,
+                        form.questionText,
+                        type,
+                        form.difficulty,
+                        form.durationSeconds,
+                        optionsModels,
+                        form.selectedImageBytes
+                    )
                 } else {
                     questionService.createQuestion(
                         form.questionText,

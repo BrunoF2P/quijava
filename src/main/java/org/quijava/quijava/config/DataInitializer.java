@@ -17,7 +17,7 @@ public class DataInitializer {
     private static final int ADMIN_ROLE = 2;
 
     private static final List<String> DEFAULT_CATEGORIES = List.of(
-            "Informatica", "Matematica", "Jogos", "Animes", "Historia", "Outros"
+            "Informatica", "Matematica", "Jogos", "Animes", "Historia"
     );
 
     @Bean
