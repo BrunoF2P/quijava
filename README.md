@@ -1,216 +1,180 @@
 <a name="readme-top"></a>
 
-<!-- LOGO -->
-<br />
 <div align="center">
   <a href="https://github.com/BrunoF2P/quijava">
     <img src="src/main/resources/images/logo.png" alt="Logo" width="200" height="200">
   </a>
 
-<h3 align="center">Quijava - Quizes para você se divertir</h3>
+  <h1 align="center">QuiJava</h1>
 
   <p align="center">
-    Projeto avaliativo para LP2 (Linguagem de Programação 2)!
-    <br/>
-    <a href="https://github.com/BrunoF2P/quijava/issues/new?labels=bug&template=bug-report---.md">Reporte Bug</a>
+    <b>A plataforma definitiva de quizzes para testar seus conhecimentos!</b>
+    <br />
+    <i>Desenvolvido com Kotlin, Jetpack Compose Desktop e Spring Boot</i>
+    <br />
+    <br />
+    <a href="#-funcionalidades">Funcionalidades</a>
     ·
-    <a href="https://github.com/BrunoF2P/quijava/issues/new?labels=enhancement&template=feature-request---.md">Solicitar recurso</a>
+    <a href="#-instalação">Instalação</a>
+    ·
+    <a href="#-telas">Telas</a>
   </p>
 </div>
 
+<div align="center">
 
+[![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org)
+[![Compose Desktop](https://img.shields.io/badge/Compose_Desktop-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white)](https://www.jetbrains.com/lp/compose-multiplatform/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white)](https://hibernate.org/)
 
-<!-- CONTEUDOS -->
-<details>
-  <summary>Tabela de Conteudos</summary>
-  <ol>
-    <li>
-      <a href="#sobre-o-projeto">Sobre o Projeto</a>
-      <ul>
-        <li><a href="#construcao">Construção</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#comecando">Começando</a>
-      <ul>
-        <li><a href="#prerequisitos">Pre-requisitos</a></li>
-        <li><a href="#instalacao">Instalação</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#licenca">Licença</a></li>
-    <li><a href="#contato">Contato</a></li>
-    <li><a href="#agradecimentos">Agradecimentos</a></li>
-  </ol>
-</details>
+</div>
 
+<br />
 
+## 📖 Sobre o Projeto
 
-<!-- Sobre o Projeto -->
-## Sobre o Projeto
+**QuiJava** é uma aplicação desktop moderna e interativa para criação e execução de quizzes. Desenvolvido como projeto avaliativo para a disciplina de Linguagem de Programação 2, ele evoluiu para uma plataforma robusta com uma interface de usuário de alto nível.
 
-O projeto consiste na implementação de um quiz interativo utilizando os princípios e técnicas aprendidos na disciplina de Linguagem de Programação 2. O objetivo é criar uma aplicação que permita aos usuários testarem seus conhecimentos em um determinado tema, apresentando uma série de perguntas e fornecendo feedback instantâneo sobre as respostas escolhidas.
+O projeto combina a robustez do **Spring Boot** no backend com a beleza e fluidez do **Jetpack Compose Desktop** no frontend, oferecendo uma experiência de usuário premium.
 
+---
 
-<p align="right">(<a href="#readme-top">inicio</a>)</p>
+## 📸 Telas
 
+> *Adicione aqui as capturas de tela do seu projeto para mostrar como ele ficou incrível!*
 
-### Construção
+### 🏠 Menu Principal & Dashboard
+<div align="center">
+  <img src="images/menu.png" alt="Menu Principal" width="800">
+  <br>
+  <i>Dashboard intuitivo com acesso rápido a todas as funcionalidades</i>
+</div>
 
+<br>
 
-* [![Java][Java]][Java-url]
-* [![Javafx][Javafx]][Javafx-url]
+### 🎮 Jogando um Quiz
+<div align="center">
+  <img src="images/jogo.png" alt="Tela de Jogo" width="800">
+  <br>
+  <i>Interface imersiva com timer animado e feedback visual</i>
+</div>
 
+<br>
 
-<p align="right">(<a href="#readme-top">inicio</a>)</p>
+### ✏️ Criação de Quiz
+<div align="center">
+  <img src="images/criando.png" alt="Criação de Quiz" width="800">
+  <br>
+  <i>Editor poderoso para criar perguntas personalizadas com imagens</i>
+</div>
 
-<!-- COMECO -->
-## Começando
+<br>
 
-Antes de começar, verifique se sua máquina atende aos seguintes requisitos:
+### 🔐 Login & Registro
+<div align="center">
+  <img src="images/login.png" alt="Login" width="800">
+  <br>
+  <i>Autenticação segura com opção de "Lembrar-me"</i>
+</div>
 
-### Pre-requisitos
+<br>
 
-1. **Java:** É necessário ter o Java 21 ou uma versão superior instalada na sua máquina. Você pode baixar o Java mais recente em [Java](https://java.com).
+### 📜 Histórico de Partidas
+<div align="center">
+  <img src="images/historico.png" alt="Histórico" width="800">
+  <br>
+  <i>Acompanhe seu desempenho e quizzes completados</i>
+</div>
 
-2. **Java Terumin no IntelliJ:** Certifique-se de ter o SDK Java Terumin 21 instalado no IntelliJ IDEA. Este SDK é essencial para o desenvolvimento e execução do projeto. 
-3. **Banco de dados:** O projeto requer um Banco de dados para armazenar informações, no momento está configurado com o HSQLDB. Você pode encontrar mais informações e baixar o [HSQLDB](https://hsqldb.org).
+---
 
-### Instalação
+## ✨ Funcionalidades
 
-1. Clone este repositório em sua máquina local usando o comando abaixo:
+### 👤 Para Estudantes
+- **Explorar Quizzes:** Navegue por uma vasta biblioteca de quizzes organizados por categorias.
+- **Jogar:** Teste seus conhecimentos com um sistema de jogo dinâmico, incluindo timer e pontuação.
+- **Ranking:** Veja seu desempenho e compare com outros jogadores.
+- **Histórico:** Acompanhe os quizzes que você já completou.
 
-    ```bash
-    git clone https://github.com/BrunoF2P/quijava.git
-    ```
-2. Navegue até o diretório recém-clonado e abra sua IDE:
+### 👨‍🏫 Para Professores/Admins
+- **Criar Quizzes:** Ferramenta completa para criar quizzes com título, descrição, imagem e categorias.
+- **Gerenciar Perguntas:** Adicione perguntas de múltipla escolha, defina a dificuldade e o tempo limite.
+- **Editor Visual:** Interface moderna para editar quizzes existentes.
+- **Gerenciar Categorias:** Crie e organize categorias para manter o conteúdo estruturado.
 
-    ```bash
-    cd quijava
-    ```
-3. **Atualize o projeto:** Dependendo da sua IDE, você pode precisar atualizar o projeto para que o Maven baixe os plugins adicionados. Em muitas IDEs, isso é feito clicando com o botão direito do mouse no arquivo pom.xml e selecionando a opção para atualizar o projeto ou atualizar as dependências do Maven.
-4.  Abra a pasta `db` do projeto:
+---
 
-    ```bash
-    cd db
-    ```
+## 🛠️ Tecnologias Utilizadas
 
-4. Ligue o servidor do banco de dados executando o seguinte comando (certifique-se de substituir `[PATH_HSQLDB]` pelo caminho para a biblioteca HSQLDB em sua máquina):
+- **Linguagem:** Kotlin & Java 21
+- **Frontend:** Jetpack Compose Desktop (Material Design 3)
+- **Backend:** Spring Boot 3
+- **Banco de Dados:** HSQLDB (JPA/Hibernate)
+- **Build System:** Gradle
 
-    ```bash
-    java -cp [PATH_HSQLDB]/lib/hsqldb.jar org.hsqldb.server.Server --database.0 quijavadb --dbname.0 quijavadb
-    ```
+---
 
-   Isso iniciará o servidor do banco de dados HSQLDB com o banco de dados `quijavadb`.
+## 🚀 Roadmap (Funcionalidades Futuras)
 
+O QuiJava está em constante evolução! Aqui estão algumas das funcionalidades planejadas para as próximas versões:
 
-5. Siga as instruções específicas do projeto para configurar o ambiente e iniciar o desenvolvimento.
+- [ ] **Perfil de Usuário:** Edição de avatar, senha e visualização de estatísticas detalhadas.
+- [ ] **Leaderboard Global:** Ranking com os melhores jogadores de toda a plataforma.
+- [ ] **Modo Escuro/Claro:** Alternância de tema manual nas configurações.
+- [ ] **Exportar Quizzes:** Compartilhamento de quizzes via arquivo para outros professores.
+- [ ] **Sistema de Conquistas:** Badges e medalhas por objetivos alcançados.
+- [ ] **Modo Multiplayer:** Desafie um amigo em tempo real!
 
-Se você encontrar algum problema durante a instalação ou configuração, entre em contato com os contribuintes do projeto.
-<!-- ROADMAP -->
-## Roadmap
+---
 
+## 🚀 Instalação e Execução
 
+### Pré-requisitos
+- JDK 21 instalado
+- Git instalado
 
-### Telas
-- [ ] Menu
-  * Listagem de quizzes por categoria
-  * Filtrar por categorias
-  - [ ] Informação auxiliar
-    * Mostrar se um usuario já realizou um quiz ou não
-    * Exibir potuação obtida pelo usuario quiz
-- [x] Cadastro
-- [x] Criar quiz
-- [ ] Gerenciar quizzes feitos pelo administrador
-  * Possibilidade de editar pontuação, pergunta, img, tempo de resposta
+### Passo a Passo
 
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/BrunoF2P/quijava.git
+   cd quijava
+   ```
 
-### Criacao de quiz
-- [x] Definição do Quiz
-  * Criar interface para inserção de título, descrição e temas.
-  * Implementação de funcionalidades para salvar título, descrição e tema do quiz.
-- [ ] Configuração de Perguntas
-  * Adicionar campo para selecionar o número de perguntas 
-  - [x] Implementar opções para escolha do tipo de pergunta
-    * Multipla escolha
-    * Escolha unica
-  - [ ] Implementar opções para escolha do tipo de pergunta
-- [x] Permitir definição da pontuação para cada pergunta
-- [x] Adicionar imagem para cada pergunta
-- [x] Tempo limite para responder cada pergunta
-- [ ] Visibilidade
-  * Opção para definir se o quiz é publico ou privado
+2. **Execute a aplicação**
+   ```bash
+   ./gradlew run
+   ```
 
-### Cadastro
-- [x] Gerenciamento de Usuarios
-  * Formulario de registro para novos usuarios
-  * Sistema de autenticação de login de usuarios
+> **Nota:** O banco de dados HSQLDB é iniciado automaticamente ou configurado via `application.properties`.
 
+---
 
+## 🤝 Contribuição
 
+Contribuições são o que fazem a comunidade open source um lugar incrível para aprender, inspirar e criar. Qualquer contribuição que você fizer será **muito apreciada**.
 
-Para quaisquer funcionalidades adicionais além do escopo planejado ou para qualquer problema conhecido: [Issues](https://github.com/BrunoF2P/quijava/issues)  
+1. Faça um Fork do projeto
+2. Crie sua Feature Branch (`git checkout -b feature/MinhaFeature`)
+3. Commit suas mudanças (`git commit -m 'Adicionando uma nova feature'`)
+4. Push para a Branch (`git push origin feature/MinhaFeature`)
+5. Abra um Pull Request
 
-<p align="right">(<a href="#readme-top">inicio</a>)</p>
+---
 
+## 📝 Licença
 
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
+---
 
+## 📞 Contato
 
+**Bruno Bispo** - [@brunof2p](https://instagram.com/brunof2p)
+<br>
+**Gabriel Brandão** - [GitHub](https://github.com/Tartacoding)
 
-<!-- LICENSE -->
-## Licença
+Link do Projeto: [https://github.com/BrunoF2P/quijava](https://github.com/BrunoF2P/quijava)
 
-Distribuído sob a licença MIT. Consulte `LICENSE.txt` para obter mais informações.
-
-<p align="right">(<a href="#readme-top">inicio</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contato
-
-Bruno Bispo: [@brunof2p](https://instagram.com/brunof2p) -
-Projetos: [github.com/BrunoF2P](https://github.com/BrunoF2P)
-
-Gabriel Brandão: [](##) - 
-Projetos: [github.com/Tartacoding](https://github.com/Tartacoding)
-
-<p align="right">(<a href="#readme-top">inicio</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Agradecimentos
-
-
-* [Escolha uma licença de código aberto](https://choosealicense.com)
-* [Img Shields](https://shields.io)
-* [Template README](https://github.com/othneildrew/Best-README-Template)
-
-<p align="right">(<a href="#readme-top">inicio</a>)</p>
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-
-
-
-[Java]: https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white
-[Java-url]: https://www.java.com/
-[Javafx]: https://img.shields.io/badge/javafx-%23FF0000.svg?style=for-the-badge&logo=javafx&logoColor=white
-[Javafx-url]: https://openjfx.io/
-
+<p align="right">(<a href="#readme-top">voltar ao topo</a>)</p>

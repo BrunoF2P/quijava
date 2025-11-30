@@ -3,8 +3,11 @@ package org.quijava.quijava.models;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "answers")
@@ -23,12 +26,17 @@ public class AnswerModel {
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;
 
-    @Column(name = "selected_answer", nullable = false)
-    private List<Integer> selectedAnswer;
+    @ElementCollection
+    @CollectionTable(
+            name = "answer_selected_options",
+            joinColumns = @JoinColumn(name = "answer_id")
+    )
+    @Column(name = "option_id", nullable = false)
+    @OrderColumn(name = "selection_order")
+    private List<Integer> selectedAnswer = new ArrayList<>();
 
-    @Lob
     @Column(name = "time_answer", nullable = false)
-    private String timeAnswer;
+    private Duration timeAnswer;
 
     @Column(name = "win_score", nullable = false)
     private Integer winScore;
@@ -66,14 +74,14 @@ public class AnswerModel {
     }
 
     public void setSelectedAnswer(List<Integer> selectedAnswer) {
-        this.selectedAnswer = selectedAnswer;
+        this.selectedAnswer = selectedAnswer != null ? selectedAnswer : new ArrayList<>();
     }
 
-    public String getTimeAnswer() {
+    public Duration getTimeAnswer() {
         return timeAnswer;
     }
 
-    public void setTimeAnswer(String timeAnswer) {
+    public void setTimeAnswer(Duration timeAnswer) {
         this.timeAnswer = timeAnswer;
     }
 
@@ -93,4 +101,33 @@ public class AnswerModel {
         this.dateCompleted = dateCompleted;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        if (this.dateCompleted == null) {
+            this.dateCompleted = Instant.now();
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AnswerModel that = (AnswerModel) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "AnswerModel{" +
+                "id=" + id +
+                ", winScore=" + winScore +
+                ", timeAnswer=" + timeAnswer +
+                ", dateCompleted=" + dateCompleted +
+                '}';
+    }
 }

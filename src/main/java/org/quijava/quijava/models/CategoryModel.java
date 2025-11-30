@@ -3,6 +3,7 @@ package org.quijava.quijava.models;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -17,7 +18,7 @@ public class CategoryModel {
     @Column(name = "description", length = 64)
     private String description;
 
-    @ManyToMany(mappedBy = "categories")
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
     private Set<QuizModel> quizzes = new LinkedHashSet<>();
 
     public Integer getId() {
@@ -44,4 +45,21 @@ public class CategoryModel {
         this.quizzes = quizzes;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryModel that = (CategoryModel) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryModel{id=" + id + ", description='" + description + "'}";
+    }
 }

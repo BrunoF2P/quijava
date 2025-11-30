@@ -5,6 +5,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import java.util.Date;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -33,13 +34,13 @@ public class UserModel {
     @Column(name = "role", nullable = false)
     private Integer role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<AnswerModel> answers = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private Set<QuizModel> quizzes = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private Set<RankingModel> rankings = new LinkedHashSet<>();
 
     public Integer getId() {
@@ -125,4 +126,26 @@ public class UserModel {
         this.updatedAt = new Date();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserModel userModel = (UserModel) o;
+        return Objects.equals(id, userModel.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", role=" + role +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

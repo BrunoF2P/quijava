@@ -1,17 +1,16 @@
 package org.quijava.quijava.dao;
 
+import org.jetbrains.annotations.NotNull;
 import org.quijava.quijava.models.UserModel;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface UserDao {
-    void save(UserModel user);
+import java.util.Optional;
 
-    void update(UserModel user);
+@Repository
+public interface UserDao extends JpaRepository<@NotNull UserModel, @NotNull Integer> {
 
-    void delete(UserModel user);
-
-    UserModel findById(Integer id);
-
-    UserModel findByUsername(String username);
+    Optional<UserModel> findByUsername(String username);
 
     boolean existsByUsername(String username);
 }

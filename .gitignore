@@ -2,9 +2,16 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+db/
+.kotlin
 
 ### ENV ####
 .env
+
+### Database ###
+data/
+*.log
+*.lck
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
@@ -14,6 +21,8 @@ target/
 *.iws
 *.iml
 *.ipr
+/build
+.gradle
 
 ### Eclipse ###
 .apt_generated
