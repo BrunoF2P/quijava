@@ -59,7 +59,10 @@ public class RegisterService {
         UserModel newUser = new UserModel();
         newUser.setUsername(username);
         newUser.setPassword(passwordEncoder.encode(password));
-        newUser.setRole(USER_ROLE);
+        
+        // First user becomes admin, others are regular users
+        boolean isFirstUser = userDao.count() == 0;
+        newUser.setRole(isFirstUser ? 2 : USER_ROLE);
 
         return userDao.save(newUser);
     }
