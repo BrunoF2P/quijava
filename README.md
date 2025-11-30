@@ -42,8 +42,6 @@ O projeto combina a robustez do **Spring Boot** no backend com a beleza e fluide
 
 ## 📸 Telas
 
-> *Adicione aqui as capturas de tela do seu projeto para mostrar como ele ficou incrível!*
-
 ### 🏠 Menu Principal & Dashboard
 <div align="center">
   <img src="images/menu.png" alt="Menu Principal" width="800">
