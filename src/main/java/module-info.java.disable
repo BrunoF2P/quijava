@@ -1,0 +1,34 @@
+module org.quijava.quijava {
+    requires spring.core;
+    requires spring.boot.autoconfigure;
+    requires spring.boot;
+    requires spring.context;
+    requires spring.beans;
+    requires spring.tx;
+    requires spring.jdbc;
+    requires spring.orm;
+    requires spring.aop;
+    requires spring.data.commons;
+    requires spring.data.jpa;
+    
+    requires spring.security.crypto;
+    
+    requires org.hibernate.orm.core;
+    requires jakarta.persistence;
+    requires jakarta.annotation;
+    
+    requires java.prefs;
+    requires java.desktop;
+    
+    requires kotlin.stdlib;
+    
+    opens org.quijava.quijava.services to spring.core;
+    opens org.quijava.quijava.dao to spring.core;
+    opens org.quijava.quijava.utils to spring.core;
+    opens org.quijava.quijava.models to org.hibernate.orm.core;
+    
+    exports org.quijava.quijava.models;
+    exports org.quijava.quijava.utils;
+    exports org.quijava.quijava.services;
+    exports org.quijava.quijava.dao;
+}

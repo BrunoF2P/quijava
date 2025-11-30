@@ -64,10 +64,10 @@ public class CategoryDaoImpl implements CategoryDao {
     @Override
     @Transactional
     public List<CategoryModel> findAllLimit(int offset, int limit) {
-        Query query = entityManager.createQuery("SELECT c FROM CategoryModel c")
+        return entityManager.createQuery("SELECT c FROM CategoryModel c", CategoryModel.class)
                 .setFirstResult(offset)
-                .setMaxResults(limit);
-        return query.getResultList();
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override

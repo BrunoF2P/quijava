@@ -1,7 +1,5 @@
 package org.quijava.quijava.services;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.quijava.quijava.dao.CategoryDao;
 import org.quijava.quijava.dao.QuizDao;
 import org.quijava.quijava.models.CategoryModel;
@@ -27,13 +25,11 @@ public class CategoryService {
         this.quizDao = quizDao;
     }
 
-    public ObservableList<String> getAllCategoriesDescriptions() {
+    public List<String> getAllCategoriesDescriptions() {
         List<CategoryModel> categories = categoryDao.findAll();
-        return FXCollections.observableArrayList(
-                categories.stream()
-                        .map(CategoryModel::getDescription)
-                        .collect(Collectors.toList())
-        );
+        return categories.stream()
+                .map(CategoryModel::getDescription)
+                .collect(Collectors.toList());
     }
 
     /**

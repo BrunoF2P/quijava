@@ -7,30 +7,51 @@
 plugins {
     `java-library`
     `maven-publish`
-    id("org.openjfx.javafxplugin") version "0.1.0"
+    kotlin("jvm") version "2.1.0"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.1.0"
+    id("org.jetbrains.compose") version "1.7.3"
+    id("application")
 }
 
 repositories {
     mavenLocal()
+    google()
+    mavenCentral()
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
 }
 
-javafx {
-    version = "26-ea+18"
-    modules = listOf("javafx.controls", "javafx.fxml")
-}
 
 dependencies {
+    // Compose Desktop
+    implementation(compose.desktop.currentOs)
+    implementation(compose.material3)
+    implementation(compose.materialIconsExtended)
+    implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10")
+    
+    // Kotlin stdlib
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    
+    // Koin for Dependency Injection
+    implementation("io.insert-koin:koin-core:3.5.3")
+    implementation("io.insert-koin:koin-compose:1.1.2")
+    
+    // Coroutines Swing for Dispatchers.Main in Desktop
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.7.3")
+
     api("org.hibernate.orm:hibernate-core:7.1.10.Final")
     api("org.springframework.boot:spring-boot-starter:4.0.0")
     api("org.springframework.security:spring-security-crypto:7.0.0")
     api("org.springframework.boot:spring-boot-starter-data-jpa:4.0.0")
-    api("io.github.mkpaz:atlantafx-base:2.1.0")
     api("me.paulschwarz:spring-dotenv:4.0.0")
     api("org.springframework.boot:spring-boot-starter-aop:4.0.0-M2")
-    runtimeOnly("org.hsqldb:hsqldb:2.7.1")
+    implementation("org.springframework.boot:spring-boot-starter-actuator:4.0.0")
+
+    // Database
+    implementation("org.hsqldb:hsqldb:2.7.4")
+    
+    // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test:4.0.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -38,7 +59,17 @@ dependencies {
 group = "org.quijava"
 version = "1.0-SNAPSHOT"
 description = "quijava"
-java.sourceCompatibility = JavaVersion.VERSION_25
+java.sourceCompatibility = JavaVersion.VERSION_21
+
+application {
+    mainClass.set("org.quijava.quijava.compose.MainComposeKt")
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21)
+    }
+}
 
 publishing {
     publications.create<MavenPublication>("maven") {
@@ -49,6 +80,8 @@ publishing {
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"
 }
+
+
 
 tasks.withType<Javadoc>() {
     options.encoding = "UTF-8"
