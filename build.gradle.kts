@@ -44,7 +44,7 @@ dependencies {
 }
 
 group = "org.quijava"
-version = "1.0-SNAPSHOT"
+version = "2.0"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 compose.desktop {
@@ -52,20 +52,52 @@ compose.desktop {
         mainClass = "org.quijava.quijava.compose.MainComposeKt"
 
         nativeDistributions {
-            targetFormats(org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg, org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi, org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb)
-            packageName = "quijava"
-            packageVersion = "1.0.0"
+            targetFormats(
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Rpm,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg,
+                org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi
+            )
+
+            modules(
+                "java.sql",
+                "java.naming",        // Para DataSource
+                "java.management",    // Para JMX (Spring Actuator)
+                "java.instrument",    // Para Spring AOP
+                "java.compiler",      // Para Spring Boot 4.0 AOT
+                "jdk.unsupported"     // Para Hibernate
+            )
+
+
+
+            packageName = "QuiJava"
+            packageVersion = "2.0.0"
+            description = "Sistema de Quiz Educacional"
+            vendor = "QuiJava Project"
 
             linux {
-                iconFile.set(project.file("src/main/resources/images/logo.png"))
+                iconFile.set(project.file("src/main/composeResources/drawable/logo.png"))
+                packageName = "quijava"
+                debMaintainer = "brunobispof2p@gmail.com"
+                menuGroup = "Education"
+                appCategory = "Education"
+
+                shortcut = true
+                appRelease = "1"
+
+
             }
+
             windows {
-                // Windows requires .ico
-                // iconFile.set(project.file("src/main/resources/images/logo.ico"))
+                iconFile.set(project.file("src/main/composeResources/drawable/logo.ico"))
+                menuGroup = "QuiJava"
+                upgradeUuid = "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
             }
+
             macOS {
-                // macOS requires .icns
-                // iconFile.set(project.file("src/main/resources/images/logo.icns"))
+                iconFile.set(project.file("src/main/composeResources/drawable/logo.icns"))
+                bundleID = "org.quijava.quijava"
+                appCategory = "public.app-category.education"
             }
         }
     }
