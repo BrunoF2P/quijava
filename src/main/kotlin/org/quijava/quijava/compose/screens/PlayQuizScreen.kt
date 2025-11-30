@@ -189,7 +189,7 @@ fun PlayQuizScreen(
 
                         state.shuffledOptions.forEachIndexed { index, option ->
                             val isSelected = state.selectedOptions.contains(index)
-                            val isSingleChoice = currentQuestion.typeQuestion == TypeQuestion.Escolha_unica
+                            val isSingleChoice = currentQuestion.typeQuestion == TypeQuestion.SINGLE_CHOICE
 
                             Card(
                                 onClick = {

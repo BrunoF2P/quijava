@@ -57,18 +57,15 @@ class RegisterViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                registerService.validateFields(_uiState.value.username, _uiState.value.password, _uiState.value.rePassword)
-                val role = registerService.determineUserRole(_uiState.value.refCode)
-                val userOptional = registerService.registerUser(_uiState.value.username, _uiState.value.password, role)
-                
-                if (userOptional.isPresent) {
-                    registerService.manageUserSession(userOptional.get())
-                    _uiState.update { it.copy(isLoading = false) }
-                    _events.send(RegisterEvent.NavigateToMenu)
-                } else {
-                    _uiState.update { it.copy(isLoading = false) }
-                    _events.send(RegisterEvent.ShowError("Erro ao registrar usuário."))
+                with(_uiState.value) {
+                    registerService.validateFields(username, password, rePassword)
+                    val user = registerService.registerUser(username, password)
+                    registerService.manageUserSession(user)
                 }
+
+                _uiState.update { it.copy(isLoading = false) }
+                _events.send(RegisterEvent.NavigateToMenu)
+
             } catch (e: IllegalArgumentException) {
                 _uiState.update { it.copy(isLoading = false) }
                 _events.send(RegisterEvent.ShowError(e.message ?: "Erro de validação"))

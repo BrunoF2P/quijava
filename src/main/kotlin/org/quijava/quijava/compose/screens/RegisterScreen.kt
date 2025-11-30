@@ -2,7 +2,6 @@ package org.quijava.quijava.compose.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Key
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.PersonAdd
@@ -96,15 +95,6 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(16.dp))
 
-            OutlinedTextField(
-                value = state.refCode,
-                onValueChange = { viewModel.updateRefCode(it) },
-                label = { Text("Admin (Key)") },
-                leadingIcon = { Icon(Icons.Default.Key, contentDescription = null) },
-                singleLine = true,
-                modifier = Modifier.width(450.dp),
-                supportingText = { Text("Deixe em branco para conta de aluno") }
-            )
 
             state.errorMessage?.let {
                 Text(

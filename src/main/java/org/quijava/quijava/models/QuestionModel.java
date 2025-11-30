@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Duration;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "questions")
@@ -22,12 +19,12 @@ public class QuestionModel {
     @JoinColumn(name = "quiz_id", nullable = false)
     private QuizModel quiz;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     @Column(name = "type_question", nullable = false)
     private TypeQuestion typeQuestion;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(name = "question_difficulty", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "question_difficulty", nullable = false, length = 10)
     private QuestionDifficulty questionDifficulty;
 
     @Column(name = "question_text", nullable = false, length = Integer.MAX_VALUE)
@@ -36,7 +33,6 @@ public class QuestionModel {
     @ColumnDefault("0")
     @Column(name = "total_attempts", nullable = false)
     private Integer totalAttempts;
-
 
     @Column(name = "limite_time", nullable = false)
     private Duration limiteTime;
@@ -49,10 +45,10 @@ public class QuestionModel {
     @Column(name = "correct_attempts", nullable = false)
     private Integer correctAttempts;
 
-    @OneToMany(mappedBy = "question")
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private Set<AnswerModel> answers = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OptionsAnswerModel> optionsAnswers = new LinkedList<>();
 
     public Integer getId() {
@@ -149,4 +145,28 @@ public class QuestionModel {
         this.correctAttempts = 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        QuestionModel that = (QuestionModel) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "QuestionModel{" +
+                "id=" + id +
+                ", typeQuestion=" + typeQuestion +
+                ", questionDifficulty=" + questionDifficulty +
+                ", questionText='" + questionText + '\'' +
+                ", totalAttempts=" + totalAttempts +
+                ", correctAttempts=" + correctAttempts +
+                '}';
+    }
 }

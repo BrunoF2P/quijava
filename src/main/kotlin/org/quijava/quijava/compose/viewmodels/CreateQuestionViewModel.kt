@@ -22,7 +22,7 @@ data class QuestionFormState(
     val questionText: String = "",
     val durationSeconds: String = "30",
     val score: String = "10",
-    val difficulty: QuestionDifficulty = QuestionDifficulty.FACIL,
+    val difficulty: QuestionDifficulty = QuestionDifficulty.EASY,
     val selectedImageBytes: ByteArray? = null,
     val options: List<OptionState> = listOf(OptionState(), OptionState()),
     val editingQuestion: QuestionModel? = null,
@@ -109,15 +109,10 @@ class CreateQuestionViewModel(
 
     fun selectImage() {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val bytes = imageService.selectImage()
-                if (bytes != null) {
-                    _uiState.update {
-                        it.copy(form = it.form.copy(selectedImageBytes = bytes))
-                    }
+            imageService.selectImage().ifPresent { bytes ->
+                _uiState.update {
+                    it.copy(form = it.form.copy(selectedImageBytes = bytes))
                 }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = "Erro ao selecionar imagem: ${e.message}") }
             }
         }
     }
@@ -154,54 +149,53 @@ class CreateQuestionViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val type = if (form.options.count { it.isCorrect } > 1) TypeQuestion.Multipla_escolha else TypeQuestion.Escolha_unica
-                
-                val questionToSave = if (form.editingQuestion != null) {
+                val type = if (form.options.count { it.isCorrect } > 1) {
+                    TypeQuestion.MULTIPLE_CHOICE
+                } else {
+                    TypeQuestion.SINGLE_CHOICE
+                }
+
+                val optionsModels = form.options.map {
+                    OptionsAnswerModel().apply {
+                        optionText = it.text
+                        isCorrect = it.isCorrect
+                        score = form.score.toIntOrNull() ?: 10
+                    }
+                }
+
+                if (form.editingQuestion != null) {
                     form.editingQuestion.apply {
                         questionText = form.questionText
                         typeQuestion = type
                         limiteTime = Duration.ofSeconds(form.durationSeconds.toLongOrNull() ?: 30)
                         questionDifficulty = form.difficulty
                         imageQuestion = form.selectedImageBytes
+                        optionsAnswers.clear()
+                        optionsAnswers.addAll(optionsModels.onEach { it.question = this })
                     }
+                    questionService.updateQuestion(form.editingQuestion)
                 } else {
                     questionService.createQuestion(
                         form.questionText,
                         quiz,
                         type,
                         form.durationSeconds,
-                        emptyList(),
+                        optionsModels,
                         form.difficulty,
                         form.selectedImageBytes
                     )
                 }
 
-                val optionsModels = form.options.map { 
-                    OptionsAnswerModel().apply {
-                        this.optionText = it.text
-                        this.isCorrect = it.isCorrect
-                        this.score = form.score.toIntOrNull() ?: 10
-                        this.question = questionToSave
-                    }
-                }
-
-                questionService.saveQuestion(questionToSave)
-                questionService.saveOptionsAnswers(optionsModels)
-
+                // Recarrega lista
                 val questions = questionService.findQuestionsByQuiz(quiz.id)
-                
+
                 _uiState.update {
                     it.copy(
                         questions = questions,
-                        form = QuestionFormState(),
-                        errorMessage = null
+                        form = QuestionFormState()
                     )
                 }
-                
-                // Emitting event instead of just state update if needed, 
-                // but here we just refresh the list. 
-                // If we wanted to close a dialog or show a toast, we'd use an event.
-                // Let's emit QuestionSaved to signal success (maybe show a toast)
+
                 _events.send(CreateQuestionEvent.QuestionSaved)
 
             } catch (e: Exception) {
@@ -210,6 +204,7 @@ class CreateQuestionViewModel(
             }
         }
     }
+
 
     fun deleteQuestion(question: QuestionModel) {
         val quiz = currentQuiz ?: return

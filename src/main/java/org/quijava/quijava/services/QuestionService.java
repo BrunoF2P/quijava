@@ -1,132 +1,88 @@
 package org.quijava.quijava.services;
 
-import org.quijava.quijava.dao.OptionsAnswerDao;
 import org.quijava.quijava.dao.QuestionDao;
-import org.quijava.quijava.models.OptionsAnswerModel;
-import org.quijava.quijava.models.QuestionModel;
-import org.quijava.quijava.models.QuestionDifficulty;
-import org.quijava.quijava.models.QuizModel;
-import org.quijava.quijava.models.TypeQuestion;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.quijava.quijava.models.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional
 public class QuestionService {
 
     private final QuestionDao questionDao;
-    private final OptionsAnswerDao optionsAnswerDao;
 
-    @Autowired
-    public QuestionService(QuestionDao questionDao, OptionsAnswerDao optionsAnswerDao) {
+    public QuestionService(QuestionDao questionDao) {
         this.questionDao = questionDao;
-        this.optionsAnswerDao = optionsAnswerDao;
     }
 
-    @Transactional
-    public QuestionModel createQuestion(String questionText, QuizModel quiz, TypeQuestion typeQuestion, String durationText, List<OptionsAnswerModel> optionsAnswers, QuestionDifficulty difficulty, byte[] image) {
-        QuestionModel newQuestion = new QuestionModel();
+    public QuestionModel createQuestion(String questionText,
+                                        QuizModel quiz,
+                                        TypeQuestion typeQuestion,
+                                        String durationText,
+                                        List<OptionsAnswerModel> optionsAnswers,
+                                        QuestionDifficulty difficulty,
+                                        byte[] image) {
+        QuestionModel question = new QuestionModel();
+        question.setQuestionText(questionText);
+        question.setQuiz(quiz);
+        question.setTypeQuestion(typeQuestion);
+        question.setQuestionDifficulty(difficulty);
+        question.setImageQuestion(image);
+        question.setLimiteTime(parseDuration(durationText));
 
-        newQuestion.setQuestionText(questionText);
-        newQuestion.setQuiz(quiz);
-        newQuestion.setTypeQuestion(typeQuestion);
-        newQuestion.setQuestionDifficulty(difficulty);
-        newQuestion.setImageQuestion(image);
+        associateOptionsToQuestion(question, optionsAnswers);
 
-        try {
-            long durationSeconds = Long.parseLong(durationText);
-            Duration duration = Duration.ofSeconds(durationSeconds);
-            newQuestion.setLimiteTime(duration);
-        } catch (NumberFormatException e) {
-            System.out.println("Erro ao converter a duração para segundos.");
-        }
-
-        // Associar as respostas à pergunta
-        List<OptionsAnswerModel> associatedAnswers = createOptionsAnswers(newQuestion, optionsAnswers);
-        newQuestion.setOptionsAnswers(associatedAnswers);
-
-        return questionDao.save(newQuestion);
-    }
-
-
-    @Transactional
-    public List<OptionsAnswerModel> createOptionsAnswers(QuestionModel question, List<OptionsAnswerModel> newAnswers) {
-        List<OptionsAnswerModel> optionsAnswers = new LinkedList<>();
-
-        if (newAnswers != null) {
-            for (OptionsAnswerModel newAnswer : newAnswers) {
-                // Assegure-se de que cada nova resposta esteja associada à pergunta correta
-                newAnswer.setQuestion(question);
-                optionsAnswers.add(newAnswer);
-            }
-        }
-
-        return optionsAnswers;
-    }
-
-
-
-    @Transactional
-    public QuestionModel updateQuestion(QuestionModel question) {
-        Optional<QuestionModel> optionalQuestion = questionDao.findById(question.getId());
-        if (optionalQuestion.isPresent()) {
-            QuestionModel existingQuestion = optionalQuestion.get();
-
-            existingQuestion.setQuestionText(question.getQuestionText());
-            existingQuestion.setQuiz(question.getQuiz());
-            existingQuestion.setTypeQuestion(question.getTypeQuestion());
-            existingQuestion.setQuestionDifficulty(question.getQuestionDifficulty());
-            existingQuestion.setImageQuestion(question.getImageQuestion());
-            existingQuestion.setLimiteTime(question.getLimiteTime());
-
-            // Limpa as opções de resposta atuais da pergunta no banco de dados
-            optionsAnswerDao.deleteByQuestionId(existingQuestion.getId());
-
-            // Limpa as opções de resposta atuais da pergunta em memória
-            existingQuestion.getOptionsAnswers().clear();
-
-            // Atualizar as opções de resposta associadas à pergunta
-            List<OptionsAnswerModel> updatedOptionsAnswers = createOptionsAnswers(existingQuestion, question.getOptionsAnswers());
-            existingQuestion.getOptionsAnswers().addAll(updatedOptionsAnswers);
-
-            return questionDao.update(existingQuestion);
-        } else {
-            throw new IllegalArgumentException("Pergunta não encontrada.");
-        }
-    }
-
-
-
-    public List<QuestionModel> findQuestionsByQuiz(Integer quiz) {
-        return questionDao.findByQuizId(quiz);
-    }
-
-
-    @Transactional
-    public QuestionModel saveQuestion(QuestionModel question) {
         return questionDao.save(question);
     }
 
-    @Transactional
-    public QuestionModel update(QuestionModel question) {
-        return questionDao.update(question);
+    public QuestionModel updateQuestion(QuestionModel question) {
+        QuestionModel existingQuestion = questionDao.findById(question.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Pergunta não encontrada."));
+
+        existingQuestion.setQuestionText(question.getQuestionText());
+        existingQuestion.setQuiz(question.getQuiz());
+        existingQuestion.setTypeQuestion(question.getTypeQuestion());
+        existingQuestion.setQuestionDifficulty(question.getQuestionDifficulty());
+        existingQuestion.setImageQuestion(question.getImageQuestion());
+        existingQuestion.setLimiteTime(question.getLimiteTime());
+
+        existingQuestion.getOptionsAnswers().clear();
+        associateOptionsToQuestion(existingQuestion, question.getOptionsAnswers());
+
+        return questionDao.save(existingQuestion);
     }
 
-    @Transactional
-    public void deleteQuestion(Integer question) {
-        optionsAnswerDao.deleteByQuestionId(question);
-        questionDao.delete(question);
+    public void deleteQuestion(Integer questionId) {
+        questionDao.deleteById(questionId);
     }
 
     public Optional<QuestionModel> findById(Integer id) {
         return questionDao.findById(id);
     }
 
-    @Transactional
-    public void saveOptionsAnswers(List<OptionsAnswerModel> optionsAnswers) {
-        optionsAnswerDao.saveAll(optionsAnswers);
+    public List<QuestionModel> findQuestionsByQuiz(Integer quizId) {
+        return questionDao.findByQuizId(quizId);
+    }
+
+    private Duration parseDuration(String durationText) {
+        try {
+            long seconds = Long.parseLong(durationText);
+            return Duration.ofSeconds(seconds);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Duração inválida: " + durationText, e);
+        }
+    }
+
+    private void associateOptionsToQuestion(QuestionModel question, List<OptionsAnswerModel> options) {
+        if (options != null) {
+            options.forEach(option -> {
+                option.setQuestion(question);
+                question.getOptionsAnswers().add(option);
+            });
+        }
     }
 }

@@ -1,26 +1,26 @@
 package org.quijava.quijava.dao;
 
+import org.jetbrains.annotations.NotNull;
 import org.quijava.quijava.models.QuestionModel;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
-public interface QuestionDao {
-
-    Set<QuestionModel> saveAll(Set<QuestionModel> questions);
-
-    QuestionModel save(QuestionModel question);
-
-    void deleteByQuizId(Integer quizId);
-
-    List<QuestionModel> findAll();
+@Repository
+public interface QuestionDao extends JpaRepository<@NotNull QuestionModel, @NotNull Integer> {
 
     List<QuestionModel> findByQuizId(Integer quizId);
 
-    QuestionModel update(QuestionModel question);
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM QuestionModel q WHERE q.quiz.id = :quizId")
+    void deleteByQuizId(@Param("quizId") Integer quizId);
 
-    void delete(Integer question);
-
-    Optional<QuestionModel> findById(Integer questionId);
+    @Query("SELECT q FROM QuestionModel q LEFT JOIN FETCH q.optionsAnswers WHERE q.quiz.id = :quizId")
+    List<QuestionModel> findByQuizIdWithOptions(@Param("quizId") Integer quizId);
 }

@@ -40,31 +40,32 @@ class LoginViewModel(
 
     fun login() {
         _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-        
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val success = loginService.validateLogin(_uiState.value.username, _uiState.value.password)
-                if (success) {
-                    val user = loginService.getUserByUsername(_uiState.value.username).orElse(null)
-                    if (user != null) {
-                        loginService.deleteActiveSession(_uiState.value.username)
-                        loginService.createSession(_uiState.value.username, user.role, user.id)
-                        val sessionId = loginService.getLastSessionId(_uiState.value.username)
-                        loginService.createPreferencesSession(_uiState.value.username, sessionId, user.role, user.id)
-                        
-                        _uiState.update { it.copy(isLoading = false) }
-                        _events.send(LoginEvent.NavigateToMenu)
-                    } else {
-                        _uiState.update { it.copy(isLoading = false) }
-                        _events.send(LoginEvent.ShowError("User not found"))
-                    }
-                } else {
+                val (username, password) = _uiState.value.let { it.username to it.password }
+
+                if (!loginService.validateLogin(username, password)) {
                     _uiState.update { it.copy(isLoading = false) }
-                    _events.send(LoginEvent.ShowError("Invalid credentials"))
+                    _events.send(LoginEvent.ShowError("Credenciais inválidas"))
+                    return@launch
                 }
+
+                val user = loginService.getUserByUsername(username)
+                    .orElseThrow { IllegalStateException("Usuário não encontrado") }
+
+                loginService.createFullSession(username, user.role, user.id)
+
+                _uiState.update { it.copy(isLoading = false) }
+                _events.send(LoginEvent.NavigateToMenu)
+
+            } catch (e: IllegalArgumentException) {
+                _uiState.update { it.copy(isLoading = false) }
+                _events.send(LoginEvent.ShowError(e.message ?: "Erro de validação"))
             } catch (e: Exception) {
                 _uiState.update { it.copy(isLoading = false) }
-                _events.send(LoginEvent.ShowError(e.message ?: "Login failed"))
+                _events.send(LoginEvent.ShowError("Erro ao fazer login"))
+                e.printStackTrace()
             }
         }
     }

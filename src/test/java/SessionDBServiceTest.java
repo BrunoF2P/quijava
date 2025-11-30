@@ -7,9 +7,10 @@ import org.quijava.quijava.dao.UserSessionDao;
 import org.quijava.quijava.models.UserSessionModel;
 import org.quijava.quijava.services.SessionDBService;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 class SessionDBServiceTest {
@@ -28,36 +29,38 @@ class SessionDBServiceTest {
     @Test
     void testCreateSession() {
         String username = "testUser";
-        int role = 1;
-        int userId = 123;
+        Integer role = 1;
+        Integer userId = 123;
 
         sessionDBService.createSession(username, role, userId);
 
-        verify(userSessionDao, times(1)).save(any());
+        verify(userSessionDao, times(1)).save(any(UserSessionModel.class));
     }
 
     @Test
     void testGetLastSessionId() {
         String username = "testUser";
-        int sessionId = 123;
+        Integer expectedSessionId = 123;
 
-        when(userSessionDao.getLastSessionIdForUser(username)).thenReturn(sessionId);
+        when(userSessionDao.getLastSessionIdForUser(username)).thenReturn(expectedSessionId);
 
-        assertEquals(sessionId, sessionDBService.getLastSessionId(username));
+        Integer actualSessionId = sessionDBService.getLastSessionId(username);
+
+        assertEquals(expectedSessionId, actualSessionId);
     }
 
     @Test
     void testDeleteSession() {
-        int sessionId = 123;
+        Integer sessionId = 123;
 
-        when(userSessionDao.delete(sessionId)).thenReturn(true);
+        sessionDBService.deleteSession(sessionId);
 
-        assertTrue(sessionDBService.deleteSession(sessionId));
+        verify(userSessionDao, times(1)).deleteById(sessionId);
     }
 
     @Test
     void testIsSessionValid() {
-        int sessionId = 123;
+        Integer sessionId = 123;
 
         when(userSessionDao.existsById(sessionId)).thenReturn(true);
 
@@ -65,51 +68,120 @@ class SessionDBServiceTest {
     }
 
     @Test
+    void testIsSessionValid_WhenNotExists() {
+        Integer sessionId = 999;
+
+        when(userSessionDao.existsById(sessionId)).thenReturn(false);
+
+        assertFalse(sessionDBService.isSessionValid(sessionId));
+    }
+
+    @Test
     void testGetSessionIdForUser() {
         String username = "testUser";
-        int sessionId = 123;
+        Integer sessionId = 123;
 
-        when(userSessionDao.getSessionIdForUser(username)).thenReturn(Optional.of(sessionId));
+        UserSessionModel sessionModel = new UserSessionModel();
+        sessionModel.setId(sessionId);
+        sessionModel.setUsername(username);
 
-        assertEquals(Optional.of(sessionId), sessionDBService.getSessionIdForUser(username));
+        when(userSessionDao.findByUsername(username)).thenReturn(Optional.of(sessionModel));
+
+        Optional<Integer> result = sessionDBService.getSessionIdForUser(username);
+
+        assertTrue(result.isPresent());
+        assertEquals(sessionId, result.get());
+    }
+
+    @Test
+    void testGetSessionIdForUser_WhenNotFound() {
+        String username = "unknownUser";
+
+        when(userSessionDao.findByUsername(username)).thenReturn(Optional.empty());
+
+        Optional<Integer> result = sessionDBService.getSessionIdForUser(username);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
     void testGetUsername() {
-        int sessionId = 123;
-        String username = "testUser";
+        Integer sessionId = 123;
+        String expectedUsername = "testUser";
 
         UserSessionModel sessionModel = new UserSessionModel();
-        sessionModel.setUsername(username);
+        sessionModel.setUsername(expectedUsername);
 
         when(userSessionDao.findById(sessionId)).thenReturn(Optional.of(sessionModel));
 
-        assertEquals(username, sessionDBService.getUsername(sessionId));
+        Optional<String> result = sessionDBService.getUsername(sessionId);
+
+        assertTrue(result.isPresent());
+        assertEquals(expectedUsername, result.get());
+    }
+
+    @Test
+    void testGetUsername_WhenNotFound() {
+        Integer sessionId = 999;
+
+        when(userSessionDao.findById(sessionId)).thenReturn(Optional.empty());
+
+        Optional<String> result = sessionDBService.getUsername(sessionId);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
     void testGetRole() {
-        int sessionId = 123;
-        int role = 1;
+        Integer sessionId = 123;
+        Integer expectedRole = 1;
 
         UserSessionModel sessionModel = new UserSessionModel();
-        sessionModel.setRole(role);
+        sessionModel.setRole(expectedRole);
 
         when(userSessionDao.findById(sessionId)).thenReturn(Optional.of(sessionModel));
 
-        assertEquals(role, sessionDBService.getRole(sessionId));
+        Optional<Integer> result = sessionDBService.getRole(sessionId);
+
+        assertTrue(result.isPresent());
+        assertEquals(expectedRole, result.get());
+    }
+
+    @Test
+    void testGetRole_WhenNotFound() {
+        Integer sessionId = 999;
+
+        when(userSessionDao.findById(sessionId)).thenReturn(Optional.empty());
+
+        Optional<Integer> result = sessionDBService.getRole(sessionId);
+
+        assertFalse(result.isPresent());
     }
 
     @Test
     void testGetUserId() {
-        int sessionId = 123;
-        int userId = 456;
+        Integer sessionId = 123;
+        Integer expectedUserId = 456;
 
         UserSessionModel sessionModel = new UserSessionModel();
-        sessionModel.setUserId(userId);
+        sessionModel.setUserId(expectedUserId);
 
         when(userSessionDao.findById(sessionId)).thenReturn(Optional.of(sessionModel));
 
-        assertEquals(userId, sessionDBService.getUserId(sessionId));
+        Optional<Integer> result = sessionDBService.getUserId(sessionId);
+
+        assertTrue(result.isPresent());
+        assertEquals(expectedUserId, result.get());
+    }
+
+    @Test
+    void testGetUserId_WhenNotFound() {
+        Integer sessionId = 999;
+
+        when(userSessionDao.findById(sessionId)).thenReturn(Optional.empty());
+
+        Optional<Integer> result = sessionDBService.getUserId(sessionId);
+
+        assertFalse(result.isPresent());
     }
 }

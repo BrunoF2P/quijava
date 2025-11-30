@@ -2,8 +2,7 @@ package org.quijava.quijava.services;
 
 import org.quijava.quijava.dao.UserDao;
 import org.quijava.quijava.models.UserModel;
-import org.quijava.quijava.utils.PasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,36 +12,43 @@ public class LoginService {
 
     private final SessionDBService sessionDBService;
     private final PasswordEncoder passwordEncoder;
-    private final SessionPreferencesService sessionPreferencesService;
+    private final SessionPreferencesService sessionPreferences;
     private final UserDao userDao;
 
-    @Autowired
-    public LoginService(SessionDBService sessionDBService, PasswordEncoder passwordEncoder, SessionPreferencesService sessionPreferencesService, UserDao userDao) {
+    public LoginService(SessionDBService sessionDBService,
+                        PasswordEncoder passwordEncoder,
+                        SessionPreferencesService sessionPreferences,
+                        UserDao userDao) {
         this.sessionDBService = sessionDBService;
         this.passwordEncoder = passwordEncoder;
-        this.sessionPreferencesService = sessionPreferencesService;
+        this.sessionPreferences = sessionPreferences;
         this.userDao = userDao;
     }
 
     public boolean validateLogin(String username, String password) {
-        if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+        if (username == null || username.trim().isEmpty() ||
+                password == null || password.trim().isEmpty()) {
             throw new IllegalArgumentException("Preencha todos os campos.");
         }
 
-        Optional<UserModel> userOptional = Optional.ofNullable(userDao.findByUsername(username));
-        return userOptional.map(user -> passwordEncoder.matches(password, user.getPassword())).orElse(false);
+        return userDao.findByUsername(username)
+                .map(user -> passwordEncoder.matches(password, user.getPassword()))
+                .orElse(false);
     }
 
     public Optional<UserModel> getUserByUsername(String username) {
-        return Optional.ofNullable(userDao.findByUsername(username));
+        return userDao.findByUsername(username);
     }
 
-    public Integer getUserRole(String username) {
-        return getUserByUsername(username).map(UserModel::getRole).orElse(null);
+    public Optional<Integer> getUserRole(String username) {
+        return getUserByUsername(username).map(UserModel::getRole);
     }
 
-    public void createSession(String username, Integer role, Integer userId) {
+    public void createFullSession(String username, Integer role, Integer userId) {
+        deleteActiveSession(username);
         sessionDBService.createSession(username, role, userId);
+        Integer sessionId = sessionDBService.getLastSessionId(username);
+        sessionPreferences.createPreferencesSession(username, sessionId, role, userId);
     }
 
     public Integer getLastSessionId(String username) {
@@ -50,14 +56,11 @@ public class LoginService {
     }
 
     public void deleteActiveSession(String username) {
-        sessionDBService.getSessionIdForUser(username).ifPresent(sessionDBService::deleteSession);
+        sessionDBService.getSessionIdForUser(username)
+                .ifPresent(sessionDBService::deleteSession);
     }
 
-    public void createPreferencesSession(String username, Integer sessionId, Integer role, Integer userId) {
-        sessionPreferencesService.createPreferencesSession(username, sessionId, role, userId);
-    }
-
-    public UserModel findById(Integer id) {
+    public Optional<UserModel> findById(Integer id) {
         return userDao.findById(id);
     }
 }

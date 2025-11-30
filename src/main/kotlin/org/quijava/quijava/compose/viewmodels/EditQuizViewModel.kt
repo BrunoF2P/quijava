@@ -103,16 +103,12 @@ class EditQuizViewModel(
 
     fun selectImage() {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val bytes = imageService.selectImage()
-                if (bytes != null) {
-                    _uiState.update { it.copy(selectedImageBytes = bytes) }
-                }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(errorMessage = "Erro ao selecionar imagem: ${e.message}") }
+            imageService.selectImage().ifPresent { bytes ->
+                _uiState.update { it.copy(selectedImageBytes = bytes) }
             }
         }
     }
+
 
     fun removeImage() {
         _uiState.update { it.copy(selectedImageBytes = null) }

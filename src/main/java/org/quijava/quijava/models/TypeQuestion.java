@@ -1,8 +1,8 @@
 package org.quijava.quijava.models;
 
 public enum TypeQuestion {
-    Escolha_unica(0),
-    Multipla_escolha(1);
+    SINGLE_CHOICE(0),
+    MULTIPLE_CHOICE(1);
 
     private final int value;
 
@@ -14,4 +14,10 @@ public enum TypeQuestion {
         return value;
     }
 
+    public static TypeQuestion fromValue(int value) {
+        for (TypeQuestion type : values()) {
+            if (type.value == value) return type;
+        }
+        throw new IllegalArgumentException("Invalid value: " + value);
+    }
 }
